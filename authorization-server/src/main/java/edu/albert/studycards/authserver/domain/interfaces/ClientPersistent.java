@@ -1,5 +1,7 @@
 package edu.albert.studycards.authserver.domain.interfaces;
 
+import java.util.Date;
+
 public interface ClientPersistent {
 	String getFirstName();
 	void setFirstName(String firstName);
@@ -14,7 +16,9 @@ public interface ClientPersistent {
 	void setPassword(String password);
 	
 	Long getId();
-	void setId(Long id);
+//	void setId(Long id);
+	
+	Date getCreated();
 	
 	Role getRole();
 	void setRole(Role role);
