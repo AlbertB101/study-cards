@@ -1,6 +1,7 @@
 package edu.albert.studycards.authserver.domain.dto;
 
 import edu.albert.studycards.authserver.domain.interfaces.ClientDto;
+import edu.albert.studycards.authserver.domain.interfaces.ClientPersistent;
 import edu.albert.studycards.authserver.domain.interfaces.Role;
 import edu.albert.studycards.authserver.domain.interfaces.Status;
 import lombok.Getter;
@@ -40,4 +41,22 @@ public class ClientDtoImpl implements ClientDto {
 	
 	@Enumerated(value = EnumType.STRING)
 	private Status status;
+	
+	public ClientDtoImpl(ClientPersistent client) {
+		this.firstName = client.getFirstName();
+		this.lastName = client.getLastName();
+		this.email = client.getEmail();
+		this.password = client.getPassword();
+		this.role = client.getRole();
+		this.status = client.getStatus();
+	}
+	
+	public ClientDtoImpl(ClientDto client) {
+		this.firstName = client.getFirstName();
+		this.lastName = client.getLastName();
+		this.email = client.getEmail();
+		this.password = client.getPassword();
+		this.role = client.getRole();
+		this.status = client.getStatus();
+	}
 }

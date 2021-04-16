@@ -1,5 +1,6 @@
 package edu.albert.studycards.authserver.domain.persistent;
 
+import edu.albert.studycards.authserver.domain.interfaces.ClientDto;
 import edu.albert.studycards.authserver.domain.interfaces.ClientPersistent;
 import edu.albert.studycards.authserver.domain.interfaces.Role;
 import edu.albert.studycards.authserver.domain.interfaces.Status;
@@ -54,4 +55,14 @@ public class ClientPersistentImpl implements ClientPersistent {
 	@Column(name = "status")
 	@Enumerated(value = EnumType.STRING)
 	private Status status;
+	
+	public ClientPersistentImpl(ClientDto clientDto) {
+		this.email = clientDto.getEmail();
+		this.firstName = clientDto.getFirstName();
+		this.lastName = clientDto.getLastName();
+		this.password = clientDto.getPassword();
+		this.created = new Date();
+		this.role = Role.USER;
+		this.status = Status.ACTIVE;
+	}
 }
