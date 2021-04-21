@@ -3,7 +3,7 @@ package edu.albert.studycards.authserver.service;
 
 import edu.albert.studycards.authserver.SourceProvider;
 import edu.albert.studycards.authserver.domain.interfaces.ClientDto;
-import edu.albert.studycards.authserver.exception.ClientAlreadyExistException;
+import edu.albert.studycards.authserver.exception.ClientAlreadyExistsException;
 import edu.albert.studycards.authserver.repository.ClientRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -107,7 +107,7 @@ public class ClientServiceTest {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (ExecutionException e) {
-				assertEquals(ClientAlreadyExistException.class, e.getCause().getClass());
+				assertEquals(ClientAlreadyExistsException.class, e.getCause().getClass());
 			}
 		}
 	}
