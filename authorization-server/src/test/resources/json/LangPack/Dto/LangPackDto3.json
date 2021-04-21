@@ -1,0 +1,19 @@
+{
+  "id": 1,
+  "accountId": 1,
+  "lang": "English",
+  "cards": [
+    {
+      "id": 1,
+      "word": "outstanding",
+      "wordTr": "ˌaʊtˈstæn.dɪŋ",
+      "wordMng": "clearly very much better than what is usual"
+    },
+    {
+      "id": 2,
+      "word": "garbage",
+      "wordTr": "ˈɡɑː.bɪdʒ",
+      "wordMng": "waste material or unwanted things that you throw away"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "accountId": 1,
+  "lang": "German",
+  "cards": [
+    {
+      "word": "Buch",
+      "wordTr": "buːx",
+      "wordMng": "book"
+    },
+    {
+      "word": "auto",
+      "wordTr": "ˈɔːtəʊ",
+      "wordMng": "car"
+    }
+  ]
+}
