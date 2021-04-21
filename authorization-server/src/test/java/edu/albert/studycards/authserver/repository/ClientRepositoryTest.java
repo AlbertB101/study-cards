@@ -72,4 +72,23 @@ public class ClientRepositoryTest {
 	void whenClientDoesntExistShouldReturnFalse() {
 		assertFalse(clientRepo.existsByEmail(clientPersistent.getEmail()));
 	}
+	
+	@Test
+	@DisplayName("Should update Client firstName and lastName")
+	void shouldUpdateClientFirstNameAndLastName() {
+		String newFirstName = "Alex";
+		String newLastName = "Johnson";
+		clientRepo.saveAndFlush(clientPersistent);
+		
+		clientRepo.updateClientByEmail(
+			clientPersistent.getEmail(),
+			newFirstName,
+			newLastName);
+		
+		ClientPersistent updatedClient = clientRepo
+			                                 .findByEmail(ClientRepositoryTest.clientPersistent.getEmail())
+			                                 .orElse(new ClientPersistentImpl());
+		assertEquals(newFirstName, updatedClient.getFirstName());
+		assertEquals(newLastName, updatedClient.getLastName());
+	}
 }
