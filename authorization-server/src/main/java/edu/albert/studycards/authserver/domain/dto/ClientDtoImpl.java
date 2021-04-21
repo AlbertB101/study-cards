@@ -59,4 +59,15 @@ public class ClientDtoImpl implements ClientDto {
 		this.role = client.getRole();
 		this.status = client.getStatus();
 	}
+	
+	@Override
+	public String toString() {
+		return "ClientDtoImpl{" +
+			       "firstName='" + firstName + '\'' +
+			       ", lastName='" + lastName + '\'' +
+			       ", email='" + email + '\'' +
+			       ", role=" + role +
+			       ", status=" + status +
+			       '}';
+	}
 }
