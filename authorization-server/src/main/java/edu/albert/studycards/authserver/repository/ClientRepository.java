@@ -14,8 +14,8 @@ import java.util.Optional;
 public interface ClientRepository extends JpaRepository<ClientPersistentImpl, Long> {
 	
 	Optional<ClientPersistent> findByEmail(String email);
-	
 	boolean existsByEmail(String email);
+	void deleteByEmail(String email);
 	
 	//	@Transactional
 	@Modifying(clearAutomatically = true)
@@ -23,4 +23,5 @@ public interface ClientRepository extends JpaRepository<ClientPersistentImpl, Lo
 	void updateClientByEmail(@Param("email") String email,
 	                         @Param("firstName") String firsName,
 	                         @Param("lastName") String lastName);
+	
 }
