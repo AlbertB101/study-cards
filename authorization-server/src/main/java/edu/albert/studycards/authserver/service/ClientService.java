@@ -10,9 +10,9 @@ public interface ClientService {
 	
 	CompletableFuture<Void> registerClient(ClientDto clientDto) throws ClientAlreadyExistsException;
 	
-	CompletableFuture<ClientDto> getClient(String email) throws ClientAlreadyExistsException;
+	CompletableFuture<ClientDto> receiveClient(String email) throws NoSuchElementException;
 	
-	CompletableFuture<ClientDto> getClient(Long id) throws ClientAlreadyExistsException;
+	CompletableFuture<ClientDto> receiveClient(Long id) throws NoSuchElementException;
 	
 	
 	CompletableFuture<ClientDto> updateClient(ClientDto clientDto) throws NoSuchElementException;
