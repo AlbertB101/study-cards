@@ -2,14 +2,12 @@ package edu.albert.studycards.authserver.service;
 
 
 import edu.albert.studycards.authserver.SourceProvider;
-import edu.albert.studycards.authserver.domain.dto.ClientDtoImpl;
 import edu.albert.studycards.authserver.domain.interfaces.ClientDto;
 import edu.albert.studycards.authserver.domain.persistent.ClientPersistentImpl;
 import edu.albert.studycards.authserver.exception.ClientAlreadyExistsException;
 import edu.albert.studycards.authserver.repository.ClientRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.function.ThrowingSupplier;
 import org.mockito.*;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -92,7 +90,7 @@ public class ClientServiceTest {
 	}
 	
 	@Test
-	@DisplayName("Should throw ClientAlreadyExistsException")
+	@DisplayName("When register should throw ClientAlreadyExistsException")
 	void shouldThrowClientAlreadyExistsException() {
 		when(clientRepo.existsByEmail(any()))
 			.thenReturn(true);
@@ -101,7 +99,7 @@ public class ClientServiceTest {
 	}
 	
 	@Test
-	@DisplayName("Should throw ClientAlreadyExistException for all the clients")
+	@DisplayName("When register should throw ClientAlreadyExistException for all the clients")
 	void shouldThrowClientAlreadyExistExceptionForAllTheClients() {
 		List<Future<?>> execFutures = new ArrayList<>(ACCOUNT_AMOUNT);
 		
@@ -128,27 +126,21 @@ public class ClientServiceTest {
 	}
 	
 	@Test
-	@DisplayName("Should throw ClientAlreadyExistsException when try to get Client")
+	@DisplayName("When receive Client Should throw NoSuchElementException")
 	void shouldThrowClientAlreadyExistsExceptionWhenTryToGetClient() {
-		when(clientRepo.exists(any()))
-			.thenReturn(false);
-		
 		assertThrows(
-			ClientAlreadyExistsException.class,
-			() -> clientService.getClient(CLIENT.getEmail()));
+			NoSuchElementException.class,
+			() -> clientService.receiveClient(CLIENT.getEmail()));
 	}
 	
 	@Test
-	@DisplayName("Should throw ClientAlreadyExistsException when try to get Clients")
+	@DisplayName("When receive Client should throw NoSuchElementException")
 	void shouldThrowClientAlreadyExistsExceptionWhenTryToGetClients() {
 		List<Future<CompletableFuture<?>>> execFutures = new ArrayList<>(ACCOUNT_AMOUNT);
 		
-		when(clientRepo.exists(any()))
-			.thenReturn(false);
-		
 		for (ClientDto clientDto : CLIENTS) {
 			Future<CompletableFuture<?>> futureTask =
-				executor.submit(() -> clientService.getClient(clientDto.getEmail()));
+				executor.submit(() -> clientService.receiveClient(clientDto.getEmail()));
 			execFutures.add(futureTask);
 		}
 		
@@ -159,21 +151,19 @@ public class ClientServiceTest {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (ExecutionException e) {
-				assertEquals(ClientAlreadyExistsException.class, e.getCause());
+				assertEquals(NoSuchElementException.class, e.getCause().getClass());
 			}
 		}
 	}
 	
 	@Test
-	@DisplayName("Should return CLIENT")
+	@DisplayName("Should receive CLIENT")
 	void shouldReturnClient() {
-		when(clientRepo.exists(any()))
-			.thenReturn(true);
 		when(clientRepo.findByEmail(any()))
 			.thenReturn(Optional.of(new ClientPersistentImpl(CLIENT)));
 		
 		assertDoesNotThrow(() -> {
-			CompletableFuture<ClientDto> compFuture = clientService.getClient(CLIENT.getEmail());
+			CompletableFuture<ClientDto> compFuture = clientService.receiveClient(CLIENT.getEmail());
 			ClientDto clientDto = compFuture.get();
 			assertEquals(CLIENT.getEmail(), clientDto.getEmail());
 			assertEquals(CLIENT.getFirstName(), clientDto.getFirstName());
@@ -184,18 +174,16 @@ public class ClientServiceTest {
 	}
 	
 	@Test
-	@DisplayName("Should return CLIENT for requests")
+	@DisplayName("Should receive CLIENT for requests")
 	void shouldReturnClientForRequests() {
 		List<Future<CompletableFuture<ClientDto>>> execFutures = new ArrayList<>(ACCOUNT_AMOUNT);
 		
-		when(clientRepo.exists(any()))
-			.thenReturn(true);
 		when(clientRepo.findByEmail(any()))
 			.thenReturn(Optional.of(new ClientPersistentImpl(CLIENT)));
 		
 		for (ClientDto clientDto : CLIENTS) {
 			Future<CompletableFuture<ClientDto>> futureTask =
-				executor.submit(() -> clientService.getClient(clientDto.getEmail()));
+				executor.submit(() -> clientService.receiveClient(clientDto.getEmail()));
 			execFutures.add(futureTask);
 		}
 		
@@ -226,7 +214,7 @@ public class ClientServiceTest {
 	void shouldSuccessfullyDeleteClientsWithoutExceptions() {
 		List<Future<CompletableFuture<?>>> execFutures = new ArrayList<>(ACCOUNT_AMOUNT);
 		
-		when(clientRepo.existsByEmail(CLIENT.getEmail()))
+		when(clientRepo.existsByEmail(anyString()))
 			.thenReturn(true);
 		
 		for (ClientDto clientDto : CLIENTS) {
@@ -243,7 +231,7 @@ public class ClientServiceTest {
 	@Test
 	@DisplayName("Should throw NoSuchElementException when try to delete Client")
 	void shouldThrowNoSuchElementExceptionWhenTryToDeleteClient() {
-		when(clientRepo.existsByEmail(CLIENT.getEmail()))
+		when(clientRepo.existsByEmail(anyString()))
 			.thenReturn(false);
 		
 		assertThrows(
@@ -256,7 +244,7 @@ public class ClientServiceTest {
 	void shouldThrowNoSuchElementExceptionWhenTryToDeleteClients() {
 		List<Future<CompletableFuture<?>>> execFutures = new ArrayList<>(ACCOUNT_AMOUNT);
 		
-		when(clientRepo.existsByEmail(CLIENT.getEmail()))
+		when(clientRepo.existsByEmail(anyString()))
 			.thenReturn(false);
 		
 		for (ClientDto clientDto : CLIENTS) {
@@ -271,7 +259,7 @@ public class ClientServiceTest {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (ExecutionException e) {
-				assertEquals(NoSuchElementException.class, e.getCause());
+				assertEquals(NoSuchElementException.class, e.getCause().getClass());
 			}
 		}
 	}
