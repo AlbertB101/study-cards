@@ -9,6 +9,7 @@ import edu.albert.studycards.authserver.exception.ClientAlreadyExistsException;
 import edu.albert.studycards.authserver.repository.ClientRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.ThrowingSupplier;
 import org.mockito.*;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -18,6 +19,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -207,6 +209,70 @@ public class ClientServiceTest {
 				assertEquals(CLIENT.getRole(), clientDto.getRole());
 				assertEquals(CLIENT.getStatus(), clientDto.getStatus());
 			});
+		}
+	}
+	
+	@Test
+	@DisplayName("Should successfully delete Client")
+	void shouldSuccessfullyDeleteClient() {
+		when(clientRepo.existsByEmail(CLIENT.getEmail()))
+			.thenReturn(true);
+		
+		assertDoesNotThrow(() -> clientService.deleteClient(CLIENT.getEmail()));
+	}
+	
+	@Test
+	@DisplayName("Should successfully delete Clients")
+	void shouldSuccessfullyDeleteClientsWithoutExceptions() {
+		List<Future<CompletableFuture<?>>> execFutures = new ArrayList<>(ACCOUNT_AMOUNT);
+		
+		when(clientRepo.existsByEmail(CLIENT.getEmail()))
+			.thenReturn(true);
+		
+		for (ClientDto clientDto : CLIENTS) {
+			Future<CompletableFuture<?>> f =
+				executor.submit(() -> clientService.deleteClient(clientDto.getEmail()));
+			execFutures.add(f);
+		}
+		
+		for (Future<CompletableFuture<?>> future : execFutures) {
+			assertDoesNotThrow(() -> future.get());
+		}
+	}
+	
+	@Test
+	@DisplayName("Should throw NoSuchElementException when try to delete Client")
+	void shouldThrowNoSuchElementExceptionWhenTryToDeleteClient() {
+		when(clientRepo.existsByEmail(CLIENT.getEmail()))
+			.thenReturn(false);
+		
+		assertThrows(
+			NoSuchElementException.class,
+			() -> clientService.deleteClient(CLIENT.getEmail()));
+	}
+	
+	@Test
+	@DisplayName("Should throw NoSuchElementException when try to delete Clients")
+	void shouldThrowNoSuchElementExceptionWhenTryToDeleteClients() {
+		List<Future<CompletableFuture<?>>> execFutures = new ArrayList<>(ACCOUNT_AMOUNT);
+		
+		when(clientRepo.existsByEmail(CLIENT.getEmail()))
+			.thenReturn(false);
+		
+		for (ClientDto clientDto : CLIENTS) {
+			Future<CompletableFuture<?>> f =
+				executor.submit(() -> clientService.deleteClient(clientDto.getEmail()));
+			execFutures.add(f);
+		}
+		
+		for (Future<CompletableFuture<?>> future : execFutures) {
+			try {
+				future.get();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				assertEquals(NoSuchElementException.class, e.getCause());
+			}
 		}
 	}
 }
