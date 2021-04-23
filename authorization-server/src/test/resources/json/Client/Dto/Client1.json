@@ -2,7 +2,5 @@
   "firstName": "Albert",
   "lastName": "Kleys",
   "email": "AlbertKleys@gmail.com",
-  "password": "password",
-  "role": "USER",
-  "status": "ACTIVE"
+  "password": "password"
 }
