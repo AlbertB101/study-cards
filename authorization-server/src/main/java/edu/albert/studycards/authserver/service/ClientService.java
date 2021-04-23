@@ -8,7 +8,7 @@ import java.util.concurrent.CompletableFuture;
 
 public interface ClientService {
 	
-	CompletableFuture<Void> registerClient(ClientDto clientDto) throws ClientAlreadyExistsException;
+	CompletableFuture<ClientDto> registerClient(ClientDto clientDto) throws ClientAlreadyExistsException;
 	
 	CompletableFuture<ClientDto> receiveClient(String email) throws NoSuchElementException;
 	

@@ -22,14 +22,14 @@ public class ClientServiceImpl implements ClientService {
 	
 	@Async("threadPoolTaskExecutor")
 	@Override
-	public CompletableFuture<Void> registerClient(ClientDto clientDto) throws ClientAlreadyExistsException {
+	public CompletableFuture<ClientDto> registerClient(ClientDto clientDto) throws ClientAlreadyExistsException {
 		if (clientRepo.existsByEmail(clientDto.getEmail()))
 			throw new ClientAlreadyExistsException();
 //		TODO: add email validity check
 		
-		clientRepo.saveAndFlush(new ClientPersistentImpl(clientDto));
+		ClientPersistent savedClient = clientRepo.saveAndFlush(new ClientPersistentImpl(clientDto));
 		
-		return CompletableFuture.completedFuture(null);
+		return CompletableFuture.completedFuture(new ClientDtoImpl(savedClient));
 	}
 	
 	@Async("threadPoolTaskExecutor")
