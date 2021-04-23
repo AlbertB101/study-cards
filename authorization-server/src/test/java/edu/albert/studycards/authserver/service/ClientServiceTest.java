@@ -3,6 +3,8 @@ package edu.albert.studycards.authserver.service;
 
 import edu.albert.studycards.authserver.SourceProvider;
 import edu.albert.studycards.authserver.domain.interfaces.ClientDto;
+import edu.albert.studycards.authserver.domain.interfaces.Role;
+import edu.albert.studycards.authserver.domain.interfaces.Status;
 import edu.albert.studycards.authserver.domain.persistent.ClientPersistentImpl;
 import edu.albert.studycards.authserver.exception.ClientAlreadyExistsException;
 import edu.albert.studycards.authserver.repository.ClientRepository;
@@ -64,27 +66,45 @@ public class ClientServiceTest {
 	void shouldSuccessfullyRegisterNewClient() {
 		when(clientRepo.existsByEmail(CLIENT.getEmail()))
 			.thenReturn(false);
+		when(clientRepo.saveAndFlush(any()))
+			.thenReturn(new ClientPersistentImpl(CLIENT));
 		
-		assertDoesNotThrow(() -> clientService.registerClient(CLIENT));
+		assertDoesNotThrow(() -> {
+			ClientDto clientDto = clientService.registerClient(CLIENT).get();
+			assertEquals(CLIENT.getEmail(), clientDto.getEmail());
+			assertEquals(CLIENT.getFirstName(), clientDto.getFirstName());
+			assertEquals(CLIENT.getLastName(), clientDto.getLastName());
+			assertEquals(Role.USER, clientDto.getRole());
+			assertEquals(Status.ACTIVE, clientDto.getStatus());
+		});
 	}
 	
 	@Test
 	@DisplayName("Should successfully register all the clients")
 	void shouldSuccessfullyRegisterAllTheClients() {
-		List<Future<?>> execFutures = new ArrayList<>(ACCOUNT_AMOUNT);
+		List<Future<CompletableFuture<ClientDto>>> execFutures = new ArrayList<>(ACCOUNT_AMOUNT);
 		
 		when(clientRepo.existsByEmail(any(String.class)))
 			.thenReturn(false);
+		when(clientRepo.saveAndFlush(any()))
+			.thenReturn(new ClientPersistentImpl(CLIENT));
 		
 		for (ClientDto clientDto : CLIENTS) {
-			Future<?> future = executor.submit(() -> clientService.registerClient(clientDto));
+			Future<CompletableFuture<ClientDto>> future =
+				executor.submit(() -> clientService.registerClient(clientDto));
 			execFutures.add(future);
 		}
 		
-		for (Future<?> future : execFutures) {
+		for (Future<CompletableFuture<ClientDto>> future : execFutures) {
 			assertDoesNotThrow(() -> {
-				future.get();
+				CompletableFuture<ClientDto> compFuture = future.get();
 				assertTrue(future.isDone());
+				ClientDto clientDto = compFuture.get();
+				assertEquals(CLIENT.getEmail(), clientDto.getEmail());
+				assertEquals(CLIENT.getFirstName(), clientDto.getFirstName());
+				assertEquals(CLIENT.getLastName(), clientDto.getLastName());
+				assertEquals(Role.USER, clientDto.getRole());
+				assertEquals(Status.ACTIVE, clientDto.getStatus());
 			});
 		}
 	}
@@ -168,8 +188,8 @@ public class ClientServiceTest {
 			assertEquals(CLIENT.getEmail(), clientDto.getEmail());
 			assertEquals(CLIENT.getFirstName(), clientDto.getFirstName());
 			assertEquals(CLIENT.getLastName(), clientDto.getLastName());
-			assertEquals(CLIENT.getRole(), clientDto.getRole());
-			assertEquals(CLIENT.getStatus(), clientDto.getStatus());
+			assertEquals(Role.USER, clientDto.getRole());
+			assertEquals(Status.ACTIVE, clientDto.getStatus());
 		});
 	}
 	
@@ -194,8 +214,8 @@ public class ClientServiceTest {
 				assertEquals(CLIENT.getEmail(), clientDto.getEmail());
 				assertEquals(CLIENT.getFirstName(), clientDto.getFirstName());
 				assertEquals(CLIENT.getLastName(), clientDto.getLastName());
-				assertEquals(CLIENT.getRole(), clientDto.getRole());
-				assertEquals(CLIENT.getStatus(), clientDto.getStatus());
+				assertEquals(Role.USER, clientDto.getRole());
+				assertEquals(Status.ACTIVE, clientDto.getStatus());
 			});
 		}
 	}
