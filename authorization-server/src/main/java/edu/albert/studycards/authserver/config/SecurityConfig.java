@@ -18,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
-	private final JwtConfigurer jwtConfigurer;
+	private JwtConfigurer jwtConfigurer;
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 			.authorizeRequests()
-			.mvcMatchers("/api/v1/auth/login").permitAll()
+			.mvcMatchers("/api/v1/auth/login", "/api/v1/signup").permitAll()
 			.anyRequest().authenticated()
 			.and()
 			.apply(jwtConfigurer);
@@ -43,5 +43,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder(12);
 	}
-	
 }
