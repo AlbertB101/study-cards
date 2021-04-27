@@ -11,6 +11,6 @@ public interface JwtBlacklistRepository extends JpaRepository<JwtBlacklist, Long
     boolean existsByToken(String token);
     @Transactional
     @Modifying
-    @Query(value = "delete from JwtBlacklist as j where current_timestamp > j.expired ")
+    @Query(value = "delete from JWT_Blacklist as j where current_timestamp > j.expired ")
     void deleteAllExpired();
 }
