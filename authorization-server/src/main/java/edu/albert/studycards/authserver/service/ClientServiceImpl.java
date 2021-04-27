@@ -8,6 +8,7 @@ import edu.albert.studycards.authserver.exception.ClientAlreadyExistsException;
 import edu.albert.studycards.authserver.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -18,6 +19,8 @@ public class ClientServiceImpl implements ClientService {
 	
 	@Autowired
 	ClientRepository clientRepo;
+	@Autowired
+	PasswordEncoder passwordEncoder;
 	
 	
 	@Async("threadPoolTaskExecutor")
@@ -27,7 +30,9 @@ public class ClientServiceImpl implements ClientService {
 			throw new ClientAlreadyExistsException();
 //		TODO: add email validity check
 		
+		clientDto.setPassword(passwordEncoder.encode(clientDto.getPassword()));
 		ClientPersistent savedClient = clientRepo.saveAndFlush(new ClientPersistentImpl(clientDto));
+		
 		ClientDtoImpl clientInfo = new ClientDtoImpl(savedClient);
 		clientInfo.setPassword(null);
 		
