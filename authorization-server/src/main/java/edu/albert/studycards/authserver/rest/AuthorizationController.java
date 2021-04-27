@@ -101,7 +101,7 @@ public class AuthorizationController {
 		
 		securityContextLogoutHandler.logout(request, response, context.getAuthentication());
 		securityContextLogoutHandler.setClearAuthentication(true);
-		jwtBlacklistRepository.save(new JwtBlacklist(token));
+		jwtBlacklistRepository.saveAndFlush(new JwtBlacklist(token));
 		
 		return new ResponseEntity<>("ok", HttpStatus.OK);
 	}
