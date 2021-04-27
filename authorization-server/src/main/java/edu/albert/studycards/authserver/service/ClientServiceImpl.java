@@ -28,8 +28,10 @@ public class ClientServiceImpl implements ClientService {
 //		TODO: add email validity check
 		
 		ClientPersistent savedClient = clientRepo.saveAndFlush(new ClientPersistentImpl(clientDto));
+		ClientDtoImpl clientInfo = new ClientDtoImpl(savedClient);
+		clientInfo.setPassword(null);
 		
-		return CompletableFuture.completedFuture(new ClientDtoImpl(savedClient));
+		return CompletableFuture.completedFuture(clientInfo);
 	}
 	
 	@Async("threadPoolTaskExecutor")
