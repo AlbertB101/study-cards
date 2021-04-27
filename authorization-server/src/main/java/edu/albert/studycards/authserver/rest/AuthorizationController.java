@@ -11,6 +11,7 @@ import edu.albert.studycards.authserver.domain.persistent.JwtBlacklist;
 import edu.albert.studycards.authserver.security.JwtTokenProvider;
 import edu.albert.studycards.authserver.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +21,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +39,9 @@ public class AuthorizationController {
 	
 	@Autowired
 	ClientService clientService;
+	@Qualifier("userDetailsServiceImpl")
+	@Autowired
+	UserDetailsService userDetailsService;
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	@Autowired
@@ -63,15 +69,17 @@ public class AuthorizationController {
 	public ResponseEntity<?> login(@RequestBody @Valid LoginDtoImpl loginDto) {
 		try {
 			var client = clientRepository.findByEmail(loginDto.getEmail())
-				           .orElseThrow(() -> new BadCredentialsException("This client doesn't exist"));
+				             .orElseThrow(() -> new BadCredentialsException("The client doesn't exist"));
 			
 			Authentication auth = new UsernamePasswordAuthenticationToken(
 				loginDto.getEmail(),
-				null /*loginDto.getPassword()*/,
+				loginDto.getPassword(),
 				client.getRole().getAuthorities());
 			authenticationManager.authenticate(auth);
 			
 			return ResponseEntity.ok(formResponseOnSuccess(loginDto, client));
+		} catch (BadCredentialsException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
 		} catch (AuthenticationException e) {
 			return new ResponseEntity<>("Invalid email/password combination", HttpStatus.FORBIDDEN);
 		}
