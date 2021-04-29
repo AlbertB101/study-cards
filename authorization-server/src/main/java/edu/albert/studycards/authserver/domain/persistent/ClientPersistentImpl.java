@@ -1,12 +1,10 @@
 package edu.albert.studycards.authserver.domain.persistent;
 
-import edu.albert.studycards.authserver.domain.interfaces.ClientDto;
-import edu.albert.studycards.authserver.domain.interfaces.ClientPersistent;
-import edu.albert.studycards.authserver.domain.interfaces.Role;
-import edu.albert.studycards.authserver.domain.interfaces.Status;
+import edu.albert.studycards.authserver.domain.interfaces.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -34,8 +32,9 @@ public class ClientPersistentImpl implements ClientPersistent {
 	@Size(max = 32)
 	private String lastName;
 	
-	@Column
+	@Column(name = "email")
 	@Size(max = 128)
+	@NaturalId
 	private String email;
 	
 	@NotNull
@@ -48,13 +47,13 @@ public class ClientPersistentImpl implements ClientPersistent {
 	@Column(name = "created_at")
 	private Date created;
 	
-	@Column(name = "role")
-	@Enumerated(value = EnumType.STRING)
-	private Role role;
-	
-	@Column(name = "status")
-	@Enumerated(value = EnumType.STRING)
-	private Status status;
+	@OneToOne(
+		mappedBy = "client",
+		cascade = CascadeType.ALL,
+		orphanRemoval = true,
+		targetEntity = AccountPersistentImpl.class
+	)
+	private AccountPersistent account;
 	
 	public ClientPersistentImpl(ClientDto clientDto) {
 		this.email = clientDto.getEmail();
@@ -62,7 +61,5 @@ public class ClientPersistentImpl implements ClientPersistent {
 		this.lastName = clientDto.getLastName();
 		this.password = clientDto.getPassword();
 		this.created = new Date();
-		this.role = Role.USER;
-		this.status = Status.ACTIVE;
 	}
 }

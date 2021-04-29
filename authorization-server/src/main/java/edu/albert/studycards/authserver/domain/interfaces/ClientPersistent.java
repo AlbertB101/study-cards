@@ -20,9 +20,6 @@ public interface ClientPersistent {
 	
 	Date getCreated();
 	
-	Role getRole();
-	void setRole(Role role);
-	
-	Status getStatus();
-	void setStatus(Status status);
+	void setAccount(AccountPersistent account);
+	AccountPersistent getAccount();
 }
