@@ -13,10 +13,4 @@ public interface ClientDto {
 	
 	String getPassword();
 	void setPassword(String password);
-	
-	Role getRole();
-	void setRole(Role role);
-	
-	Status getStatus();
-	void setStatus(Status status);
 }
