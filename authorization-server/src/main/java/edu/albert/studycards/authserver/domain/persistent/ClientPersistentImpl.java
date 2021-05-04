@@ -9,6 +9,7 @@ import org.hibernate.annotations.NaturalId;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity(name = "Client")
@@ -16,11 +17,21 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ClientPersistentImpl implements ClientPersistent {
+public class ClientPersistentImpl implements ClientPersistent, Serializable {
 	
 	@Id
+	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+//	@OneToOne(
+//		cascade = CascadeType.ALL,
+//		mappedBy = "client",
+//		fetch = FetchType.LAZY,
+//		optional = false
+//	)
+//	@JoinColumn(name = "account_id", referencedColumnName = "id")
+//	private AccountPersistentImpl account;
 	
 	@NotNull
 	@Column
@@ -32,9 +43,9 @@ public class ClientPersistentImpl implements ClientPersistent {
 	@Size(max = 32)
 	private String lastName;
 	
-	@Column(name = "email")
 	@Size(max = 128)
-	@NaturalId
+	@Column(name = "email")
+//	@NaturalId(mutable = true)
 	private String email;
 	
 	@NotNull
@@ -46,14 +57,6 @@ public class ClientPersistentImpl implements ClientPersistent {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_at")
 	private Date created;
-	
-	@OneToOne(
-		mappedBy = "client",
-		cascade = CascadeType.ALL,
-		orphanRemoval = true,
-		targetEntity = AccountPersistentImpl.class
-	)
-	private AccountPersistent account;
 	
 	public ClientPersistentImpl(ClientDto clientDto) {
 		this.email = clientDto.getEmail();
