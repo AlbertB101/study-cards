@@ -4,14 +4,9 @@ import edu.albert.studycards.authserver.exception.JwtAuthenticationException;
 import edu.albert.studycards.authserver.repository.JwtBlacklistRepository;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -22,9 +17,6 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 	
-	@Autowired
-	@Qualifier("userDetailsServiceImpl")
-	private UserDetailsService userDetailsService;
 	@Autowired
 	private JwtBlacklistRepository jwtBlacklistRepository;
 	
@@ -61,11 +53,6 @@ public class JwtTokenProvider {
 		} catch (JwtException | IllegalArgumentException e) {
 			throw new JwtAuthenticationException("JWT token is expired or invalid", HttpStatus.UNAUTHORIZED);
 		}
-	}
-	
-	public Authentication authenticate(String token) {
-		UserDetails userDetails = this.userDetailsService.loadUserByUsername(getUsername(token));
-		return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
 	}
 	
 	public String getUsername(String token) {
