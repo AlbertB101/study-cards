@@ -1,6 +1,8 @@
 package edu.albert.studycards.authserver.security.filter;
 
+import edu.albert.studycards.authserver.domain.interfaces.AccountPersistent;
 import edu.albert.studycards.authserver.domain.interfaces.ClientPersistent;
+import edu.albert.studycards.authserver.repository.AccountRepository;
 import edu.albert.studycards.authserver.repository.ClientRepository;
 import edu.albert.studycards.authserver.exception.JwtAuthenticationException;
 import edu.albert.studycards.authserver.security.JwtTokenProvider;
@@ -24,7 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
     @Autowired
-    private ClientRepository clientRepository;
+    private AccountRepository accountRepo;
     
     public JwtAuthenticationFilter() {
     }
@@ -40,13 +42,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             
             String username = jwtTokenProvider.getUsername(token);
-            ClientPersistent user = clientRepository.findByEmail(username)
+            AccountPersistent account = accountRepo.findByClient_Email(username)
                                          .orElseThrow(() -> new BadCredentialsException("Such user doesn't exist"));
             
             var authRequest = new UsernamePasswordAuthenticationToken(
                 username,
                 null,
-                user.getRole().getAuthorities());
+	            account.getRole().getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authRequest);
         } catch (AuthenticationException e) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
