@@ -36,8 +36,8 @@ public class ClientRepositoryTest {
 		clientDto.setFirstName("SomeName");
 		clientDto.setLastName("SomeLastName");
 		clientDto.setPassword("TestPassword");
-		clientDto.setRole(Role.USER);
-		clientDto.setStatus(Status.ACTIVE);
+//		clientDto.setRole(Role.USER);
+//		clientDto.setStatus(Status.ACTIVE);
 		
 		clientPersistent = new ClientPersistentImpl(clientDto);
 	}

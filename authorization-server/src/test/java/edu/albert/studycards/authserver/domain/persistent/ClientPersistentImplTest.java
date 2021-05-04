@@ -1,16 +1,19 @@
-package edu.albert.studycards.authserver.domain.dto;
+package edu.albert.studycards.authserver.domain.persistent;
 
+import edu.albert.studycards.authserver.domain.dto.ClientDtoImpl;
 import edu.albert.studycards.authserver.domain.interfaces.ClientDto;
 import edu.albert.studycards.authserver.domain.interfaces.ClientPersistent;
 import edu.albert.studycards.authserver.domain.interfaces.Role;
 import edu.albert.studycards.authserver.domain.interfaces.Status;
-import edu.albert.studycards.authserver.domain.persistent.ClientPersistentImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.Date;
 
-public class ClientDtoImplTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+public class ClientPersistentImplTest {
 	private static String testEmail = "TestEmail@mail.com";
 	private static String testFirstName = "SomeName";
 	private static String testLastName = "SomeLastName";
@@ -29,35 +32,14 @@ public class ClientDtoImplTest {
 //		testClientDto.setRole(testRole);
 //		testClientDto.setStatus(testStatus);
 		
-		ClientDto client = new ClientDtoImpl(testClientDto);
+		ClientPersistent client = new ClientPersistentImpl(testClientDto);
 		
 		assertEquals(testClientDto.getEmail(), client.getEmail());
 		assertEquals(testClientDto.getFirstName(), client.getFirstName());
 		assertEquals(testClientDto.getLastName(), client.getLastName());
 		assertEquals(testClientDto.getPassword(), client.getPassword());
+		assertNotNull(client.getCreated());
 //		assertEquals(testClientDto.getRole(), client.getRole());
 //		assertEquals(testClientDto.getStatus(), client.getStatus());
 	}
-	
-	@Test
-	@DisplayName("Should be constructed with ClientPersistent instance")
-	void shouldBeConstructedWithClientPersistentInstance() {
-		ClientPersistent testClientPersistent = new ClientPersistentImpl();
-		testClientPersistent.setEmail(testEmail);
-		testClientPersistent.setFirstName(testFirstName);
-		testClientPersistent.setLastName(testLastName);
-		testClientPersistent.setPassword(testPass);
-//		testClientPersistent.setRole(testRole);
-//		testClientPersistent.setStatus(testStatus);
-		
-		ClientDto client = new ClientDtoImpl(testClientPersistent);
-		
-		assertEquals(testClientPersistent.getEmail(), client.getEmail());
-		assertEquals(testClientPersistent.getFirstName(), client.getFirstName());
-		assertEquals(testClientPersistent.getLastName(), client.getLastName());
-		assertEquals(testClientPersistent.getPassword(), client.getPassword());
-//		assertEquals(testClientPersistent.getRole(), client.getRole());
-//		assertEquals(testClientPersistent.getStatus(), client.getStatus());
-	}
-	
 }

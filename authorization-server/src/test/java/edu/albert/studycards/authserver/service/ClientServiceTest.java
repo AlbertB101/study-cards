@@ -74,8 +74,8 @@ public class ClientServiceTest {
 			assertEquals(CLIENT.getEmail(), clientDto.getEmail());
 			assertEquals(CLIENT.getFirstName(), clientDto.getFirstName());
 			assertEquals(CLIENT.getLastName(), clientDto.getLastName());
-			assertEquals(Role.USER, clientDto.getRole());
-			assertEquals(Status.ACTIVE, clientDto.getStatus());
+//			assertEquals(Role.USER, clientDto.getRole());
+//			assertEquals(Status.ACTIVE, clientDto.getStatus());
 		});
 	}
 	
@@ -103,8 +103,8 @@ public class ClientServiceTest {
 				assertEquals(CLIENT.getEmail(), clientDto.getEmail());
 				assertEquals(CLIENT.getFirstName(), clientDto.getFirstName());
 				assertEquals(CLIENT.getLastName(), clientDto.getLastName());
-				assertEquals(Role.USER, clientDto.getRole());
-				assertEquals(Status.ACTIVE, clientDto.getStatus());
+//				assertEquals(Role.USER, clientDto.getRole());
+//				assertEquals(Status.ACTIVE, clientDto.getStatus());
 			});
 		}
 	}
@@ -188,8 +188,8 @@ public class ClientServiceTest {
 			assertEquals(CLIENT.getEmail(), clientDto.getEmail());
 			assertEquals(CLIENT.getFirstName(), clientDto.getFirstName());
 			assertEquals(CLIENT.getLastName(), clientDto.getLastName());
-			assertEquals(Role.USER, clientDto.getRole());
-			assertEquals(Status.ACTIVE, clientDto.getStatus());
+//			assertEquals(Role.USER, clientDto.getRole());
+//			assertEquals(Status.ACTIVE, clientDto.getStatus());
 		});
 	}
 	
@@ -214,8 +214,8 @@ public class ClientServiceTest {
 				assertEquals(CLIENT.getEmail(), clientDto.getEmail());
 				assertEquals(CLIENT.getFirstName(), clientDto.getFirstName());
 				assertEquals(CLIENT.getLastName(), clientDto.getLastName());
-				assertEquals(Role.USER, clientDto.getRole());
-				assertEquals(Status.ACTIVE, clientDto.getStatus());
+//				assertEquals(Role.USER, clientDto.getRole());
+//				assertEquals(Status.ACTIVE, clientDto.getStatus());
 			});
 		}
 	}
