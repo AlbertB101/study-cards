@@ -7,17 +7,16 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-
 import javax.transaction.Transactional;
 import java.util.Optional;
 
 public interface ClientRepository extends JpaRepository<ClientPersistentImpl, Long> {
+	@Transactional
+	Optional<ClientPersistent> findByEmail(@Param("email") String email);
 	
-	Optional<ClientPersistent> findByEmail(String email);
 	boolean existsByEmail(String email);
 	void deleteByEmail(String email);
 	
-	//	@Transactional
 	@Modifying(clearAutomatically = true)
 	@Query("update Client c set c.firstName = :firstName, c.lastName = :lastName where c.email = :email")
 	void updateClientByEmail(@Param("email") String email,
