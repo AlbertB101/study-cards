@@ -51,16 +51,10 @@ public class ClientPersistentImpl implements ClientPersistent, Serializable {
 	@Size(max = 64)
 	private String password;
 	
-	@NotNull
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "created_at")
-	private Date created;
-	
 	public ClientPersistentImpl(ClientDto clientDto) {
 		this.email = clientDto.getEmail();
 		this.firstName = clientDto.getFirstName();
 		this.lastName = clientDto.getLastName();
 		this.password = clientDto.getPassword();
-		this.created = new Date();
 	}
 }

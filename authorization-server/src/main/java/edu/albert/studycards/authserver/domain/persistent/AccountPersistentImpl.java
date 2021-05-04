@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.*;
+import java.util.Date;
 
 @Entity(name = "Account")
 @Table(name = "account")
@@ -41,10 +43,16 @@ public class AccountPersistentImpl implements AccountPersistent, Serializable {
 	@Column(name = "STATUS")
 	private Status status;
 	
+	@NotNull
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "created_at")
+	private Date created;
+	
 	public AccountPersistentImpl(ClientPersistentImpl client) {
 		this.client = client;
 		this.role = Role.USER;
 		this.status = Status.ACTIVE;
+		this.created = new Date();
 	}
 	
 	@Override
