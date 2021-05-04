@@ -1,7 +1,12 @@
 package edu.albert.studycards.authserver.domain.interfaces;
 
+import java.util.Date;
+
 public interface AccountPersistent {
 	Long getId();
+	
+	void setClient(ClientPersistent client);
+	ClientPersistent getClient();
 	
 	Role getRole();
 	void setRole(Role role);
@@ -9,6 +14,5 @@ public interface AccountPersistent {
 	Status getStatus();
 	void setStatus(Status status);
 	
-	void setClient(ClientPersistent client);
-	ClientPersistent getClient();
+	Date getCreated();
 }

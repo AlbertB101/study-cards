@@ -1,6 +1,7 @@
 package edu.albert.studycards.authserver.domain.persistent;
 
-import edu.albert.studycards.authserver.domain.interfaces.*;
+import edu.albert.studycards.authserver.domain.interfaces.ClientDto;
+import edu.albert.studycards.authserver.domain.interfaces.ClientPersistent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,7 +11,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
 
 @Entity(name = "Client")
 @Table(name = "client")
@@ -22,14 +22,6 @@ public class ClientPersistentImpl implements ClientPersistent, Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-//	@OneToOne(
-//		mappedBy = "client",
-//		cascade = CascadeType.ALL,
-//		orphanRemoval = true,
-//		fetch = FetchType.LAZY
-//	)
-//	private AccountPersistentImpl account;
 	
 	@NotNull
 	@Column
