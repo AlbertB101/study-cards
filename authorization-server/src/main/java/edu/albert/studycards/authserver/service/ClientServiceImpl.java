@@ -3,8 +3,10 @@ package edu.albert.studycards.authserver.service;
 import edu.albert.studycards.authserver.domain.dto.ClientDtoImpl;
 import edu.albert.studycards.authserver.domain.interfaces.ClientDto;
 import edu.albert.studycards.authserver.domain.interfaces.ClientPersistent;
+import edu.albert.studycards.authserver.domain.persistent.AccountPersistentImpl;
 import edu.albert.studycards.authserver.domain.persistent.ClientPersistentImpl;
 import edu.albert.studycards.authserver.exception.ClientAlreadyExistsException;
+import edu.albert.studycards.authserver.repository.AccountRepository;
 import edu.albert.studycards.authserver.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -20,6 +22,8 @@ public class ClientServiceImpl implements ClientService {
 	@Autowired
 	ClientRepository clientRepo;
 	@Autowired
+	AccountRepository accountRepo;
+	@Autowired
 	PasswordEncoder passwordEncoder;
 	
 	
@@ -28,15 +32,22 @@ public class ClientServiceImpl implements ClientService {
 	public CompletableFuture<ClientDto> registerClient(ClientDto clientDto) throws ClientAlreadyExistsException {
 		if (clientRepo.existsByEmail(clientDto.getEmail()))
 			throw new ClientAlreadyExistsException();
+
 //		TODO: add email validity check
+//		TODO: refactor creation new Client and Account entities
+//		TODO: receive from client already encoded password
 		
-		clientDto.setPassword(passwordEncoder.encode(clientDto.getPassword()));
-		ClientPersistent savedClient = clientRepo.saveAndFlush(new ClientPersistentImpl(clientDto));
 		
-		ClientDtoImpl clientInfo = new ClientDtoImpl(savedClient);
-		clientInfo.setPassword(null);
+		ClientPersistentImpl client = new ClientPersistentImpl(clientDto);
+		client.setPassword(passwordEncoder.encode(client.getPassword()));
 		
-		return CompletableFuture.completedFuture(clientInfo);
+		AccountPersistentImpl account = new AccountPersistentImpl(client);
+		
+		clientRepo.saveAndFlush(client);
+		accountRepo.saveAndFlush(account);
+		
+		clientDto.setPassword(null);
+		return CompletableFuture.completedFuture(clientDto);
 	}
 	
 	@Async("threadPoolTaskExecutor")
