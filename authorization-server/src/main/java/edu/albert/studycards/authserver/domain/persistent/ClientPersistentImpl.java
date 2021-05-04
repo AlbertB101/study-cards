@@ -20,17 +20,15 @@ import java.util.Date;
 public class ClientPersistentImpl implements ClientPersistent, Serializable {
 	
 	@Id
-	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 //	@OneToOne(
-//		cascade = CascadeType.ALL,
 //		mappedBy = "client",
-//		fetch = FetchType.LAZY,
-//		optional = false
+//		cascade = CascadeType.ALL,
+//		orphanRemoval = true,
+//		fetch = FetchType.LAZY
 //	)
-//	@JoinColumn(name = "account_id", referencedColumnName = "id")
 //	private AccountPersistentImpl account;
 	
 	@NotNull
@@ -44,8 +42,8 @@ public class ClientPersistentImpl implements ClientPersistent, Serializable {
 	private String lastName;
 	
 	@Size(max = 128)
-	@Column(name = "email")
-//	@NaturalId(mutable = true)
+	@Column(name = "EMAIL")
+	@NaturalId(mutable = true)
 	private String email;
 	
 	@NotNull
