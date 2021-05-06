@@ -25,59 +25,32 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("api/v1/auth")
 public class AuthorizationController {
 	
-	@Autowired
-	UserAccountService userAccountService;
 	@Qualifier("userDetailsServiceImpl")
 	@Autowired
 	UserDetailsService userDetailsService;
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	@Autowired
-	private UserAccountRepository userAccRepo;
-	@Autowired
 	private JwtBlacklistRepository jwtBlacklistRepository;
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 	
-	@PostMapping(value = "/signup")
-	public ResponseEntity<?> registerClient(@RequestBody @Valid UserAccountDtoImpl clientDto) {
-		try {
-			CompletableFuture<UserAccountDto> compFuture = userAccountService.registerClient(clientDto);
-			UserAccountDto registeredClient = compFuture.join();
-			return new ResponseEntity<>(
-				Map.of("ClientMetaInfo", registeredClient,
-					"ResponseMessage", "Client was successfully registered"),
-				HttpStatus.OK);
-		} catch (Throwable e) {
-			return new ResponseEntity<>("Client wasn't registered. " + e.getMessage(), HttpStatus.BAD_REQUEST);
-		}
-	}
-	
 	@PostMapping(value = "/login")
 	public ResponseEntity<?> login(@RequestBody @Valid LoginDtoImpl loginDto) {
 		try {
-			UserAccountPersistent client = userAccRepo.findByEmail(loginDto.getEmail())
-				                          .orElseThrow(() -> new BadCredentialsException("The client doesn't exist"));
-			
-			Authentication auth = new UsernamePasswordAuthenticationToken(
-				loginDto.getEmail(),
-				loginDto.getPassword(),
-				Role.USER.getAuthorities());
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			authenticationManager.authenticate(auth);
 			
 			return ResponseEntity.ok(formResponseOnSuccess(loginDto/*, client*/));
 		} catch (BadCredentialsException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
 		} catch (AuthenticationException e) {
-			e.printStackTrace();
-//			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-			return null;
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
 		}
 	}
 	
