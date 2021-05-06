@@ -1,7 +1,7 @@
 package edu.albert.studycards.authserver.security.filter;
 
-import edu.albert.studycards.authserver.domain.interfaces.AccountPersistent;
-import edu.albert.studycards.authserver.repository.AccountRepository;
+import edu.albert.studycards.authserver.domain.interfaces.UserAccountPersistent;
+import edu.albert.studycards.authserver.repository.UserAccountRepository;
 import edu.albert.studycards.authserver.exception.JwtAuthenticationException;
 import edu.albert.studycards.authserver.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
     @Autowired
-    private AccountRepository accountRepo;
+    private UserAccountRepository userAccRepo;
     
     public JwtAuthenticationFilter() {
     }
@@ -40,7 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             
             String username = jwtTokenProvider.getUsername(token);
-            AccountPersistent account = accountRepo.findByClient_Email(username)
+            UserAccountPersistent account = userAccRepo.findByEmail(username)
                                          .orElseThrow(() -> new BadCredentialsException("Such user doesn't exist"));
             
             var authRequest = new UsernamePasswordAuthenticationToken(

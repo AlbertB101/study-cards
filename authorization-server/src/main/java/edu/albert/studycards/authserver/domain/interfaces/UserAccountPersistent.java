@@ -1,7 +1,8 @@
 package edu.albert.studycards.authserver.domain.interfaces;
 
-public interface UserDto {
-	
+import java.util.Date;
+
+public interface UserAccountPersistent {
 	String getFirstName();
 	void setFirstName(String firstName);
 	
@@ -13,4 +14,16 @@ public interface UserDto {
 	
 	String getPassword();
 	void setPassword(String password);
+	
+	Long getId();
+//	void setId(Long id);
+	
+	Date getCreated();
+	
+	Role getRole();
+	void setRole(Role role);
+	
+	Status getStatus();
+	void setStatus(Status status);
+	
 }

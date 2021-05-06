@@ -1,9 +1,9 @@
 package edu.albert.studycards.authserver.repository;
 
-import edu.albert.studycards.authserver.domain.dto.UserDtoImpl;
-import edu.albert.studycards.authserver.domain.interfaces.UserDto;
-import edu.albert.studycards.authserver.domain.interfaces.UserPersistent;
-import edu.albert.studycards.authserver.domain.persistent.UserPersistentImpl;
+import edu.albert.studycards.authserver.domain.dto.UserAccountDtoImpl;
+import edu.albert.studycards.authserver.domain.interfaces.UserAccountDto;
+import edu.albert.studycards.authserver.domain.interfaces.UserAccountPersistent;
+import edu.albert.studycards.authserver.domain.persistent.UserAccountPersistentImpl;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -19,40 +19,40 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 public class ClientRepositoryTest {
-	private static UserDto userDto;
-	private static UserPersistentImpl clientPersistent;
+	private static UserAccountDto userAccountDto;
+	private static UserAccountPersistentImpl clientPersistent;
 	
 	@Autowired
-	ClientRepository clientRepo;
+	UserAccountRepository userAccRepo;
 	
 	@Test
 	@BeforeAll
 	@DisplayName("Should configure clients")
 	static void shouldConfigureClients() {
-		userDto = new UserDtoImpl();
-		userDto.setEmail("TestEmail@mail.com");
-		userDto.setFirstName("SomeName");
-		userDto.setLastName("SomeLastName");
-		userDto.setPassword("TestPassword");
+		userAccountDto = new UserAccountDtoImpl();
+		userAccountDto.setEmail("TestEmail@mail.com");
+		userAccountDto.setFirstName("SomeName");
+		userAccountDto.setLastName("SomeLastName");
+		userAccountDto.setPassword("TestPassword");
 //		clientDto.setRole(Role.USER);
 //		clientDto.setStatus(Status.ACTIVE);
 		
-		clientPersistent = new UserPersistentImpl(userDto);
+		clientPersistent = new UserAccountPersistentImpl(userAccountDto);
 	}
 	
 	@SneakyThrows
 	@Test
 	@DisplayName("When client is saved should be found by email")
 	void whenSavedShouldBeFoundByEmail() {
-		clientRepo.saveAndFlush(clientPersistent);
+		userAccRepo.saveAndFlush(clientPersistent);
 		
-		assertThat(clientRepo.findByEmail(userDto.getEmail())).isNotNull();
+		assertThat(userAccRepo.findByEmail(userAccountDto.getEmail())).isNotNull();
 	}
 	
 	@Test
 	@DisplayName("When client isn't saved should return Optional with NULL")
 	void whenClientIsNotSavedShouldReturnOptionalWithNull() {
-		Optional<UserPersistent> opt = clientRepo.findByEmail(clientPersistent.getEmail());
+		Optional<UserAccountPersistent> opt = userAccRepo.findByEmail(clientPersistent.getEmail());
 		assertFalse(opt.isPresent());
 		assertThrows(NoSuchElementException.class, () -> opt.get());
 	}
@@ -60,15 +60,15 @@ public class ClientRepositoryTest {
 	@Test
 	@DisplayName("When client exists should return true")
 	void whenClientExistsShouldReturnTrue() {
-		clientRepo.saveAndFlush(clientPersistent);
+		userAccRepo.saveAndFlush(clientPersistent);
 		
-		assertTrue(clientRepo.existsByEmail(clientPersistent.getEmail()));
+		assertTrue(userAccRepo.existsByEmail(clientPersistent.getEmail()));
 	}
 	
 	@Test
 	@DisplayName("When client doesn't exist should return false")
 	void whenClientDoesntExistShouldReturnFalse() {
-		assertFalse(clientRepo.existsByEmail(clientPersistent.getEmail()));
+		assertFalse(userAccRepo.existsByEmail(clientPersistent.getEmail()));
 	}
 	
 	@Test
@@ -76,16 +76,16 @@ public class ClientRepositoryTest {
 	void shouldUpdateClientFirstNameAndLastName() {
 		String newFirstName = "Alex";
 		String newLastName = "Johnson";
-		clientRepo.saveAndFlush(clientPersistent);
+		userAccRepo.saveAndFlush(clientPersistent);
 		
-		clientRepo.updateClientByEmail(
+		userAccRepo.updateUserAccByEmail(
 			clientPersistent.getEmail(),
 			newFirstName,
 			newLastName);
 		
-		UserPersistent updatedClient = clientRepo
+		UserAccountPersistent updatedClient = userAccRepo
 			                                 .findByEmail(ClientRepositoryTest.clientPersistent.getEmail())
-			                                 .orElse(new UserPersistentImpl());
+			                                 .orElse(new UserAccountPersistentImpl());
 		assertEquals(newFirstName, updatedClient.getFirstName());
 		assertEquals(newLastName, updatedClient.getLastName());
 	}

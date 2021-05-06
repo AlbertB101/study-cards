@@ -5,7 +5,7 @@ import edu.albert.studycards.authserver.domain.interfaces.*;
 import edu.albert.studycards.authserver.domain.persistent.JwtBlacklist;
 import edu.albert.studycards.authserver.repository.*;
 import edu.albert.studycards.authserver.security.JwtTokenProvider;
-import edu.albert.studycards.authserver.service.ClientService;
+import edu.albert.studycards.authserver.service.UserAccountService;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,24 +32,24 @@ import java.util.concurrent.CompletableFuture;
 public class AuthorizationController {
 	
 	@Autowired
-	ClientService clientService;
+	UserAccountService userAccountService;
 	@Qualifier("userDetailsServiceImpl")
 	@Autowired
 	UserDetailsService userDetailsService;
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	@Autowired
-	private ClientRepository clientRepo;
+	private UserAccountRepository userAccRepo;
 	@Autowired
 	private JwtBlacklistRepository jwtBlacklistRepository;
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 	
 	@PostMapping(value = "/signup")
-	public ResponseEntity<?> registerClient(@RequestBody @Valid UserDtoImpl clientDto) {
+	public ResponseEntity<?> registerClient(@RequestBody @Valid UserAccountDtoImpl clientDto) {
 		try {
-			CompletableFuture<UserDto> compFuture = clientService.registerClient(clientDto);
-			UserDto registeredClient = compFuture.join();
+			CompletableFuture<UserAccountDto> compFuture = userAccountService.registerClient(clientDto);
+			UserAccountDto registeredClient = compFuture.join();
 			return new ResponseEntity<>(
 				Map.of("ClientMetaInfo", registeredClient,
 					"ResponseMessage", "Client was successfully registered"),
@@ -62,7 +62,7 @@ public class AuthorizationController {
 	@PostMapping(value = "/login")
 	public ResponseEntity<?> login(@RequestBody @Valid LoginDtoImpl loginDto) {
 		try {
-			UserPersistent client = clientRepo.findByEmail(loginDto.getEmail())
+			UserAccountPersistent client = userAccRepo.findByEmail(loginDto.getEmail())
 				                          .orElseThrow(() -> new BadCredentialsException("The client doesn't exist"));
 			
 			Authentication auth = new UsernamePasswordAuthenticationToken(

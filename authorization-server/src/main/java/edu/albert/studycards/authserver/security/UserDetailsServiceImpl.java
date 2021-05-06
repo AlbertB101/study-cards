@@ -1,9 +1,7 @@
 package edu.albert.studycards.authserver.security;
 
-import edu.albert.studycards.authserver.domain.interfaces.AccountPersistent;
-import edu.albert.studycards.authserver.domain.interfaces.UserPersistent;
-import edu.albert.studycards.authserver.repository.AccountRepository;
-import edu.albert.studycards.authserver.repository.ClientRepository;
+import edu.albert.studycards.authserver.domain.interfaces.UserAccountPersistent;
+import edu.albert.studycards.authserver.repository.UserAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,18 +12,14 @@ import org.springframework.stereotype.Service;
 public class UserDetailsServiceImpl implements UserDetailsService {
 	
 	@Autowired
-	private ClientRepository clientRepo;
-	@Autowired
-	private AccountRepository accountRepo;
+	private UserAccountRepository userAccRepo;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		UserPersistent client = clientRepo.findByEmail(username)
-			                          .orElseThrow(() -> new UsernameNotFoundException("Client doesn't exists"));
-		AccountPersistent account = accountRepo.findByClient_Email(username)
-			                            .orElseThrow(() -> new UsernameNotFoundException("Account doesn't exists"));
+		UserAccountPersistent userAcc = userAccRepo.findByEmail(username)
+			                                .orElseThrow(() -> new UsernameNotFoundException("Account doesn't exists"));
 		
-		return SecurityAccount.fromUser(client, account);
+		return SecurityAccount.fromUser(userAcc);
 	}
 	
 	

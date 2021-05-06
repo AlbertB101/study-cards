@@ -1,7 +1,7 @@
 package edu.albert.studycards.authserver;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.albert.studycards.authserver.domain.dto.UserDtoImpl;
-import edu.albert.studycards.authserver.domain.interfaces.UserDto;
+import edu.albert.studycards.authserver.domain.dto.UserAccountDtoImpl;
+import edu.albert.studycards.authserver.domain.interfaces.UserAccountDto;
 import lombok.SneakyThrows;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
@@ -61,12 +61,12 @@ public class SourceProvider {
 //    }
 	
 	@SneakyThrows
-	public static List<UserDto> getAccountDto(int amount) {
+	public static List<UserAccountDto> getAccountDto(int amount) {
 		List<Resource> resources = loadNResources(JSON_DIR + ACCOUNT_DIR + DTO_DIR, CLIENT_FILE_NAME, amount);
-		List<UserDto> packs = new ArrayList<>();
+		List<UserAccountDto> packs = new ArrayList<>();
 		
 		for (Resource res : resources) {
-			UserDtoImpl accountDto = OBJECT_MAPPER.readValue(res.getFile(), UserDtoImpl.class);
+			UserAccountDtoImpl accountDto = OBJECT_MAPPER.readValue(res.getFile(), UserAccountDtoImpl.class);
 			packs.add(accountDto);
 		}
 		
@@ -74,12 +74,12 @@ public class SourceProvider {
 	}
 	
 	@SneakyThrows
-	public static List<UserDto> getRandomAccountDto(int amount) {
+	public static List<UserAccountDto> getRandomAccountDto(int amount) {
 		List<Resource> resources = loadNResources(JSON_DIR + ACCOUNT_DIR + DTO_DIR, CLIENT_FILE_NAME, amount);
-		List<UserDto> packs = new ArrayList<>();
+		List<UserAccountDto> packs = new ArrayList<>();
 		
 		for (Resource res : resources) {
-			UserDtoImpl accountDto = OBJECT_MAPPER.readValue(res.getFile(), UserDtoImpl.class);
+			UserAccountDtoImpl accountDto = OBJECT_MAPPER.readValue(res.getFile(), UserAccountDtoImpl.class);
 			accountDto.setEmail(accountDto.getEmail() + random.nextInt());
 			accountDto.setFirstName(accountDto.getFirstName() + random.nextInt());
 			accountDto.setLastName(accountDto.getLastName() + random.nextInt());
