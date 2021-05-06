@@ -3,7 +3,6 @@ package edu.albert.studycards.authserver.rest;
 import edu.albert.studycards.authserver.domain.dto.*;
 import edu.albert.studycards.authserver.domain.interfaces.*;
 import edu.albert.studycards.authserver.domain.persistent.JwtBlacklist;
-import edu.albert.studycards.authserver.repository.AccountRepository;
 import edu.albert.studycards.authserver.repository.*;
 import edu.albert.studycards.authserver.security.JwtTokenProvider;
 import edu.albert.studycards.authserver.service.ClientService;
@@ -47,10 +46,10 @@ public class AuthorizationController {
 	private JwtTokenProvider jwtTokenProvider;
 	
 	@PostMapping(value = "/signup")
-	public ResponseEntity<?> registerClient(@RequestBody @Valid ClientDtoImpl clientDto) {
+	public ResponseEntity<?> registerClient(@RequestBody @Valid UserDtoImpl clientDto) {
 		try {
-			CompletableFuture<ClientDto> compFuture = clientService.registerClient(clientDto);
-			ClientDto registeredClient = compFuture.join();
+			CompletableFuture<UserDto> compFuture = clientService.registerClient(clientDto);
+			UserDto registeredClient = compFuture.join();
 			return new ResponseEntity<>(
 				Map.of("ClientMetaInfo", registeredClient,
 					"ResponseMessage", "Client was successfully registered"),
@@ -63,7 +62,7 @@ public class AuthorizationController {
 	@PostMapping(value = "/login")
 	public ResponseEntity<?> login(@RequestBody @Valid LoginDtoImpl loginDto) {
 		try {
-			ClientPersistent client = clientRepo.findByEmail(loginDto.getEmail())
+			UserPersistent client = clientRepo.findByEmail(loginDto.getEmail())
 				                          .orElseThrow(() -> new BadCredentialsException("The client doesn't exist"));
 			
 			Authentication auth = new UsernamePasswordAuthenticationToken(

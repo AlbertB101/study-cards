@@ -5,8 +5,8 @@ import java.util.Date;
 public interface AccountPersistent {
 	Long getId();
 	
-	void setClient(ClientPersistent client);
-	ClientPersistent getClient();
+	void setClient(UserPersistent client);
+	UserPersistent getClient();
 	
 	Role getRole();
 	void setRole(Role role);

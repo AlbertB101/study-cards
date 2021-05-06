@@ -1,11 +1,9 @@
 package edu.albert.studycards.authserver.repository;
 
-import edu.albert.studycards.authserver.domain.dto.ClientDtoImpl;
-import edu.albert.studycards.authserver.domain.interfaces.ClientDto;
-import edu.albert.studycards.authserver.domain.interfaces.ClientPersistent;
-import edu.albert.studycards.authserver.domain.interfaces.Role;
-import edu.albert.studycards.authserver.domain.interfaces.Status;
-import edu.albert.studycards.authserver.domain.persistent.ClientPersistentImpl;
+import edu.albert.studycards.authserver.domain.dto.UserDtoImpl;
+import edu.albert.studycards.authserver.domain.interfaces.UserDto;
+import edu.albert.studycards.authserver.domain.interfaces.UserPersistent;
+import edu.albert.studycards.authserver.domain.persistent.UserPersistentImpl;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -21,8 +19,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 public class ClientRepositoryTest {
-	private static ClientDto clientDto;
-	private static ClientPersistentImpl clientPersistent;
+	private static UserDto userDto;
+	private static UserPersistentImpl clientPersistent;
 	
 	@Autowired
 	ClientRepository clientRepo;
@@ -31,15 +29,15 @@ public class ClientRepositoryTest {
 	@BeforeAll
 	@DisplayName("Should configure clients")
 	static void shouldConfigureClients() {
-		clientDto = new ClientDtoImpl();
-		clientDto.setEmail("TestEmail@mail.com");
-		clientDto.setFirstName("SomeName");
-		clientDto.setLastName("SomeLastName");
-		clientDto.setPassword("TestPassword");
+		userDto = new UserDtoImpl();
+		userDto.setEmail("TestEmail@mail.com");
+		userDto.setFirstName("SomeName");
+		userDto.setLastName("SomeLastName");
+		userDto.setPassword("TestPassword");
 //		clientDto.setRole(Role.USER);
 //		clientDto.setStatus(Status.ACTIVE);
 		
-		clientPersistent = new ClientPersistentImpl(clientDto);
+		clientPersistent = new UserPersistentImpl(userDto);
 	}
 	
 	@SneakyThrows
@@ -48,13 +46,13 @@ public class ClientRepositoryTest {
 	void whenSavedShouldBeFoundByEmail() {
 		clientRepo.saveAndFlush(clientPersistent);
 		
-		assertThat(clientRepo.findByEmail(clientDto.getEmail())).isNotNull();
+		assertThat(clientRepo.findByEmail(userDto.getEmail())).isNotNull();
 	}
 	
 	@Test
 	@DisplayName("When client isn't saved should return Optional with NULL")
 	void whenClientIsNotSavedShouldReturnOptionalWithNull() {
-		Optional<ClientPersistent> opt = clientRepo.findByEmail(clientPersistent.getEmail());
+		Optional<UserPersistent> opt = clientRepo.findByEmail(clientPersistent.getEmail());
 		assertFalse(opt.isPresent());
 		assertThrows(NoSuchElementException.class, () -> opt.get());
 	}
@@ -85,9 +83,9 @@ public class ClientRepositoryTest {
 			newFirstName,
 			newLastName);
 		
-		ClientPersistent updatedClient = clientRepo
+		UserPersistent updatedClient = clientRepo
 			                                 .findByEmail(ClientRepositoryTest.clientPersistent.getEmail())
-			                                 .orElse(new ClientPersistentImpl());
+			                                 .orElse(new UserPersistentImpl());
 		assertEquals(newFirstName, updatedClient.getFirstName());
 		assertEquals(newLastName, updatedClient.getLastName());
 	}

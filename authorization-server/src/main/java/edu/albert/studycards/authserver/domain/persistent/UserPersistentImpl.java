@@ -1,7 +1,7 @@
 package edu.albert.studycards.authserver.domain.persistent;
 
-import edu.albert.studycards.authserver.domain.interfaces.ClientDto;
-import edu.albert.studycards.authserver.domain.interfaces.ClientPersistent;
+import edu.albert.studycards.authserver.domain.interfaces.UserDto;
+import edu.albert.studycards.authserver.domain.interfaces.UserPersistent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,7 +17,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ClientPersistentImpl implements ClientPersistent, Serializable {
+public class UserPersistentImpl implements UserPersistent, Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,10 +43,10 @@ public class ClientPersistentImpl implements ClientPersistent, Serializable {
 	@Size(max = 64)
 	private String password;
 	
-	public ClientPersistentImpl(ClientDto clientDto) {
-		this.email = clientDto.getEmail();
-		this.firstName = clientDto.getFirstName();
-		this.lastName = clientDto.getLastName();
-		this.password = clientDto.getPassword();
+	public UserPersistentImpl(UserDto userDto) {
+		this.email = userDto.getEmail();
+		this.firstName = userDto.getFirstName();
+		this.lastName = userDto.getLastName();
+		this.password = userDto.getPassword();
 	}
 }

@@ -1,7 +1,7 @@
 package edu.albert.studycards.authserver.domain.dto;
 
-import edu.albert.studycards.authserver.domain.interfaces.ClientDto;
-import edu.albert.studycards.authserver.domain.interfaces.ClientPersistent;
+import edu.albert.studycards.authserver.domain.interfaces.UserDto;
+import edu.albert.studycards.authserver.domain.interfaces.UserPersistent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ClientDtoImpl implements ClientDto {
+public class UserDtoImpl implements UserDto {
 	
 	@NotEmpty
 	@Size(max = 64)
@@ -31,14 +31,14 @@ public class ClientDtoImpl implements ClientDto {
 	@NotEmpty
 	private String password;
 	
-	public ClientDtoImpl(ClientPersistent client) {
+	public UserDtoImpl(UserPersistent client) {
 		this.firstName = client.getFirstName();
 		this.lastName = client.getLastName();
 		this.email = client.getEmail();
 		this.password = client.getPassword();
 	}
 	
-	public ClientDtoImpl(ClientDto client) {
+	public UserDtoImpl(UserDto client) {
 		this.firstName = client.getFirstName();
 		this.lastName = client.getLastName();
 		this.email = client.getEmail();

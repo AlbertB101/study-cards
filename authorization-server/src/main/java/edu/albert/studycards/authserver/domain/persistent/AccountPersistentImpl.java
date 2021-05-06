@@ -1,7 +1,7 @@
 package edu.albert.studycards.authserver.domain.persistent;
 
 import edu.albert.studycards.authserver.domain.interfaces.AccountPersistent;
-import edu.albert.studycards.authserver.domain.interfaces.ClientPersistent;
+import edu.albert.studycards.authserver.domain.interfaces.UserPersistent;
 import edu.albert.studycards.authserver.domain.interfaces.Role;
 import edu.albert.studycards.authserver.domain.interfaces.Status;
 import lombok.Getter;
@@ -26,14 +26,14 @@ public class AccountPersistentImpl implements AccountPersistent, Serializable {
 	
 	@OneToOne(
 		fetch = FetchType.LAZY,
-		targetEntity = ClientPersistentImpl.class
+		targetEntity = UserPersistentImpl.class
 	)
 	@JoinColumn(
 		name = "CLIENT_EMAIL",
 		referencedColumnName = "EMAIL",
 		nullable = false
 	)
-	private ClientPersistent client;
+	private UserPersistent client;
 	
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "ROLE")
@@ -48,7 +48,7 @@ public class AccountPersistentImpl implements AccountPersistent, Serializable {
 	@Column(name = "created_at")
 	private Date created;
 	
-	public AccountPersistentImpl(ClientPersistentImpl client) {
+	public AccountPersistentImpl(UserPersistentImpl client) {
 		this.client = client;
 		this.role = Role.USER;
 		this.status = Status.ACTIVE;

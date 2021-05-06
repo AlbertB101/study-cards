@@ -1,18 +1,11 @@
 package edu.albert.studycards.authserver;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.albert.studycards.authserver.domain.dto.ClientDtoImpl;
-import edu.albert.studycards.authserver.domain.interfaces.ClientDto;
-import edu.albert.studycards.authserver.domain.interfaces.ClientPersistent;
-import edu.albert.studycards.authserver.domain.persistent.ClientPersistentImpl;
+import edu.albert.studycards.authserver.domain.dto.UserDtoImpl;
+import edu.albert.studycards.authserver.domain.interfaces.UserDto;
 import lombok.SneakyThrows;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
-import org.springframework.util.ResourceUtils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -68,12 +61,12 @@ public class SourceProvider {
 //    }
 	
 	@SneakyThrows
-	public static List<ClientDto> getAccountDto(int amount) {
+	public static List<UserDto> getAccountDto(int amount) {
 		List<Resource> resources = loadNResources(JSON_DIR + ACCOUNT_DIR + DTO_DIR, CLIENT_FILE_NAME, amount);
-		List<ClientDto> packs = new ArrayList<>();
+		List<UserDto> packs = new ArrayList<>();
 		
 		for (Resource res : resources) {
-			ClientDtoImpl accountDto = OBJECT_MAPPER.readValue(res.getFile(), ClientDtoImpl.class);
+			UserDtoImpl accountDto = OBJECT_MAPPER.readValue(res.getFile(), UserDtoImpl.class);
 			packs.add(accountDto);
 		}
 		
@@ -81,12 +74,12 @@ public class SourceProvider {
 	}
 	
 	@SneakyThrows
-	public static List<ClientDto> getRandomAccountDto(int amount) {
+	public static List<UserDto> getRandomAccountDto(int amount) {
 		List<Resource> resources = loadNResources(JSON_DIR + ACCOUNT_DIR + DTO_DIR, CLIENT_FILE_NAME, amount);
-		List<ClientDto> packs = new ArrayList<>();
+		List<UserDto> packs = new ArrayList<>();
 		
 		for (Resource res : resources) {
-			ClientDtoImpl accountDto = OBJECT_MAPPER.readValue(res.getFile(), ClientDtoImpl.class);
+			UserDtoImpl accountDto = OBJECT_MAPPER.readValue(res.getFile(), UserDtoImpl.class);
 			accountDto.setEmail(accountDto.getEmail() + random.nextInt());
 			accountDto.setFirstName(accountDto.getFirstName() + random.nextInt());
 			accountDto.setLastName(accountDto.getLastName() + random.nextInt());

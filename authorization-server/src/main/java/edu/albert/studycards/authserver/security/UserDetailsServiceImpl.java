@@ -1,7 +1,7 @@
 package edu.albert.studycards.authserver.security;
 
 import edu.albert.studycards.authserver.domain.interfaces.AccountPersistent;
-import edu.albert.studycards.authserver.domain.interfaces.ClientPersistent;
+import edu.albert.studycards.authserver.domain.interfaces.UserPersistent;
 import edu.albert.studycards.authserver.repository.AccountRepository;
 import edu.albert.studycards.authserver.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		ClientPersistent client = clientRepo.findByEmail(username)
+		UserPersistent client = clientRepo.findByEmail(username)
 			                          .orElseThrow(() -> new UsernameNotFoundException("Client doesn't exists"));
 		AccountPersistent account = accountRepo.findByClient_Email(username)
 			                            .orElseThrow(() -> new UsernameNotFoundException("Account doesn't exists"));

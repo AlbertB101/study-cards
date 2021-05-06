@@ -1,10 +1,10 @@
 package edu.albert.studycards.authserver.service;
 
-import edu.albert.studycards.authserver.domain.dto.ClientDtoImpl;
-import edu.albert.studycards.authserver.domain.interfaces.ClientDto;
-import edu.albert.studycards.authserver.domain.interfaces.ClientPersistent;
+import edu.albert.studycards.authserver.domain.dto.UserDtoImpl;
+import edu.albert.studycards.authserver.domain.interfaces.UserDto;
+import edu.albert.studycards.authserver.domain.interfaces.UserPersistent;
 import edu.albert.studycards.authserver.domain.persistent.AccountPersistentImpl;
-import edu.albert.studycards.authserver.domain.persistent.ClientPersistentImpl;
+import edu.albert.studycards.authserver.domain.persistent.UserPersistentImpl;
 import edu.albert.studycards.authserver.exception.ClientAlreadyExistsException;
 import edu.albert.studycards.authserver.repository.AccountRepository;
 import edu.albert.studycards.authserver.repository.ClientRepository;
@@ -29,8 +29,8 @@ public class ClientServiceImpl implements ClientService {
 	
 	@Async("threadPoolTaskExecutor")
 	@Override
-	public CompletableFuture<ClientDto> registerClient(ClientDto clientDto) throws ClientAlreadyExistsException {
-		if (clientRepo.existsByEmail(clientDto.getEmail()))
+	public CompletableFuture<UserDto> registerClient(UserDto userDto) throws ClientAlreadyExistsException {
+		if (clientRepo.existsByEmail(userDto.getEmail()))
 			throw new ClientAlreadyExistsException();
 
 //		TODO: add email validity check
@@ -38,7 +38,7 @@ public class ClientServiceImpl implements ClientService {
 //		TODO: receive from client already encoded password
 		
 		
-		ClientPersistentImpl client = new ClientPersistentImpl(clientDto);
+		UserPersistentImpl client = new UserPersistentImpl(userDto);
 		client.setPassword(passwordEncoder.encode(client.getPassword()));
 		
 		AccountPersistentImpl account = new AccountPersistentImpl(client);
@@ -46,44 +46,44 @@ public class ClientServiceImpl implements ClientService {
 		clientRepo.saveAndFlush(client);
 		accountRepo.saveAndFlush(account);
 		
-		clientDto.setPassword(null);
-		return CompletableFuture.completedFuture(clientDto);
+		userDto.setPassword(null);
+		return CompletableFuture.completedFuture(userDto);
 	}
 	
 	@Async("threadPoolTaskExecutor")
 	@Override
-	public CompletableFuture<ClientDto> receiveClient(String email) throws NoSuchElementException {
-		ClientPersistent clientPers = clientRepo
+	public CompletableFuture<UserDto> receiveClient(String email) throws NoSuchElementException {
+		UserPersistent clientPers = clientRepo
 			                              .findByEmail(email)
 			                              .orElseThrow(NoSuchElementException::new);
-		return CompletableFuture.completedFuture(new ClientDtoImpl(clientPers));
+		return CompletableFuture.completedFuture(new UserDtoImpl(clientPers));
 	}
 	
 	@Async("threadPoolTaskExecutor")
 	@Override
-	public CompletableFuture<ClientDto> receiveClient(Long id) throws NoSuchElementException {
-		ClientPersistent clientPers = clientRepo
+	public CompletableFuture<UserDto> receiveClient(Long id) throws NoSuchElementException {
+		UserPersistent clientPers = clientRepo
 			                              .findById(id)
 			                              .orElseThrow(NoSuchElementException::new);
-		return CompletableFuture.completedFuture(new ClientDtoImpl(clientPers));
+		return CompletableFuture.completedFuture(new UserDtoImpl(clientPers));
 	}
 	
 	@Async("threadPoolTaskExecutor")
 	@Override
-	public CompletableFuture<ClientDto> updateClient(ClientDto clientDto) throws NoSuchElementException {
-		if (!clientRepo.existsByEmail(clientDto.getEmail()))
+	public CompletableFuture<UserDto> updateClient(UserDto userDto) throws NoSuchElementException {
+		if (!clientRepo.existsByEmail(userDto.getEmail()))
 			throw new NoSuchElementException();
 		
 		clientRepo.updateClientByEmail(
-			clientDto.getEmail(),
-			clientDto.getFirstName(),
-			clientDto.getLastName());
+			userDto.getEmail(),
+			userDto.getFirstName(),
+			userDto.getLastName());
 		
-		ClientPersistent clientPers = clientRepo
-			                              .findByEmail(clientDto.getEmail())
+		UserPersistent clientPers = clientRepo
+			                              .findByEmail(userDto.getEmail())
 			                              .orElseThrow(() -> new RuntimeException("Client wasn't found after updating"));
 		
-		return CompletableFuture.completedFuture(new ClientDtoImpl(clientPers));
+		return CompletableFuture.completedFuture(new UserDtoImpl(clientPers));
 	}
 	
 	@Async("threadPoolTaskExecutor")

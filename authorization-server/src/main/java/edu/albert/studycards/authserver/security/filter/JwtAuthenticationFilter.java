@@ -1,9 +1,7 @@
 package edu.albert.studycards.authserver.security.filter;
 
 import edu.albert.studycards.authserver.domain.interfaces.AccountPersistent;
-import edu.albert.studycards.authserver.domain.interfaces.ClientPersistent;
 import edu.albert.studycards.authserver.repository.AccountRepository;
-import edu.albert.studycards.authserver.repository.ClientRepository;
 import edu.albert.studycards.authserver.exception.JwtAuthenticationException;
 import edu.albert.studycards.authserver.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;

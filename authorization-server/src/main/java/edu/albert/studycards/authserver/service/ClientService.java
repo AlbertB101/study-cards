@@ -1,6 +1,6 @@
 package edu.albert.studycards.authserver.service;
 
-import edu.albert.studycards.authserver.domain.interfaces.ClientDto;
+import edu.albert.studycards.authserver.domain.interfaces.UserDto;
 import edu.albert.studycards.authserver.exception.ClientAlreadyExistsException;
 
 import java.util.NoSuchElementException;
@@ -8,14 +8,14 @@ import java.util.concurrent.CompletableFuture;
 
 public interface ClientService {
 	
-	CompletableFuture<ClientDto> registerClient(ClientDto clientDto) throws ClientAlreadyExistsException;
+	CompletableFuture<UserDto> registerClient(UserDto userDto) throws ClientAlreadyExistsException;
 	
-	CompletableFuture<ClientDto> receiveClient(String email) throws NoSuchElementException;
+	CompletableFuture<UserDto> receiveClient(String email) throws NoSuchElementException;
 	
-	CompletableFuture<ClientDto> receiveClient(Long id) throws NoSuchElementException;
+	CompletableFuture<UserDto> receiveClient(Long id) throws NoSuchElementException;
 	
 	
-	CompletableFuture<ClientDto> updateClient(ClientDto clientDto) throws NoSuchElementException;
+	CompletableFuture<UserDto> updateClient(UserDto userDto) throws NoSuchElementException;
 	
 	CompletableFuture<Void> deleteClient(String email) throws NoSuchElementException;
 	
