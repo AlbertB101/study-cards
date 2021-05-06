@@ -67,7 +67,7 @@ public class UserAccountServiceTest {
 			.thenReturn(new UserAccountPersistentImpl(CLIENT));
 		
 		assertDoesNotThrow(() -> {
-			UserAccountDto userAccountDto = clientService.registerClient(CLIENT).get();
+			UserAccountDto userAccountDto = clientService.register(CLIENT).get();
 			assertEquals(CLIENT.getEmail(), userAccountDto.getEmail());
 			assertEquals(CLIENT.getFirstName(), userAccountDto.getFirstName());
 			assertEquals(CLIENT.getLastName(), userAccountDto.getLastName());
@@ -88,7 +88,7 @@ public class UserAccountServiceTest {
 		
 		for (UserAccountDto userAccountDto : CLIENTS) {
 			Future<CompletableFuture<UserAccountDto>> future =
-				executor.submit(() -> clientService.registerClient(userAccountDto));
+				executor.submit(() -> clientService.register(userAccountDto));
 			execFutures.add(future);
 		}
 		
@@ -112,7 +112,7 @@ public class UserAccountServiceTest {
 		when(userAccRepo.existsByEmail(any()))
 			.thenReturn(true);
 		
-		assertThrows(ClientAlreadyExistsException.class, () -> clientService.registerClient(CLIENT));
+		assertThrows(ClientAlreadyExistsException.class, () -> clientService.register(CLIENT));
 	}
 	
 	@Test
@@ -128,7 +128,7 @@ public class UserAccountServiceTest {
 		
 		for (UserAccountDto userAccountDto : CLIENTS) {
 			execFutures.add(executor.submit(
-				() -> clientService.registerClient(userAccountDto)));
+				() -> clientService.register(userAccountDto)));
 		}
 		
 		for (Future<?> future : execFutures) {
@@ -147,7 +147,7 @@ public class UserAccountServiceTest {
 	void shouldThrowClientAlreadyExistsExceptionWhenTryToGetClient() {
 		assertThrows(
 			NoSuchElementException.class,
-			() -> clientService.receiveClient(CLIENT.getEmail()));
+			() -> clientService.receive(CLIENT.getEmail()));
 	}
 	
 	@Test
@@ -157,7 +157,7 @@ public class UserAccountServiceTest {
 		
 		for (UserAccountDto userAccountDto : CLIENTS) {
 			Future<CompletableFuture<?>> futureTask =
-				executor.submit(() -> clientService.receiveClient(userAccountDto.getEmail()));
+				executor.submit(() -> clientService.receive(userAccountDto.getEmail()));
 			execFutures.add(futureTask);
 		}
 		
@@ -180,7 +180,7 @@ public class UserAccountServiceTest {
 			.thenReturn(Optional.of(new UserAccountPersistentImpl(CLIENT)));
 		
 		assertDoesNotThrow(() -> {
-			CompletableFuture<UserAccountDto> compFuture = clientService.receiveClient(CLIENT.getEmail());
+			CompletableFuture<UserAccountDto> compFuture = clientService.receive(CLIENT.getEmail());
 			UserAccountDto userAccountDto = compFuture.get();
 			assertEquals(CLIENT.getEmail(), userAccountDto.getEmail());
 			assertEquals(CLIENT.getFirstName(), userAccountDto.getFirstName());
@@ -200,7 +200,7 @@ public class UserAccountServiceTest {
 		
 		for (UserAccountDto userAccountDto : CLIENTS) {
 			Future<CompletableFuture<UserAccountDto>> futureTask =
-				executor.submit(() -> clientService.receiveClient(userAccountDto.getEmail()));
+				executor.submit(() -> clientService.receive(userAccountDto.getEmail()));
 			execFutures.add(futureTask);
 		}
 		
@@ -223,7 +223,7 @@ public class UserAccountServiceTest {
 		when(userAccRepo.existsByEmail(CLIENT.getEmail()))
 			.thenReturn(true);
 		
-		assertDoesNotThrow(() -> clientService.deleteClient(CLIENT.getEmail()));
+		assertDoesNotThrow(() -> clientService.delete(CLIENT.getEmail()));
 	}
 	
 	@Test
@@ -236,7 +236,7 @@ public class UserAccountServiceTest {
 		
 		for (UserAccountDto userAccountDto : CLIENTS) {
 			Future<CompletableFuture<?>> f =
-				executor.submit(() -> clientService.deleteClient(userAccountDto.getEmail()));
+				executor.submit(() -> clientService.delete(userAccountDto.getEmail()));
 			execFutures.add(f);
 		}
 		
@@ -253,7 +253,7 @@ public class UserAccountServiceTest {
 		
 		assertThrows(
 			NoSuchElementException.class,
-			() -> clientService.deleteClient(CLIENT.getEmail()));
+			() -> clientService.delete(CLIENT.getEmail()));
 	}
 	
 	@Test
@@ -266,7 +266,7 @@ public class UserAccountServiceTest {
 		
 		for (UserAccountDto userAccountDto : CLIENTS) {
 			Future<CompletableFuture<?>> f =
-				executor.submit(() -> clientService.deleteClient(userAccountDto.getEmail()));
+				executor.submit(() -> clientService.delete(userAccountDto.getEmail()));
 			execFutures.add(f);
 		}
 		

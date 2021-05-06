@@ -8,16 +8,16 @@ import java.util.concurrent.CompletableFuture;
 
 public interface UserAccountService {
 	
-	CompletableFuture<UserAccountDto> registerClient(UserAccountDto userAccountDto) throws ClientAlreadyExistsException;
+	CompletableFuture<UserAccountDto> register(UserAccountDto userAccountDto) throws ClientAlreadyExistsException;
 	
-	CompletableFuture<UserAccountDto> receiveClient(String email) throws NoSuchElementException;
+	CompletableFuture<UserAccountDto> receive(String email) throws NoSuchElementException;
 	
-	CompletableFuture<UserAccountDto> receiveClient(Long id) throws NoSuchElementException;
+	CompletableFuture<UserAccountDto> receive(Long id) throws NoSuchElementException;
 	
 	
-	CompletableFuture<UserAccountDto> updateClient(UserAccountDto userAccountDto) throws NoSuchElementException;
+	CompletableFuture<UserAccountDto> update(UserAccountDto userAccountDto) throws NoSuchElementException;
 	
-	CompletableFuture<Void> deleteClient(String email) throws NoSuchElementException;
+	CompletableFuture<Void> delete(String email) throws NoSuchElementException;
 	
-	CompletableFuture<Void> deleteClient(Long id) throws NoSuchElementException;
+	CompletableFuture<Void> delete(Long id) throws NoSuchElementException;
 }

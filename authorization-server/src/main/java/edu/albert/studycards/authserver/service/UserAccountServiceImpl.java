@@ -25,14 +25,12 @@ public class UserAccountServiceImpl implements UserAccountService {
 	
 	@Async("threadPoolTaskExecutor")
 	@Override
-	public CompletableFuture<UserAccountDto> registerClient(UserAccountDto userAccDto) throws ClientAlreadyExistsException {
+	public CompletableFuture<UserAccountDto> register(UserAccountDto userAccDto) throws ClientAlreadyExistsException {
 		if (userAccRepo.existsByEmail(userAccDto.getEmail()))
 			throw new ClientAlreadyExistsException();
 
 //		TODO: add email validity check
-//		TODO: refactor creation new Client and Account entities
 //		TODO: receive from client already encoded password
-		
 		
 		UserAccountPersistentImpl userAcc = new UserAccountPersistentImpl(userAccDto);
 		userAcc.setPassword(passwordEncoder.encode(userAcc.getPassword()));
@@ -44,7 +42,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 	
 	@Async("threadPoolTaskExecutor")
 	@Override
-	public CompletableFuture<UserAccountDto> receiveClient(String email) throws NoSuchElementException {
+	public CompletableFuture<UserAccountDto> receive(String email) throws NoSuchElementException {
 		UserAccountPersistent clientPers = userAccRepo
 			                              .findByEmail(email)
 			                              .orElseThrow(NoSuchElementException::new);
@@ -53,7 +51,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 	
 	@Async("threadPoolTaskExecutor")
 	@Override
-	public CompletableFuture<UserAccountDto> receiveClient(Long id) throws NoSuchElementException {
+	public CompletableFuture<UserAccountDto> receive(Long id) throws NoSuchElementException {
 		UserAccountPersistent clientPers = userAccRepo
 			                              .findById(id)
 			                              .orElseThrow(NoSuchElementException::new);
@@ -62,7 +60,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 	
 	@Async("threadPoolTaskExecutor")
 	@Override
-	public CompletableFuture<UserAccountDto> updateClient(UserAccountDto userAccountDto) throws NoSuchElementException {
+	public CompletableFuture<UserAccountDto> update(UserAccountDto userAccountDto) throws NoSuchElementException {
 		if (!userAccRepo.existsByEmail(userAccountDto.getEmail()))
 			throw new NoSuchElementException();
 		
@@ -80,7 +78,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 	
 	@Async("threadPoolTaskExecutor")
 	@Override
-	public CompletableFuture<Void> deleteClient(String email) throws NoSuchElementException {
+	public CompletableFuture<Void> delete(String email) throws NoSuchElementException {
 		if (!userAccRepo.existsByEmail(email))
 			throw new NoSuchElementException();
 		
@@ -91,7 +89,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 	
 	@Async("threadPoolTaskExecutor")
 	@Override
-	public CompletableFuture<Void> deleteClient(Long id) throws NoSuchElementException {
+	public CompletableFuture<Void> delete(Long id) throws NoSuchElementException {
 		if (!userAccRepo.existsById(id))
 			throw new NoSuchElementException();
 		

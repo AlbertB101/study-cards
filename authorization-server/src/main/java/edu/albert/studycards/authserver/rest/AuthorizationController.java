@@ -1,24 +1,27 @@
 package edu.albert.studycards.authserver.rest;
 
-import edu.albert.studycards.authserver.domain.dto.*;
-import edu.albert.studycards.authserver.domain.interfaces.*;
+import edu.albert.studycards.authserver.domain.dto.LoginDtoImpl;
+import edu.albert.studycards.authserver.domain.interfaces.LoginDto;
+import edu.albert.studycards.authserver.domain.interfaces.Role;
 import edu.albert.studycards.authserver.domain.persistent.JwtBlacklist;
-import edu.albert.studycards.authserver.repository.*;
+import edu.albert.studycards.authserver.repository.JwtBlacklistRepository;
 import edu.albert.studycards.authserver.security.JwtTokenProvider;
-import edu.albert.studycards.authserver.service.UserAccountService;
-import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -54,7 +57,7 @@ public class AuthorizationController {
 		}
 	}
 	
-	private Map<Object, Object> formResponseOnSuccess(LoginDto loginDto/*, ClientPersistent user*/) {
+	private Map<Object, Object> formResponseOnSuccess(LoginDto loginDto) {
 		String token = jwtTokenProvider.createToken(
 			loginDto.getEmail(),
 			Role.USER.name()/*user.getRole().name()*/);
