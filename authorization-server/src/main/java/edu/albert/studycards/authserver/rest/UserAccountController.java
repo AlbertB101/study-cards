@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
-@RequestMapping("api/v1/auth")
+@RequestMapping("api/v1/account")
 public class UserAccountController {
 	
 	@Autowired
