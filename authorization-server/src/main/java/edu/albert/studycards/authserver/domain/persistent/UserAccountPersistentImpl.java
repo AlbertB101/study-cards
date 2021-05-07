@@ -54,6 +54,9 @@ public class UserAccountPersistentImpl implements UserAccountPersistent, Seriali
 	@Enumerated(value = EnumType.STRING)
 	private Status status;
 	
+	@Column(name = "jwt_token")
+	private String token;
+	
 	public UserAccountPersistentImpl(UserAccountDto userAcc) {
 		this.email = userAcc.getEmail();
 		this.firstName = userAcc.getFirstName();

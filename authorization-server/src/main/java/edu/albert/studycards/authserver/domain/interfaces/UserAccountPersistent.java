@@ -26,4 +26,7 @@ public interface UserAccountPersistent {
 	Status getStatus();
 	void setStatus(Status status);
 	
+	String getToken();
+	void setToken(String token);
+	
 }
