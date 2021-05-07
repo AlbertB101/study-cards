@@ -2,8 +2,8 @@ package edu.albert.studycards.authserver.rest;
 
 import edu.albert.studycards.authserver.domain.dto.UserAccountDtoImpl;
 import edu.albert.studycards.authserver.domain.interfaces.UserAccountDto;
+import edu.albert.studycards.authserver.exception.ClientAlreadyExistsException;
 import edu.albert.studycards.authserver.service.UserAccountService;
-import javassist.bytecode.stackmap.TypeData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +18,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("api/v1/account")
 public class UserAccountController {
 	
-	final Logger logger = LoggerFactory.getLogger(UserAccountController.class);
+	private final static Logger LOGGER = LoggerFactory.getLogger(UserAccountController.class);
 	
 	@Autowired
 	UserAccountService userAccService;
@@ -38,9 +37,19 @@ public class UserAccountController {
 				Map.of("UserAccInfo", newUserAcc,
 					"ResponseMessage", "Client was successfully registered"),
 				HttpStatus.OK);
-		} catch (Throwable e) {
-			logger.error("Exception while future completion. " + e.getMessage());
-			return new ResponseEntity<>("new user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+			
+		} catch (CancellationException e) {
+			LOGGER.debug("Future completion was unexpectedly cancelled; " + e.getMessage());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (ExecutionException e) {
+			LOGGER.debug("Future was completed exceptionally; " + e.getCause());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (InterruptedException e) {
+			LOGGER.debug("Future was interrupted; " + e.getMessage());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (ClientAlreadyExistsException e) {
+			LOGGER.info("New User account wasn't created because it already exists");
+			return new ResponseEntity<>("Such User account already exists", HttpStatus.OK);
 		}
 	}
 	
@@ -52,8 +61,16 @@ public class UserAccountController {
 			String username = auth.getName();
 			UserAccountDto userAccInfo = userAccService.receive(username).get();
 			return new ResponseEntity<>(userAccInfo, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+			
+		} catch (CancellationException e) {
+			LOGGER.debug("Future completion was unexpectedly cancelled; " + e.getMessage());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (ExecutionException e) {
+			LOGGER.debug("Future was completed exceptionally; " + e.getCause());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (InterruptedException e) {
+			LOGGER.debug("Future was interrupted; " + e.getMessage());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -61,13 +78,19 @@ public class UserAccountController {
 	@PreAuthorize("hasAuthority('developer:read')")
 	public ResponseEntity<?> getAccount(@PathVariable Long id) {
 		try {
-			UserAccountDto accInf = userAccService.receive(id).get();
-			return new ResponseEntity<>(accInf, HttpStatus.OK);
-		} catch (Exception e) {
-			logger.error("Exception while future completion/n" + e.getMessage());
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+			UserAccountDto userAccInfo = userAccService.receive(id).get();
+			return new ResponseEntity<>(userAccInfo, HttpStatus.OK);
+			
+		} catch (CancellationException e) {
+			LOGGER.debug("Future completion was unexpectedly cancelled; " + e.getMessage());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (ExecutionException e) {
+			LOGGER.debug("Future was completed exceptionally; " + e.getCause());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (InterruptedException e) {
+			LOGGER.debug("Future was interrupted; " + e.getMessage());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
 	}
 	
 	@PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -76,8 +99,16 @@ public class UserAccountController {
 		try {
 			userAccService.update(userAccDto).get();
 			return new ResponseEntity<>(HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+			
+		} catch (CancellationException e) {
+			LOGGER.debug("Future completion was unexpectedly cancelled; " + e.getMessage());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (ExecutionException e) {
+			LOGGER.debug("Future was completed exceptionally; " + e.getCause());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (InterruptedException e) {
+			LOGGER.debug("Future was interrupted; " + e.getMessage());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -87,10 +118,18 @@ public class UserAccountController {
 		try {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			String username = authentication.getName();
-			userAccService.delete(username);
+			userAccService.delete(username).get();
 			return new ResponseEntity<>(HttpStatus.OK);
-		} catch (RuntimeException e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+			
+		} catch (CancellationException e) {
+			LOGGER.debug("Future completion was unexpectedly cancelled; " + e.getMessage());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (ExecutionException e) {
+			LOGGER.debug("Future was completed exceptionally; " + e.getCause());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (InterruptedException e) {
+			LOGGER.debug("Future was interrupted; " + e.getMessage());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -98,10 +137,18 @@ public class UserAccountController {
 	@PreAuthorize("hasAuthority('developer:delete')")
 	public ResponseEntity<?> deleteAccount(@PathVariable Long id) {
 		try {
-			userAccService.delete(id);
+			userAccService.delete(id).get();
 			return new ResponseEntity<>(HttpStatus.OK);
-		} catch (RuntimeException e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+			
+		} catch (CancellationException e) {
+			LOGGER.debug("Future completion was unexpectedly cancelled; " + e.getMessage());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (ExecutionException e) {
+			LOGGER.debug("Future was completed exceptionally; " + e.getCause());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (InterruptedException e) {
+			LOGGER.debug("Future was interrupted; " + e.getMessage());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 }
