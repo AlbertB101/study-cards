@@ -1,13 +1,11 @@
 package edu.albert.studycards.authserver.security.filter;
 
-import edu.albert.studycards.authserver.domain.interfaces.UserAccountPersistent;
-import edu.albert.studycards.authserver.repository.UserAccountRepository;
 import edu.albert.studycards.authserver.exception.JwtAuthenticationException;
 import edu.albert.studycards.authserver.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -23,8 +21,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 	
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
-	@Autowired
-	private UserAccountRepository userAccRepo;
 	
 	public JwtAuthorizationFilter() {
 	}
@@ -32,28 +28,21 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request,
 	                                HttpServletResponse response,
-	                                FilterChain filterChain)
-		throws ServletException, IOException {
+	                                FilterChain filterChain) throws ServletException, IOException {
 		try {
 			String token = jwtTokenProvider.resolveToken(request);
-			if (token == null || !jwtTokenProvider.validateToken(token)) {
-				throw new JwtAuthenticationException("JWT token is expired or invalid");
+			if (token != null && jwtTokenProvider.validateToken(token)) {
+				Authentication auth = jwtTokenProvider.getAuthentication(token);
+				if (auth != null)
+					SecurityContextHolder.getContext().setAuthentication(auth);
 			}
-			
-			String username = jwtTokenProvider.getUsername(token);
-			var userAcc = userAccRepo
-				              .findByEmail(username)
-				              .orElseThrow(() -> new BadCredentialsException("Such user doesn't exist"));
-			
-			var authRequest = new UsernamePasswordAuthenticationToken(
-				username,
-				null,
-				userAcc.getRole().getAuthorities());
-			
-			SecurityContextHolder.getContext().setAuthentication(authRequest);
-		} catch (AuthenticationException e) {
-			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-			return;
+		} catch (JwtAuthenticationException e) {
+			SecurityContextHolder.clearContext();
+			response.sendError(e.getHttpStatus().value());
+			throw new JwtAuthenticationException(e.getMessage());
+		} catch (BadCredentialsException e) {
+			response.sendError(HttpStatus.UNAUTHORIZED.value());
+			throw new BadCredentialsException(e.getMessage());
 		}
 		filterChain.doFilter(request, response);
 	}
