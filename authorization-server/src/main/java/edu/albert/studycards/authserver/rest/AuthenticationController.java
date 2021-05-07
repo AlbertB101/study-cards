@@ -33,7 +33,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/auth")
-public class AuthorizationController {
+public class AuthenticationController {
 	
 	@Autowired
 	UserAccountRepository userAccRepo;
