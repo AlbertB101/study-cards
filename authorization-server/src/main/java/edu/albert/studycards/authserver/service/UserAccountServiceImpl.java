@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -43,19 +44,19 @@ public class UserAccountServiceImpl implements UserAccountService {
 	@Async("threadPoolTaskExecutor")
 	@Override
 	public CompletableFuture<UserAccountDto> receive(String email) throws NoSuchElementException {
-		UserAccountPersistent clientPers = userAccRepo
-			                              .findByEmail(email)
-			                              .orElseThrow(NoSuchElementException::new);
-		return CompletableFuture.completedFuture(new UserAccountDtoImpl(clientPers));
+		UserAccountPersistent userAcc = userAccRepo
+			                                .findByEmail(email)
+			                                .orElseThrow(NoSuchElementException::new);
+		return CompletableFuture.completedFuture(new UserAccountDtoImpl(userAcc));
 	}
 	
 	@Async("threadPoolTaskExecutor")
 	@Override
 	public CompletableFuture<UserAccountDto> receive(Long id) throws NoSuchElementException {
-		UserAccountPersistent clientPers = userAccRepo
-			                              .findById(id)
-			                              .orElseThrow(NoSuchElementException::new);
-		return CompletableFuture.completedFuture(new UserAccountDtoImpl(clientPers));
+		UserAccountPersistent userAcc = userAccRepo
+			                                .findById(id)
+			                                .orElseThrow(NoSuchElementException::new);
+		return CompletableFuture.completedFuture(new UserAccountDtoImpl(userAcc));
 	}
 	
 	@Async("threadPoolTaskExecutor")
@@ -69,11 +70,11 @@ public class UserAccountServiceImpl implements UserAccountService {
 			userAccountDto.getFirstName(),
 			userAccountDto.getLastName());
 		
-		UserAccountPersistent clientPers = userAccRepo
-			                              .findByEmail(userAccountDto.getEmail())
-			                              .orElseThrow(() -> new RuntimeException("Client wasn't found after updating"));
+		UserAccountPersistent userAcc = userAccRepo
+			                                .findByEmail(userAccountDto.getEmail())
+			                                .orElseThrow(() -> new RuntimeException("Client wasn't found after updating"));
 		
-		return CompletableFuture.completedFuture(new UserAccountDtoImpl(clientPers));
+		return CompletableFuture.completedFuture(new UserAccountDtoImpl(userAcc));
 	}
 	
 	@Async("threadPoolTaskExecutor")

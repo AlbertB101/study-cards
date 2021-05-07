@@ -3,6 +3,9 @@ package edu.albert.studycards.authserver.rest;
 import edu.albert.studycards.authserver.domain.dto.UserAccountDtoImpl;
 import edu.albert.studycards.authserver.domain.interfaces.UserAccountDto;
 import edu.albert.studycards.authserver.service.UserAccountService;
+import javassist.bytecode.stackmap.TypeData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,26 +17,30 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Map;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("api/v1/account")
 public class UserAccountController {
 	
+	final Logger logger = LoggerFactory.getLogger(UserAccountController.class);
+	
 	@Autowired
 	UserAccountService userAccService;
 	
 	@PostMapping(value = "/signUp")
-	public ResponseEntity<?> signUp(@RequestBody @Valid UserAccountDtoImpl clientDto) {
+	public ResponseEntity<?> signUp(@RequestBody @Valid UserAccountDtoImpl userAccDto) {
 		try {
-			CompletableFuture<UserAccountDto> compFuture = userAccService.register(clientDto);
-			UserAccountDto registeredClient = compFuture.join();
+			UserAccountDto newUserAcc = userAccService.register(userAccDto).get();
 			return new ResponseEntity<>(
-				Map.of("ClientMetaInfo", registeredClient,
+				Map.of("UserAccInfo", newUserAcc,
 					"ResponseMessage", "Client was successfully registered"),
 				HttpStatus.OK);
 		} catch (Throwable e) {
-			return new ResponseEntity<>("Client wasn't registered. " + e.getMessage(), HttpStatus.BAD_REQUEST);
+			logger.error("Exception while future completion. " + e.getMessage());
+			return new ResponseEntity<>("new user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -41,10 +48,10 @@ public class UserAccountController {
 	@PreAuthorize("hasAuthority('user:read')")
 	public ResponseEntity<?> getAccount() {
 		try {
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			String username = authentication.getName();
-			UserAccountDto accountInformation = userAccService.receive(username).get();
-			return new ResponseEntity<>(accountInformation, HttpStatus.OK);
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			String username = auth.getName();
+			UserAccountDto userAccInfo = userAccService.receive(username).get();
+			return new ResponseEntity<>(userAccInfo, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
 		}
@@ -57,6 +64,7 @@ public class UserAccountController {
 			UserAccountDto accInf = userAccService.receive(id).get();
 			return new ResponseEntity<>(accInf, HttpStatus.OK);
 		} catch (Exception e) {
+			logger.error("Exception while future completion/n" + e.getMessage());
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
 		}
 		
@@ -66,9 +74,9 @@ public class UserAccountController {
 	@PreAuthorize("hasAuthority('user:update')")
 	public ResponseEntity<?> updateAccount(@RequestBody @Valid UserAccountDtoImpl userAccDto) {
 		try {
-			userAccService.update(userAccDto);
+			userAccService.update(userAccDto).get();
 			return new ResponseEntity<>(HttpStatus.OK);
-		} catch (RuntimeException e) {
+		} catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
 		}
 	}
