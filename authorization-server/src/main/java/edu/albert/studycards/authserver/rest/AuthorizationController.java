@@ -3,8 +3,10 @@ package edu.albert.studycards.authserver.rest;
 import edu.albert.studycards.authserver.domain.dto.LoginDtoImpl;
 import edu.albert.studycards.authserver.domain.interfaces.LoginDto;
 import edu.albert.studycards.authserver.domain.interfaces.Role;
+import edu.albert.studycards.authserver.domain.interfaces.UserAccountPersistent;
 import edu.albert.studycards.authserver.domain.persistent.JwtBlacklist;
 import edu.albert.studycards.authserver.repository.JwtBlacklistRepository;
+import edu.albert.studycards.authserver.repository.UserAccountRepository;
 import edu.albert.studycards.authserver.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,6 +35,8 @@ import java.util.Map;
 @RequestMapping("api/v1/auth")
 public class AuthorizationController {
 	
+	@Autowired
+	UserAccountRepository userAccRepo;
 	@Qualifier("userDetailsServiceImpl")
 	@Autowired
 	UserDetailsService userDetailsService;
@@ -43,7 +47,7 @@ public class AuthorizationController {
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 	
-	@PostMapping(value = "/login")
+	@PostMapping(value = "/logIn")
 	public ResponseEntity<?> login(@RequestBody @Valid LoginDtoImpl loginDto) {
 		try {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -61,6 +65,13 @@ public class AuthorizationController {
 		String token = jwtTokenProvider.createToken(
 			loginDto.getEmail(),
 			Role.USER.name()/*user.getRole().name()*/);
+		
+		//TODO: refactor it
+		UserAccountPersistent userAcc = userAccRepo.findByEmail(loginDto.getEmail()).get();
+		userAcc.setToken(token);
+		userAccRepo.flush();
+		
+		
 		Map<Object, Object> response = new HashMap<>();
 		response.put("nickname", loginDto.getEmail());
 		response.put("token", token);

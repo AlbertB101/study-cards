@@ -29,7 +29,7 @@ public class JwtAuthenticationValidationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         return requestURI.equals("/api/v1/account/signUp") ||
-                   requestURI.equals("/api/v1/auth/login");
+                   requestURI.equals("/api/v1/auth/logIn");
         
     }
 }
