@@ -19,14 +19,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthorizationFilter extends OncePerRequestFilter {
 	
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 	@Autowired
 	private UserAccountRepository userAccRepo;
 	
-	public JwtAuthenticationFilter() {
+	public JwtAuthorizationFilter() {
 	}
 	
 	@Override
@@ -41,13 +41,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			}
 			
 			String username = jwtTokenProvider.getUsername(token);
-			UserAccountPersistent userAcc = userAccRepo.findByEmail(username)
-				                                .orElseThrow(() -> new BadCredentialsException("Such user doesn't exist"));
+			var userAcc = userAccRepo
+				              .findByEmail(username)
+				              .orElseThrow(() -> new BadCredentialsException("Such user doesn't exist"));
 			
 			var authRequest = new UsernamePasswordAuthenticationToken(
 				username,
 				null,
 				userAcc.getRole().getAuthorities());
+			
 			SecurityContextHolder.getContext().setAuthentication(authRequest);
 		} catch (AuthenticationException e) {
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
