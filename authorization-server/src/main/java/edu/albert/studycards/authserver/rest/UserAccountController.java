@@ -27,16 +27,16 @@ public class UserAccountController {
 	private final static Logger LOGGER = LoggerFactory.getLogger(UserAccountController.class);
 	
 	@Autowired
-	UserAccountService userAccService;
+	private UserAccountService userAccService;
 	
 	@PostMapping(value = "/signUp")
 	public ResponseEntity<?> signUp(@RequestBody @Valid UserAccountDtoImpl userAccDto) {
 		try {
 			UserAccountDto newUserAcc = userAccService.register(userAccDto).get();
-			return new ResponseEntity<>(
-				Map.of("UserAccInfo", newUserAcc,
-					"ResponseMessage", "Client was successfully registered"),
-				HttpStatus.OK);
+			Map<String, Object> userAccInfo = Map.of(
+				"UserAccountInfo", newUserAcc,
+				"ResponseMessage", "Client was successfully registered");
+			return new ResponseEntity<>(userAccInfo, HttpStatus.OK);
 			
 		} catch (CancellationException e) {
 			LOGGER.debug("Future completion was unexpectedly cancelled; " + e.getMessage());
