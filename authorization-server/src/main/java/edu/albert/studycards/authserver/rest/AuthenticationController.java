@@ -1,25 +1,13 @@
 package edu.albert.studycards.authserver.rest;
 
 import edu.albert.studycards.authserver.domain.dto.LoginDtoImpl;
-import edu.albert.studycards.authserver.domain.interfaces.LoginDto;
-import edu.albert.studycards.authserver.domain.interfaces.Role;
-import edu.albert.studycards.authserver.domain.interfaces.UserAccountPersistent;
-import edu.albert.studycards.authserver.domain.persistent.JwtBlacklist;
-import edu.albert.studycards.authserver.repository.JwtBlacklistRepository;
-import edu.albert.studycards.authserver.repository.UserAccountRepository;
-import edu.albert.studycards.authserver.security.JwtTokenProvider;
+import edu.albert.studycards.authserver.service.AuthenticationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,66 +16,53 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("api/v1/auth")
 public class AuthenticationController {
 	
+	private final static Logger LOGGER = LoggerFactory.getLogger(UserAccountController.class);
 	@Autowired
-	UserAccountRepository userAccRepo;
-	@Qualifier("userDetailsServiceImpl")
-	@Autowired
-	UserDetailsService userDetailsService;
-	@Autowired
-	private AuthenticationManager authenticationManager;
-	@Autowired
-	private JwtBlacklistRepository jwtBlacklistRepository;
-	@Autowired
-	private JwtTokenProvider jwtTokenProvider;
+	AuthenticationService authService;
+	
 	
 	@PostMapping(value = "/logIn")
 	public ResponseEntity<?> login(@RequestBody @Valid LoginDtoImpl loginDto) {
 		try {
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			authenticationManager.authenticate(auth);
-			
-			return ResponseEntity.ok(formResponseOnSuccess(loginDto/*, client*/));
+			Map<String, Object> response = authService.login(loginDto).get();
+			return ResponseEntity.ok(response);
 		} catch (BadCredentialsException e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-		} catch (AuthenticationException e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+			LOGGER.info("Credentials are incorrect; Login request wasn't satisfied");
+			return new ResponseEntity<>("Email or password is incorrect", HttpStatus.FORBIDDEN);
+		} catch (CancellationException e) {
+			LOGGER.debug("Future completion was unexpectedly cancelled; " + e.getMessage());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (ExecutionException e) {
+			LOGGER.debug("Future was completed exceptionally; " + e.getCause());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (InterruptedException e) {
+			LOGGER.debug("Future was interrupted; " + e.getMessage());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-	}
-	
-	private Map<Object, Object> formResponseOnSuccess(LoginDto loginDto) {
-		String token = jwtTokenProvider.createToken(
-			loginDto.getEmail(),
-			Role.USER.name()/*user.getRole().name()*/);
-		
-		//TODO: refactor it
-		UserAccountPersistent userAcc = userAccRepo.findByEmail(loginDto.getEmail()).get();
-		userAcc.setToken(token);
-		userAccRepo.flush();
-		
-		
-		Map<Object, Object> response = new HashMap<>();
-		response.put("nickname", loginDto.getEmail());
-		response.put("token", token);
-		return response;
 	}
 	
 	@PostMapping("/logout")
 	public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
-		SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
-		SecurityContext context = SecurityContextHolder.getContext();
-		String token = jwtTokenProvider.resolveToken(request);
-		
-		securityContextLogoutHandler.logout(request, response, context.getAuthentication());
-		securityContextLogoutHandler.setClearAuthentication(true);
-		jwtBlacklistRepository.saveAndFlush(new JwtBlacklist(token));
-		
-		return new ResponseEntity<>("ok", HttpStatus.OK);
+		try {
+			authService.logout(request, response).get();
+		} catch (CancellationException e) {
+			LOGGER.debug("Future completion was unexpectedly cancelled; " + e.getMessage());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (ExecutionException e) {
+			LOGGER.debug("Future was completed exceptionally; " + e.getCause());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (InterruptedException e) {
+			LOGGER.debug("Future was interrupted; " + e.getMessage());
+			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
