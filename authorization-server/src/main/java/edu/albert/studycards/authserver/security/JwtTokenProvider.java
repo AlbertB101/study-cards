@@ -4,9 +4,15 @@ import edu.albert.studycards.authserver.exception.JwtAuthenticationException;
 import edu.albert.studycards.authserver.repository.JwtBlacklistRepository;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -19,6 +25,9 @@ public class JwtTokenProvider {
 	
 	@Autowired
 	private JwtBlacklistRepository jwtBlacklistRepository;
+	@Qualifier("userDetailsServiceImpl")
+	@Autowired
+	private UserDetailsService userDetailsService;
 	
 	@Value("${jwt.secret}")
 	private String secretKey;
@@ -44,23 +53,35 @@ public class JwtTokenProvider {
 			       .compact();
 	}
 	
+	public String resolveToken(HttpServletRequest request) throws BadCredentialsException{
+		String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+		if (header == null || header.isEmpty()) {
+			throw new BadCredentialsException("Http authorization header doesn't exist");
+		}
+		return header;
+	}
+	
 	public boolean validateToken(String token) {
 		try {
 			Jws<Claims> claimsJws = getClaims(token);
 			Date expiration = claimsJws.getBody().getExpiration();
 			return !expiration.before(new Date()) &&
-					!jwtBlacklistRepository.existsByToken(token);
+				       !jwtBlacklistRepository.existsByToken(token);
 		} catch (JwtException | IllegalArgumentException e) {
 			throw new JwtAuthenticationException("JWT token is expired or invalid", HttpStatus.UNAUTHORIZED);
 		}
 	}
 	
-	public String getUsername(String token) {
-		return getClaims(token).getBody().getSubject();
+	public Authentication getAuthentication(String token) {
+		UserDetails userDetails = userDetailsService.loadUserByUsername(getUsername(token));
+		return new UsernamePasswordAuthenticationToken(
+			userDetails.getUsername(),
+			null,
+			userDetails.getAuthorities());
 	}
 	
-	public String resolveToken(HttpServletRequest request) {
-		return request.getHeader(HttpHeaders.AUTHORIZATION);
+	public String getUsername(String token) {
+		return getClaims(token).getBody().getSubject();
 	}
 	
 	private Jws<Claims> getClaims(String token) {
