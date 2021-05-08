@@ -8,11 +8,13 @@ import edu.albert.studycards.authserver.exception.ClientAlreadyExistsException;
 import edu.albert.studycards.authserver.repository.UserAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
-import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -61,18 +63,19 @@ public class UserAccountServiceImpl implements UserAccountService {
 	
 	@Async("threadPoolTaskExecutor")
 	@Override
-	public CompletableFuture<UserAccountDto> update(UserAccountDto userAccountDto) throws NoSuchElementException {
-		if (!userAccRepo.existsByEmail(userAccountDto.getEmail()))
-			throw new NoSuchElementException();
+	public CompletableFuture<UserAccountDto> update(UserAccountDto userAccountDto) throws UsernameNotFoundException {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (!userAccRepo.existsByEmail(auth.getName()))
+			throw new UsernameNotFoundException("Such a user account doesn't exist");
 		
 		userAccRepo.updateUserAccByEmail(
-			userAccountDto.getEmail(),
+			auth.getName(),
 			userAccountDto.getFirstName(),
 			userAccountDto.getLastName());
 		
-		UserAccountPersistent userAcc = userAccRepo
-			                                .findByEmail(userAccountDto.getEmail())
-			                                .orElseThrow(() -> new RuntimeException("Client wasn't found after updating"));
+		var userAcc = userAccRepo
+			              .findByEmail(auth.getName())
+			              .orElseThrow(() -> new RuntimeException("Client wasn't found after updating"));
 		
 		return CompletableFuture.completedFuture(new UserAccountDtoImpl(userAcc));
 	}
