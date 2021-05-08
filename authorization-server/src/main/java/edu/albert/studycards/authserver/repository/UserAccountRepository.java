@@ -18,7 +18,7 @@ public interface UserAccountRepository extends JpaRepository<UserAccountPersiste
 	void deleteByEmail(String email);
 	
 	@Modifying(clearAutomatically = true)
-	@Query("update UserAccount c set c.firstName = :firstName, c.lastName = :lastName where c.email = :email")
+	@Query("update UserAccount acc set acc.firstName = :firstName, acc.lastName = :lastName where acc.email = :email")
 	void updateUserAccByEmail(@Param("email") String email,
 	                          @Param("firstName") String firsName,
 	                          @Param("lastName") String lastName);
