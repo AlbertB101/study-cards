@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -99,16 +100,18 @@ public class UserAccountController {
 		try {
 			userAccService.update(userAccDto).get();
 			return new ResponseEntity<>(HttpStatus.OK);
-			
+		} catch (UsernameNotFoundException e) {
+			LOGGER.info("User account wasn't updated; account wasn't found");
+			return new ResponseEntity<>("User account wasn't updated", HttpStatus.OK);
 		} catch (CancellationException e) {
 			LOGGER.debug("Future completion was unexpectedly cancelled; " + e.getMessage());
-			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("User account wasn't updated", HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (ExecutionException e) {
 			LOGGER.debug("Future was completed exceptionally; " + e.getCause());
-			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("User account wasn't updated", HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (InterruptedException e) {
 			LOGGER.debug("Future was interrupted; " + e.getMessage());
-			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("User account wasn't updated", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
