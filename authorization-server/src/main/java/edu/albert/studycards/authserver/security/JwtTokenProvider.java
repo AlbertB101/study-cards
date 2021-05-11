@@ -53,7 +53,7 @@ public class JwtTokenProvider {
 			       .compact();
 	}
 	
-	public String resolveToken(HttpServletRequest request) throws BadCredentialsException{
+	public String resolveToken(HttpServletRequest request) throws BadCredentialsException {
 		String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 		if (header == null || header.isEmpty()) {
 			throw new BadCredentialsException("Http authorization header doesn't exist");

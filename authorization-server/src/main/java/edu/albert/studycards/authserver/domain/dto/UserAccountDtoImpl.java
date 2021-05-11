@@ -15,6 +15,8 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 public class UserAccountDtoImpl implements UserAccountDto {
+
+//TODO: SPLIT into AuthenticationRequest and userAccountDto(and registrationRequest)???
 	
 	@NotEmpty
 	@Size(max = 64)
@@ -24,12 +26,12 @@ public class UserAccountDtoImpl implements UserAccountDto {
 	@Size(max = 64)
 	private String lastName;
 	
-	@NotEmpty
+//	@NotEmpty
 	@Size(max = 256)
 	@NaturalId(mutable = true)
 	private String email;
 	
-	@NotEmpty
+//	@NotEmpty
 	private String password;
 	
 	@Enumerated(value = EnumType.STRING)
