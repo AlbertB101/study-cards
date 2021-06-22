@@ -22,7 +22,7 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 
 @RestController
-@RequestMapping("api/v1/account")
+@RequestMapping("api/v1/user/account")
 public class UserAccountController {
 	
 	private final static Logger LOGGER = LoggerFactory.getLogger(UserAccountController.class);
