@@ -9,22 +9,19 @@ import java.util.List;
 public interface LangPackDto extends LangPack{
 	
 	void addCard(CardDto card);
+	void setCard(CardDto card);
 	
 	CardDto getCard(int n);
 	CardDto getCard(String word);
 	CardDto getCard(Long id);
-	List<CardDto> getCards();
 	int getIndexOf(CardDto card);
-	
-	void setCards(List<CardDto> givenCards);
-	
-	void editLang(String lang);
-	void editWord(int n, String str);
-	void editWordTr(int n, String str);
-	void editWordMeaning(int n, String str);
 	
 	void deleteCard(int n);
 	void deleteCard(String word);
+	
+	List<CardDto> getCards();
+	void setCards(List<CardDto> givenCards);
+	void clearCards();
 	
 	boolean exists(String word);
 	int size();

@@ -6,23 +6,20 @@ import java.util.List;
 public interface LangPackPersistent extends LangPack{
 	
 	void addCard(CardPersistent card);
-	void editCard(CardDto cardDto);
-	void setCards(List<CardPersistent> cards);
+	void setCard(CardPersistent card);
 	
 	CardPersistent getCard(int n);
 	CardPersistent getCard(String word);
 	CardPersistent getCard(Long id);
-	List<CardPersistent> getCards();
 	int getIndexOf(CardPersistent card);
-	
-	void editWord(int n, String str);
-	void editWordTr(int n, String str);
-	void editWordMeaning(int n, String str);
 	
 	void deleteCard(int n);
 	void deleteCard(String word);
 	
-	int size();
-	void clear();
+	List<CardPersistent> getCards();
+	void setCards(List<CardPersistent> givenCards);
+	void clearCards();
+	
 	boolean exists(String word);
+	int size();
 }
