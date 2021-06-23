@@ -25,11 +25,11 @@ public class LangPackPersistentImpl implements LangPackPersistent, Serializable 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "account_id")
-	private Long accountId;
+	@Column(name = "acc_id")
+	private String accountEmail;
 	
 	@NotNull
-	@Column(name = "language")
+	@Column(name = "lang")
 	private String lang;
 	
 	@OneToMany(
@@ -39,6 +39,13 @@ public class LangPackPersistentImpl implements LangPackPersistent, Serializable 
 		targetEntity = CardPersistentImpl.class)
 	@JsonIgnoreProperties(value = "langPack")
 	private List<CardPersistent> cards = new ArrayList<>();
+	
+	public LangPackPersistentImpl(LangPackDto langPackDto) {
+        LangPackPersistent langPackP = new LangPackPersistentImpl();
+        langPackP.setLang(langPackDto.getLang());
+        langPackP.setAccountEmail(langPackDto.getAccountEmail());
+        langPackP.setCards(CardPersistent.listFrom(langPackDto.getCards(), this));
+    }
 	
 	public LangPackPersistentImpl(String lang) {
 		this.lang = lang;
@@ -56,6 +63,18 @@ public class LangPackPersistentImpl implements LangPackPersistent, Serializable 
 		cards.set(indexOf(card), givenCard);
 		
 	}
+    
+    @Override
+    public void editCard(CardDto cardDto) {
+        CardPersistent card;
+        try {
+            card = getCard(cardDto.getWord());
+            card.setWordTr(cardDto.getWordTr());
+            card.setWordMng(cardDto.getWordMng());
+        } catch (NoSuchElementException nsee) {
+            System.out.println(cardDto.getWord() + " doesn't exist in repository");
+        }
+    }
 	
 	@Override
 	public CardPersistent getCard(int n) {
@@ -91,7 +110,7 @@ public class LangPackPersistentImpl implements LangPackPersistent, Serializable 
 	
 	@Override
 	public void deleteCard(String word) {
-		if (exists(word)) {
+		if (hasCard(word)) {
 			CardPersistent card = getCard(word);
 			int cardIndex = indexOf(card);
 			cards.remove(cardIndex);
@@ -104,7 +123,7 @@ public class LangPackPersistentImpl implements LangPackPersistent, Serializable 
 	}
 	
 	@Override
-	public boolean exists(String word) {
+	public boolean hasCard(String word) {
 		return false;
 	}
 	
@@ -118,15 +137,5 @@ public class LangPackPersistentImpl implements LangPackPersistent, Serializable 
 		return "Main lang: " + lang
 			       + " ; Size of cardList: " + cards.size()
 			       + "\n" + cards.toString();
-	}
-	
-	@Override
-	public Long getAccountId() {
-		return accountId;
-	}
-	
-	@Override
-	public void setAccountId(Long accountId) {
-		this.accountId = accountId;
 	}
 }
