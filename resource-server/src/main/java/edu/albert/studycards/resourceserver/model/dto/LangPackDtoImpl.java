@@ -39,7 +39,7 @@ public class LangPackDtoImpl implements LangPackDto {
 	@Override
 	public void setCard(CardDto givenCard) throws NoSuchElementException {
 		CardDto card = getCard(givenCard.getWord());
-		cards.set(getIndexOf(card), givenCard);
+		cards.set(indexOf(card), givenCard);
 	}
 	
 	@Override
@@ -52,7 +52,7 @@ public class LangPackDtoImpl implements LangPackDto {
 	public void deleteCard(String word) {
 		if (exists(word)) {
 			CardDto card = getCard(word);
-			int cardIndex = getIndexOf(card);
+			int cardIndex = indexOf(card);
 			cards.remove(cardIndex);
 		}
 	}
@@ -83,7 +83,7 @@ public class LangPackDtoImpl implements LangPackDto {
 	}
 	
 	@Override
-	public int getIndexOf(CardDto card) {
+	public int indexOf(CardDto card) {
 		return cards.indexOf(card);
 	}
 	
