@@ -8,21 +8,19 @@ import java.util.List;
 
 public interface Card {
 	
-	static List<CardDto> from(List<CardPersistent> givenCards) {
-		List<CardDto> result = new ArrayList<>(givenCards.size());
-		for (CardPersistent cardP : givenCards) {
-			CardDto card = new CardDtoImpl(cardP);
-			result.add(card);
-		}
-		return result;
-	}
+	Long getId();
+	void setId(Long id);
 	
-	static List<CardPersistent> from(List<CardDto> cards, LangPackPersistent langPack) {
-		List<CardPersistent> result = new ArrayList<>(cards.size());
-		for (CardDto cardDto : cards) {
-			CardPersistent card = new CardPersistentImpl(cardDto, langPack);
-			result.add(card);
-		}
-		return result;
-	}
+	String getWord();
+	void setWord(String word);
+	
+	String getWordTr();
+	void setWordTr(String wordTr);
+	
+	void setWordMng(String wordMng);
+	String getWordMng();
+	
+
+	
+
 }
