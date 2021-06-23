@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 public class CardDtoImpl implements CardDto {
     private Long id;
+    private Long langPackId;
     private Long accountId;
     private String lang;
     private String word;
@@ -25,6 +26,7 @@ public class CardDtoImpl implements CardDto {
     
     public CardDtoImpl(CardDto card) {
         this.id = card.getId();
+        this.id = card.getLangPackId();
         this.accountId = card.getAccountId();
         this.lang = card.getLang();
         this.word = card.getWord();
@@ -39,6 +41,7 @@ public class CardDtoImpl implements CardDto {
      */
     public CardDtoImpl(CardPersistent card) {
         this.id = card.getId();
+        this.langPackId = card.getLangPack().getId();
         this.accountId = card.getLangPack().getId();
         this.word = card.getWord();
         this.wordTr = card.getWordTr();

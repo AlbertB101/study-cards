@@ -9,6 +9,9 @@ import java.util.List;
 @JsonDeserialize(as = CardDtoImpl.class)
 public interface CardDto extends Card{
 	
+	Long getLangPackId();
+	void setLangPackId(Long id);
+	
 	Long getAccountId();
 	void setAccountId(Long id);
 	
