@@ -7,6 +7,8 @@ import java.util.List;
 
 @JsonDeserialize(as = LangPackDtoImpl.class)
 public interface LangPackDto extends LangPack{
+	Long getAccountId();
+	void setAccountId(Long accountId);
 	
 	void addCard(CardDto card);
 	void setCard(CardDto card);
@@ -22,15 +24,14 @@ public interface LangPackDto extends LangPack{
 	List<CardDto> getCards();
 	void setCards(List<CardDto> givenCards);
 	void clearCards();
-	
-	boolean exists(String word);
+
 	int size();
 	
 	static LangPackDto from(LangPackPersistent langPack) {
 		LangPackDto langPackDto = new LangPackDtoImpl();
 		langPackDto.setId(langPack.getId());
 		langPackDto.setLang(langPack.getLang());
-		langPackDto.setAccountId(langPack.getAccountId());
+		langPackDto.setAccountId(langPack.getId());
 		List<CardDto> dtoList = CardDto.listFrom(langPack.getCards());
 		langPackDto.setCards(dtoList);
 		

@@ -1,13 +1,14 @@
 package edu.albert.studycards.resourceserver.model.interfaces;
 
 public interface LangPack {
-	
 	Long getId();
 	void setId(Long id);
 	
-	Long getAccountId();
-	void setAccountId(Long accountId);
-	
 	String getLang();
 	void setLang(String lang);
+	
+	String getAccountEmail();
+	void setAccountEmail(String accountEmail);
+	
+	boolean hasCard(String word);
 }

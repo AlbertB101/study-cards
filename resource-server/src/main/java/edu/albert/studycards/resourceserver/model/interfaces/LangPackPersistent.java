@@ -4,10 +4,9 @@ package edu.albert.studycards.resourceserver.model.interfaces;
 import java.util.List;
 
 public interface LangPackPersistent extends LangPack{
-	
 	void addCard(CardPersistent card);
 	void setCard(CardPersistent card);
-	
+	void editCard(CardDto cardDto);
 	CardPersistent getCard(int n);
 	CardPersistent getCard(String word);
 	CardPersistent getCard(Long id);
@@ -20,6 +19,5 @@ public interface LangPackPersistent extends LangPack{
 	void setCards(List<CardPersistent> givenCards);
 	void clearCards();
 	
-	boolean exists(String word);
 	int size();
 }
