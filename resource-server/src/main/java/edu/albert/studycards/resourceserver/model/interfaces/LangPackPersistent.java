@@ -3,20 +3,7 @@ package edu.albert.studycards.resourceserver.model.interfaces;
 
 import java.util.List;
 
-public interface LangPackPersistent {
-	Long getId();
-	void setId(Long id);
-	
-	Long getAccountId();
-	void setAccountId(Long accountId);
-	AccountPersistent getAccount();
-	void setAccount(AccountPersistent account);
-	
-	
-	String getLang();
-	void setLang(String lang);
-	void editLang(String lang);
-	
+public interface LangPackPersistent extends LangPack{
 	
 	void addCard(CardPersistent card);
 	void editCard(CardDto cardDto);
