@@ -1,27 +1,21 @@
 package edu.albert.studycards.resourceserver.model.interfaces;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import edu.albert.studycards.resourceserver.model.dto.LangPackDtoImpl;
 
 import java.util.List;
 
-//@JsonDeserialize(as = LangPackDtoImpl.class)???
-public interface LangPackDto {
-	Long getAccountId();
-	void setAccountId(Long accountId);
-	
-	Long getId();
-	void setId(Long id);
+@JsonDeserialize(as = LangPackDtoImpl.class)
+public interface LangPackDto extends LangPack{
 	
 	void addCard(CardDto card);
 	
-	String getLang();
 	CardDto getCard(int n);
 	CardDto getCard(String word);
 	CardDto getCard(Long id);
 	List<CardDto> getCards();
 	int getIndexOf(CardDto card);
 	
-	void setLang(String lang);
 	void setCards(List<CardDto> givenCards);
 	
 	void editLang(String lang);
@@ -34,4 +28,15 @@ public interface LangPackDto {
 	
 	boolean exists(String word);
 	int size();
+	
+	static LangPackDto from(LangPackPersistent langPack) {
+		LangPackDto langPackDto = new LangPackDtoImpl();
+		langPackDto.setId(langPack.getId());
+		langPackDto.setLang(langPack.getLang());
+		langPackDto.setAccountId(langPack.getAccountId());
+		List<CardDto> dtoList = CardDto.listFrom(langPack.getCards());
+		langPackDto.setCards(dtoList);
+		
+		return langPackDto;
+	}
 }
