@@ -16,6 +16,7 @@ import java.util.Objects;
 public class LangPackDtoImpl implements LangPackDto {
 	private Long id;
 	private Long accountId;
+	private String accountEmail;
 	private String lang;
 	private List<CardDto> cards = new ArrayList<>();
 	
@@ -50,7 +51,7 @@ public class LangPackDtoImpl implements LangPackDto {
 	
 	@Override
 	public void deleteCard(String word) {
-		if (exists(word)) {
+		if (hasCard(word)) {
 			CardDto card = getCard(word);
 			int cardIndex = indexOf(card);
 			cards.remove(cardIndex);
@@ -88,7 +89,7 @@ public class LangPackDtoImpl implements LangPackDto {
 	}
 	
 	@Override
-	public boolean exists(String word) {
+	public boolean hasCard(String word) {
 		return cards.stream()
 			       .anyMatch(card -> card.getWord().equals(word));
 	}
