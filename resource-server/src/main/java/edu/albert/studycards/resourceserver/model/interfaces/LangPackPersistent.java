@@ -11,7 +11,7 @@ public interface LangPackPersistent extends LangPack{
 	CardPersistent getCard(int n);
 	CardPersistent getCard(String word);
 	CardPersistent getCard(Long id);
-	int getIndexOf(CardPersistent card);
+	int indexOf(CardPersistent card);
 	
 	void deleteCard(int n);
 	void deleteCard(String word);

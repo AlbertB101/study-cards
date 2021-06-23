@@ -14,7 +14,7 @@ public interface LangPackDto extends LangPack{
 	CardDto getCard(int n);
 	CardDto getCard(String word);
 	CardDto getCard(Long id);
-	int getIndexOf(CardDto card);
+	int indexOf(CardDto card);
 	
 	void deleteCard(int n);
 	void deleteCard(String word);
