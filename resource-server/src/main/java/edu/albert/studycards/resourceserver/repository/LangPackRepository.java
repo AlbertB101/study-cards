@@ -17,6 +17,11 @@ public interface LangPackRepository extends JpaRepository<LangPackPersistentImpl
 	Optional<LangPackPersistent> findByAccountIdAndLang(@Param("account_id") Long account_id,
 	                                                    @Param("lang") String lang);
 	
+	Optional<LangPackPersistent> findByAccountEmailAndLang(@Param("account_email") String accountEmail,
+	                                                       @Param("lang") String lang);
+	
+	boolean existsByAccountEmailAndLang(@Param("account_email") String accountEmail,
+	                                    @Param("lang") String lang);
 	
 	@Query("select lp.lang from LangPack lp where lp.accountId = :account_id")
 	Optional<List<String>> getAllLanguages(@Param("account_id") Long accountId);
