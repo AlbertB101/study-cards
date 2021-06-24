@@ -25,7 +25,7 @@ public class LangPackPersistentImpl implements LangPackPersistent, Serializable 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "acc_id")
+	@Column(name = "acc_email")
 	private String accountEmail;
 	
 	@NotNull
