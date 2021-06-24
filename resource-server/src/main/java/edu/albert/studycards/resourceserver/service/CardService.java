@@ -53,9 +53,4 @@ public class CardService {
 		LangPackPersistent langPack = langPackService.find(lang);
 		return langPack.getCard(word);
 	}
-	
-	private CardPersistent findCard(String word, String lang, long accountId) throws NoSuchElementException {
-		LangPackPersistent langPack = langPackService.find(accountId, lang);
-		return langPack.getCard(word);
-	}
 }
