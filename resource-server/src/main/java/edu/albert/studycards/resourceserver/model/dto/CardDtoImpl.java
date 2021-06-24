@@ -26,7 +26,7 @@ public class CardDtoImpl implements CardDto {
     
     public CardDtoImpl(CardDto card) {
         this.id = card.getId();
-        this.id = card.getLangPackId();
+        this.langPackId = card.getLangPackId();
         this.accountId = card.getAccountId();
         this.lang = card.getLang();
         this.word = card.getWord();
@@ -42,7 +42,7 @@ public class CardDtoImpl implements CardDto {
     public CardDtoImpl(CardPersistent card) {
         this.id = card.getId();
         this.langPackId = card.getLangPack().getId();
-        this.accountId = card.getLangPack().getId();
+        this.lang = card.getLangPack().getLang();
         this.word = card.getWord();
         this.wordTr = card.getWordTr();
         this.wordMng = card.getWordMng();

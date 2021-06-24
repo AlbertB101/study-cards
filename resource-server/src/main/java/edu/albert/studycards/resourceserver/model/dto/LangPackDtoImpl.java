@@ -27,6 +27,7 @@ public class LangPackDtoImpl implements LangPackDto {
 	public LangPackDtoImpl(LangPackDto langPackDto) {
 		this.id = langPackDto.getId();
 		this.accountId = langPackDto.getAccountId();
+		this.accountEmail = langPackDto.getAccountEmail();
 		this.lang = langPackDto.getLang();
 		this.cards = langPackDto.getCards();
 	}
@@ -97,5 +98,16 @@ public class LangPackDtoImpl implements LangPackDto {
 	@Override
 	public int size() {
 		return cards.size();
+	}
+	
+	@Override
+	public String toString() {
+		return "LangPackDtoImpl{" +
+			       "id=" + id +
+			       ", accountId=" + accountId +
+			       ", accountEmail='" + accountEmail + '\'' +
+			       ", lang='" + lang + '\'' +
+			       ", cards=" + cards +
+			       '}';
 	}
 }
