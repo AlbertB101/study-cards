@@ -55,6 +55,12 @@ public class ResourceProvider<T> {
 		return instances;
 	}
 	
+	public T generateResource() {
+		List<Resource> resources = findResources();
+		List<T> instances = createInstances(resources);
+		return instances.get(0);
+	}
+	
 	private List<Resource> findResources() {
 		String dirLocation = RSC_TYPE_TO_RSC_LOCATION.get(clazz);
 		return loadResources(dirLocation);
