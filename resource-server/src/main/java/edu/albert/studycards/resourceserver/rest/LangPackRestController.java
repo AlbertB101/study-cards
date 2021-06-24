@@ -1,5 +1,6 @@
 package edu.albert.studycards.resourceserver.rest;
 
+import edu.albert.studycards.resourceserver.exceptions.LangPackAlreadyExistsException;
 import edu.albert.studycards.resourceserver.model.dto.LangPackDtoImpl;
 import edu.albert.studycards.resourceserver.service.LangPackService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class LangPackRestController {
     public ResponseEntity<?> createLangPack(@RequestBody @Valid LangPackDtoImpl langPack) {
         try {
             langPackService.create(langPack);
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | LangPackAlreadyExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity<>(HttpStatus.OK);
@@ -43,16 +44,16 @@ public class LangPackRestController {
         }
     }
     
-    @PreAuthorize("hasAuthority('developer:read')")
-    @GetMapping(value = "/{id}/get", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getLangPack(@PathVariable() Long id,
-                                         @RequestParam(name = "lang") String lang) {
-        try {
-            return new ResponseEntity<>(langPackService.get(lang, id), HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-        }
-    }
+//    @PreAuthorize("hasAuthority('developer:read')")
+//    @GetMapping(value = "/{id}/get", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<?> getLangPack(@PathVariable() Long id,
+//                                         @RequestParam(name = "lang") String lang) {
+//        try {
+//            return new ResponseEntity<>(langPackService.get(id, lang), HttpStatus.OK);
+//        } catch (NoSuchElementException e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+//        }
+//    }
     
     @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('user:update')")
@@ -69,21 +70,20 @@ public class LangPackRestController {
     @PreAuthorize("hasAuthority('user:delete')")
     public ResponseEntity<?> deleteLangPack(@RequestParam("lang") String lang) {
         try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            langPackService.delete(authentication.getName(), lang);
+//            langPackService.delete();
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
     
-    @PreAuthorize("hasAuthority('developer:read')")
-    @GetMapping(value = "/getAccountLangPackLanguages", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getExistingLanguages(@RequestParam(name = "accountId") Long accountId) {
-        try {
-            return new ResponseEntity<>(langPackService.getExistingLanguages(accountId), HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-        }
-    }
+//    @PreAuthorize("hasAuthority('developer:read')")
+//    @GetMapping(value = "/getAccountLangPackLanguages", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<?> getExistingLanguages(@RequestParam(name = "accountId") Long accountId) {
+//        try {
+//            return new ResponseEntity<>(langPackService.getExistingLanguages(accountId), HttpStatus.OK);
+//        } catch (NoSuchElementException e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+//        }
+//    }
 }
