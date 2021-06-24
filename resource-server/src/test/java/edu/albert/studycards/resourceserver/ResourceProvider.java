@@ -30,8 +30,8 @@ public class ResourceProvider<T> {
 	private Class<T> clazz;
 	
 	static {
-		RSC_TYPE_TO_RSC_LOCATION.put(CardDto.class, "model/Client/Dto/");
-		RSC_TYPE_TO_RSC_LOCATION.put(CardPersistent.class, "model/Client/Persistent/");
+		RSC_TYPE_TO_RSC_LOCATION.put(CardDto.class, "model/Card/Dto/");
+		RSC_TYPE_TO_RSC_LOCATION.put(CardPersistent.class, "model/Card/Persistent/");
 		RSC_TYPE_TO_RSC_LOCATION.put(LangPackDto.class, "model/LangPack/Dto/");
 		RSC_TYPE_TO_RSC_LOCATION.put(LangPackPersistent.class, "model/LangPack/Persistent/");
 	}
