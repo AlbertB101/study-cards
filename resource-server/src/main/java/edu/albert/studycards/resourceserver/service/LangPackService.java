@@ -29,10 +29,6 @@ public class LangPackService {
 		langPackRepo.saveAndFlush(langPack);
 	}
 	
-	public LangPackDto get(Long accountId, String lang) {
-		return LangPackDto.from(find(accountId, lang));
-	}
-	
 	public LangPackDto get(String lang) {
 		return LangPackDto.from(find(lang));
 	}
@@ -59,12 +55,6 @@ public class LangPackService {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		return langPackRepo
 			       .findByAccountEmailAndLang(email, lang)
-			       .orElseThrow(NoSuchElementException::new);
-	}
-	
-	LangPackPersistent find(Long accountId, String lang) throws NoSuchElementException {
-		return langPackRepo
-			       .findByAccountIdAndLang(accountId, lang)
 			       .orElseThrow(NoSuchElementException::new);
 	}
 }
