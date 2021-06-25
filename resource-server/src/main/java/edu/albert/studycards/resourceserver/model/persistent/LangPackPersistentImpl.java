@@ -123,7 +123,9 @@ public class LangPackPersistentImpl implements LangPackPersistent, Serializable 
 	
 	@Override
 	public boolean contains(String word) {
-		return false;
+		Objects.requireNonNull(word);
+		return cards.stream()
+			       .anyMatch(card -> card.getWord().equals(word));
 	}
 	
 	@Override
