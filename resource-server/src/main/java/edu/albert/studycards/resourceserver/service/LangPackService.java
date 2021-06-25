@@ -40,7 +40,9 @@ public class LangPackService {
 		return new LangPackDtoImpl(find(lang));
 	}
 	
-	public void update(LangPackDto langPackDto) throws NoSuchElementException {
+	public void update(LangPackDto langPackDto) throws IllegalArgumentException, NoSuchElementException {
+		if (langPackDto == null)
+			throw new IllegalArgumentException("langPack is null");
 		LangPackPersistent langPack = find(langPackDto.getLang());
 		
 		for (CardDto cardDto : langPackDto.getCards()) {
@@ -58,7 +60,7 @@ public class LangPackService {
         langPackRepo.deleteById(id);
     }
 	
-	LangPackPersistent find(String lang) throws NoSuchElementException {
+    LangPackPersistent find(String lang) throws NoSuchElementException {
 		Objects.requireNonNull(lang);
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		return langPackRepo
