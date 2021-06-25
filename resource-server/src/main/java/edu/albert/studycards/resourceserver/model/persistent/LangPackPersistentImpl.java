@@ -40,14 +40,14 @@ public class LangPackPersistentImpl implements LangPackPersistent, Serializable 
 	@JsonIgnoreProperties(value = "langPack")
 	private List<CardPersistent> cards = new ArrayList<>();
 	
-	public LangPackPersistentImpl(LangPackDto langPackDto) throws NullPointerException {
+	public LangPackPersistentImpl(LangPackDto langPackDto) {
 		this.lang = Objects.requireNonNull(langPackDto.getLang());
 		this.accountEmail = Objects.requireNonNull(langPackDto.getAccountEmail());
 		this.cards = CardPersistent.listFrom(Objects.requireNonNull(langPackDto.getCards()), this);
 	}
 	
 	public LangPackPersistentImpl(String lang) {
-		this.lang = lang;
+		this.lang = Objects.requireNonNull(lang);
 	}
 	
 	@Override
@@ -57,7 +57,8 @@ public class LangPackPersistentImpl implements LangPackPersistent, Serializable 
 	}
 	
 	@Override
-	public void setCard(CardPersistent givenCard) throws NoSuchElementException {
+	public void setCard(CardPersistent givenCard) {
+		Objects.requireNonNull(givenCard);
 		CardPersistent card = getCard(givenCard.getWord());
 		cards.set(indexOf(card), givenCard);
 		
@@ -65,6 +66,7 @@ public class LangPackPersistentImpl implements LangPackPersistent, Serializable 
 	
 	@Override
 	public void editCard(CardDto cardDto) {
+		Objects.requireNonNull(cardDto);
 		CardPersistent card;
 		try {
 			card = getCard(cardDto.getWord());
@@ -81,7 +83,8 @@ public class LangPackPersistentImpl implements LangPackPersistent, Serializable 
 	}
 	
 	@Override
-	public CardPersistent getCard(String word) throws NoSuchElementException {
+	public CardPersistent getCard(String word) {
+		Objects.requireNonNull(word);
 		return cards.stream()
 			       .filter(card -> word.equals(card.getWord()))
 			       .findAny()
@@ -89,7 +92,8 @@ public class LangPackPersistentImpl implements LangPackPersistent, Serializable 
 	}
 	
 	@Override
-	public CardPersistent getCard(Long id) throws NoSuchElementException {
+	public CardPersistent getCard(Long id) {
+		Objects.requireNonNull(id);
 		return cards.stream()
 			       .filter(card -> card.getId().equals(id))
 			       .findFirst()
@@ -98,6 +102,7 @@ public class LangPackPersistentImpl implements LangPackPersistent, Serializable 
 	
 	@Override
 	public int indexOf(CardPersistent card) {
+		Objects.requireNonNull(card);
 		return cards.indexOf(card);
 	}
 	
@@ -109,6 +114,7 @@ public class LangPackPersistentImpl implements LangPackPersistent, Serializable 
 	
 	@Override
 	public void deleteCard(String word) {
+		Objects.requireNonNull(word);
 		if (contains(word)) {
 			CardPersistent card = getCard(word);
 			int cardIndex = indexOf(card);
