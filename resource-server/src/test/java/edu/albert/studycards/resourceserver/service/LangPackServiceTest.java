@@ -135,5 +135,37 @@ public class LangPackServiceTest {
 		assertThrows(NoSuchElementException.class, () -> langPackService.get("Some language value"));
 	}
 	
+	@Test
+	@DisplayName("update() should throw IllegalArgumentException when argument is null")
+	void updateShouldThrowIllegalArgumentExceptionWhenArgumentIsNull() {
+		assertThrows(IllegalArgumentException.class,
+			() -> langPackService.update(null));
+	}
 	
+	@Test
+	@DisplayName("update() should throw NoSuchElementException when repository doesn't contain a LangPack")
+	void updateShouldThrowNoSuchElementExceptionWhenRepositoryDoesnTContainALangPack() {
+		assertThrows(NoSuchElementException.class,
+			() -> langPackService.update(TEST_LANG_PACK_DTO));
+	}
+	
+	@Test
+	@DisplayName("update() should return updated LangPack")
+	void updateShouldReturnUpdatedLangPack() {
+		LangPackPersistentImpl emptyLangPackP = new LangPackPersistentImpl(TEST_LANG_PACK_DTO);
+		emptyLangPackP.clearCards();
+		
+		when(langPackRepo.findByAccountEmailAndLang(
+			TEST_LANG_PACK_DTO.getAccountEmail(),
+			TEST_LANG_PACK_DTO.getLang()))
+			.thenReturn(Optional.of(emptyLangPackP));
+		when(langPackRepo.saveAndFlush(emptyLangPackP))
+			.thenReturn(new LangPackPersistentImpl(TEST_LANG_PACK_DTO));
+		
+		assertDoesNotThrow(() -> {
+			LangPackDto updated = langPackService.update(TEST_LANG_PACK_DTO);
+			assertNotNull(updated);
+			assertEquals(TEST_LANG_PACK_DTO, updated);
+		});
+	}
 }
