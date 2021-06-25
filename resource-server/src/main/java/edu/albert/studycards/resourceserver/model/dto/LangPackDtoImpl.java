@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -16,7 +17,9 @@ import java.util.Objects;
 public class LangPackDtoImpl implements LangPackDto {
 	private Long id;
 	private Long accountId;
+	@NotEmpty
 	private String accountEmail;
+	@NotEmpty
 	private String lang;
 	private List<CardDto> cards = new ArrayList<>();
 	
@@ -30,6 +33,13 @@ public class LangPackDtoImpl implements LangPackDto {
 		this.accountEmail = langPackDto.getAccountEmail();
 		this.lang = langPackDto.getLang();
 		this.cards = langPackDto.getCards();
+	}
+	
+	public LangPackDtoImpl(LangPackPersistent langPackP) {
+		this.id = langPackP.getId();
+		this.accountEmail = langPackP.getAccountEmail();
+		this.lang = langPackP.getLang();
+		this.cards = CardDto.listFrom(langPackP.getCards());
 	}
 	
 	@Override
@@ -98,6 +108,21 @@ public class LangPackDtoImpl implements LangPackDto {
 	@Override
 	public int size() {
 		return cards.size();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		LangPackDtoImpl that = (LangPackDtoImpl) o;
+		return Objects.equals(accountEmail, that.accountEmail) &&
+				Objects.equals(lang, that.lang) &&
+				Objects.equals(cards, that.cards);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(accountEmail, lang, cards);
 	}
 	
 	@Override
