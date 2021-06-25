@@ -40,12 +40,11 @@ public class LangPackPersistentImpl implements LangPackPersistent, Serializable 
 	@JsonIgnoreProperties(value = "langPack")
 	private List<CardPersistent> cards = new ArrayList<>();
 	
-	public LangPackPersistentImpl(LangPackDto langPackDto) {
-        LangPackPersistent langPackP = new LangPackPersistentImpl();
-        langPackP.setLang(langPackDto.getLang());
-        langPackP.setAccountEmail(langPackDto.getAccountEmail());
-        langPackP.setCards(CardPersistent.listFrom(langPackDto.getCards(), this));
-    }
+	public LangPackPersistentImpl(LangPackDto langPackDto) throws NullPointerException {
+		this.lang = Objects.requireNonNull(langPackDto.getLang());
+		this.accountEmail = Objects.requireNonNull(langPackDto.getAccountEmail());
+		this.cards = CardPersistent.listFrom(Objects.requireNonNull(langPackDto.getCards()), this);
+	}
 	
 	public LangPackPersistentImpl(String lang) {
 		this.lang = lang;
@@ -63,18 +62,18 @@ public class LangPackPersistentImpl implements LangPackPersistent, Serializable 
 		cards.set(indexOf(card), givenCard);
 		
 	}
-    
-    @Override
-    public void editCard(CardDto cardDto) {
-        CardPersistent card;
-        try {
-            card = getCard(cardDto.getWord());
-            card.setWordTr(cardDto.getWordTr());
-            card.setWordMng(cardDto.getWordMng());
-        } catch (NoSuchElementException nsee) {
-            System.out.println(cardDto.getWord() + " doesn't exist in repository");
-        }
-    }
+	
+	@Override
+	public void editCard(CardDto cardDto) {
+		CardPersistent card;
+		try {
+			card = getCard(cardDto.getWord());
+			card.setWordTr(cardDto.getWordTr());
+			card.setWordMng(cardDto.getWordMng());
+		} catch (NoSuchElementException nsee) {
+			System.out.println(cardDto.getWord() + " doesn't exist in repository");
+		}
+	}
 	
 	@Override
 	public CardPersistent getCard(int n) {
