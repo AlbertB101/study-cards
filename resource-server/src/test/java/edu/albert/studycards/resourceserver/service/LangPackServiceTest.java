@@ -168,4 +168,13 @@ public class LangPackServiceTest {
 			assertEquals(TEST_LANG_PACK_DTO, updated);
 		});
 	}
+	
+	@Test
+	@DisplayName("delete() should throw IllegalArgumentException when argument is null")
+	void deleteShouldThrowIllegalArgumentExceptionWhenArgumentIsNull() {
+		assertThrows(IllegalArgumentException.class,
+			() -> langPackService.delete(null));
+	}
+	
+	
 }
