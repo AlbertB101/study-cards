@@ -22,6 +22,7 @@ public class LangPackService {
 	CardService cardService;
 	
 	public LangPackPersistent create(LangPackDto langPackDto) throws LangPackAlreadyExistsException {
+		Objects.requireNonNull(langPackDto);
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		
 		if (langPackRepo.existsByAccountEmailAndLang(email, langPackDto.getLang())) {
@@ -34,15 +35,13 @@ public class LangPackService {
 		return langPackRepo.saveAndFlush(langPack);
 	}
 	
-	public LangPackDto get(String lang) throws IllegalArgumentException, NoSuchElementException {
-		if (lang == null || lang.isBlank())
-			throw new IllegalArgumentException("lang value is incorrect");
+	public LangPackDto get(String lang) {
+		Objects.requireNonNull(lang);
 		return new LangPackDtoImpl(find(lang));
 	}
 	
-	public LangPackDto update(LangPackDto langPackDto) throws IllegalArgumentException, NoSuchElementException {
-		if (langPackDto == null)
-			throw new IllegalArgumentException("langPack is null");
+	public LangPackDto update(LangPackDto langPackDto) {
+		Objects.requireNonNull(langPackDto);
 		LangPackPersistent langPackP = find(langPackDto.getLang());
 		updateCards(langPackP, langPackDto);
 		//TODO: add update repository query
@@ -58,16 +57,14 @@ public class LangPackService {
 				to.addCard(new CardPersistentImpl(cardDto, to));
 		}
 	}
-    
-    public void delete(Long id) throws IllegalArgumentException {
-		if (id == null)
-			throw new IllegalArgumentException("id is null");
-        langPackRepo.deleteById(id);
-    }
 	
-    LangPackPersistent find(String lang) throws NoSuchElementException {
-		if (lang == null || lang.isBlank())
-			throw new IllegalArgumentException("lang is incorrect");
+	public void delete(Long id) {
+		Objects.requireNonNull(id);
+		langPackRepo.deleteById(id);
+	}
+	
+	LangPackPersistent find(String lang) {
+		Objects.requireNonNull(lang);
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		return langPackRepo
 			       .findByAccountEmailAndLang(email, lang)
