@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Service
 public class CardService {
@@ -22,20 +23,21 @@ public class CardService {
 	@Autowired
 	LangPackService langPackService;
 	
-	public void create(CardDto cardDto) throws IllegalArgumentException, NoSuchElementException {
-		if (cardDto == null)
-			throw new IllegalArgumentException("CardDto is null");
+	public void create(CardDto cardDto) {
+		Objects.requireNonNull(cardDto);
 		LangPackPersistent langPack = langPackService.find(cardDto.getLang());
 		if (!langPack.hasCard(cardDto.getWord())) {
 			langPack.addCard(new CardPersistentImpl(cardDto, langPack));
 		}
 	}
 	
-	public CardDto get(String word) throws NoSuchElementException {
+	public CardDto get(String word) {
+		Objects.requireNonNull(word);
 		return new CardDtoImpl(findCard(word));
 	}
 	
-	public void update(CardDto cardDto) throws RuntimeException {
+	public void update(CardDto cardDto) {
+		Objects.requireNonNull(cardDto);
 		CardPersistent card = findCard(cardDto.getWord(), cardDto.getLang());
 		card.setWordTr(cardDto.getWordTr());
 		card.setWordMng(cardDto.getWordMng());
@@ -43,20 +45,25 @@ public class CardService {
 		cardRepo.saveAndFlush((CardPersistentImpl) card);
 	}
 	
-	public void delete(String word, String lang) throws NoSuchElementException {
+	public void delete(String word, String lang) {
+		Objects.requireNonNull(word);
+		Objects.requireNonNull(lang);
 		LangPackPersistent langPack = langPackService.find(lang);
 		langPack.deleteCard(word);
 		langPackRepo.saveAndFlush((LangPackPersistentImpl) langPack);
 	}
 	
-	private CardPersistent findCard(String word) throws NoSuchElementException {
+	private CardPersistent findCard(String word) {
+		Objects.requireNonNull(word);
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		return cardRepo
 			       .findByWordAndLangPack_AccountEmail(word, email)
 			       .orElseThrow(NoSuchElementException::new);
 	}
 	
-	private CardPersistent findCard(String word, String lang) throws NoSuchElementException {
+	private CardPersistent findCard(String word, String lang) {
+		Objects.requireNonNull(word);
+		Objects.requireNonNull(lang);
 		LangPackPersistent langPack = langPackService.find(lang);
 		return langPack.getCard(word);
 	}
