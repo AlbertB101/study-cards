@@ -7,6 +7,7 @@ import edu.albert.studycards.resourceserver.model.persistent.LangPackPersistentI
 import edu.albert.studycards.resourceserver.repository.CardRepository;
 import edu.albert.studycards.resourceserver.repository.LangPackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -21,18 +22,17 @@ public class CardService {
 	@Autowired
 	LangPackService langPackService;
 	
-	public void create(CardDto cardDto) {
+	public void create(CardDto cardDto) throws IllegalArgumentException, NoSuchElementException {
+		if (cardDto == null)
+			throw new IllegalArgumentException("CardDto is null");
 		LangPackPersistent langPack = langPackService.find(cardDto.getLang());
-		CardPersistent card = null;
 		if (!langPack.hasCard(cardDto.getWord())) {
-			card = new CardPersistentImpl(cardDto, langPack);
+			langPack.addCard(new CardPersistentImpl(cardDto, langPack));
 		}
-		cardRepo.saveAndFlush((CardPersistentImpl) card);
 	}
 	
-	public CardDto get(String word, String lang) throws NoSuchElementException {
-		CardPersistent cardPersistent = findCard(word, lang);
-		return new CardDtoImpl(cardPersistent);
+	public CardDto get(String word) throws NoSuchElementException {
+		return new CardDtoImpl(findCard(word));
 	}
 	
 	public void update(CardDto cardDto) throws RuntimeException {
@@ -47,6 +47,13 @@ public class CardService {
 		LangPackPersistent langPack = langPackService.find(lang);
 		langPack.deleteCard(word);
 		langPackRepo.saveAndFlush((LangPackPersistentImpl) langPack);
+	}
+	
+	private CardPersistent findCard(String word) throws NoSuchElementException {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		return cardRepo
+			       .findByWordAndLangPack_AccountEmail(word, email)
+			       .orElseThrow(NoSuchElementException::new);
 	}
 	
 	private CardPersistent findCard(String word, String lang) throws NoSuchElementException {
