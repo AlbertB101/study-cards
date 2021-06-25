@@ -66,7 +66,8 @@ public class LangPackService {
     }
 	
     LangPackPersistent find(String lang) throws NoSuchElementException {
-		Objects.requireNonNull(lang);
+		if (lang == null || lang.isBlank())
+			throw new IllegalArgumentException("lang is incorrect");
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		return langPackRepo
 			       .findByAccountEmailAndLang(email, lang)
