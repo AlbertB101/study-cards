@@ -14,6 +14,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Objects;
 
 @NoArgsConstructor
 @Getter
@@ -53,7 +54,7 @@ public class CardPersistentImpl implements CardPersistent, Serializable {
 	 * {@link LangPackPersistent} which
 	 * will have this card</p>
 	 *
-	 * @param card {@link CardDto} implementation
+	 * @param card     {@link CardDto} implementation
 	 * @param langPack {@link LangPackPersistent} implementation that has
 	 */
 	//TODO: refactor creating new Persistent cards
@@ -65,8 +66,29 @@ public class CardPersistentImpl implements CardPersistent, Serializable {
 	}
 	
 	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		CardPersistentImpl that = (CardPersistentImpl) o;
+		return Objects.equals(id, that.id) &&
+			       Objects.equals(word, that.word) &&
+			       Objects.equals(wordTr, that.wordTr) &&
+			       Objects.equals(wordMng, that.wordMng) &&
+			       Objects.equals(langPack, that.langPack);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, word, wordTr, wordMng, langPack);
+	}
+	
+	@Override
 	public String toString() {
-		return "id: " + id +
-			       word + " [" + wordTr + "] — " + wordMng;
+		return "CardPersistentImpl{" +
+			       "id=" + id +
+			       ", word='" + word + '\'' +
+			       ", wordTr='" + wordTr + '\'' +
+			       ", wordMng='" + wordMng + '\'' +
+			       '}';
 	}
 }
