@@ -59,7 +59,9 @@ public class LangPackService {
 		}
 	}
     
-    public void delete(Long id) throws NoSuchElementException {
+    public void delete(Long id) throws IllegalArgumentException {
+		if (id == null)
+			throw new IllegalArgumentException("id is null");
         langPackRepo.deleteById(id);
     }
 	
