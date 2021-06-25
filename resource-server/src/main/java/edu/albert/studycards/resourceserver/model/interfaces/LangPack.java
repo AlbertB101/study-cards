@@ -10,5 +10,5 @@ public interface LangPack {
 	String getAccountEmail();
 	void setAccountEmail(String accountEmail);
 	
-	boolean hasCard(String word);
+	boolean contains(String word);
 }

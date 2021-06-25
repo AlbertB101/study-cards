@@ -109,7 +109,7 @@ public class LangPackPersistentImpl implements LangPackPersistent, Serializable 
 	
 	@Override
 	public void deleteCard(String word) {
-		if (hasCard(word)) {
+		if (contains(word)) {
 			CardPersistent card = getCard(word);
 			int cardIndex = indexOf(card);
 			cards.remove(cardIndex);
@@ -122,7 +122,7 @@ public class LangPackPersistentImpl implements LangPackPersistent, Serializable 
 	}
 	
 	@Override
-	public boolean hasCard(String word) {
+	public boolean contains(String word) {
 		return false;
 	}
 	

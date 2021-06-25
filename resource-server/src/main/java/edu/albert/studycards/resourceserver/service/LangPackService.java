@@ -51,7 +51,7 @@ public class LangPackService {
 	
 	private void updateCards(LangPackPersistent to, LangPackDto from) {
 		for (CardDto cardDto : from.getCards()) {
-			if (to.hasCard(cardDto.getWord()))
+			if (to.contains(cardDto.getWord()))
 				to.editCard(cardDto);
 			else
 				to.addCard(new CardPersistentImpl(cardDto, to));

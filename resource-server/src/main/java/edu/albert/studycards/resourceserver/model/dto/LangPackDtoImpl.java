@@ -62,7 +62,7 @@ public class LangPackDtoImpl implements LangPackDto {
 	
 	@Override
 	public void deleteCard(String word) {
-		if (hasCard(word)) {
+		if (contains(word)) {
 			CardDto card = getCard(word);
 			int cardIndex = indexOf(card);
 			cards.remove(cardIndex);
@@ -100,7 +100,7 @@ public class LangPackDtoImpl implements LangPackDto {
 	}
 	
 	@Override
-	public boolean hasCard(String word) {
+	public boolean contains(String word) {
 		return cards.stream()
 			       .anyMatch(card -> card.getWord().equals(word));
 	}
