@@ -40,20 +40,23 @@ public class LangPackService {
 		return new LangPackDtoImpl(find(lang));
 	}
 	
-	public void update(LangPackDto langPackDto) throws IllegalArgumentException, NoSuchElementException {
+	public LangPackDto update(LangPackDto langPackDto) throws IllegalArgumentException, NoSuchElementException {
 		if (langPackDto == null)
 			throw new IllegalArgumentException("langPack is null");
-		LangPackPersistent langPack = find(langPackDto.getLang());
-		
-		for (CardDto cardDto : langPackDto.getCards()) {
-            if (langPack.hasCard(cardDto.getWord()))
-				langPack.editCard(cardDto);
-			else
-				langPack.addCard(new CardPersistentImpl(cardDto, langPack));
-		}
-		
-		langPackRepo.saveAndFlush((LangPackPersistentImpl) langPack);
+		LangPackPersistent langPackP = find(langPackDto.getLang());
+		updateCards(langPackP, langPackDto);
 		//TODO: add update repository query
+		LangPackPersistent updatedLangPack = langPackRepo.saveAndFlush((LangPackPersistentImpl) langPackP);
+		return new LangPackDtoImpl(updatedLangPack);
+	}
+	
+	private void updateCards(LangPackPersistent to, LangPackDto from) {
+		for (CardDto cardDto : from.getCards()) {
+			if (to.hasCard(cardDto.getWord()))
+				to.editCard(cardDto);
+			else
+				to.addCard(new CardPersistentImpl(cardDto, to));
+		}
 	}
     
     public void delete(Long id) throws NoSuchElementException {
