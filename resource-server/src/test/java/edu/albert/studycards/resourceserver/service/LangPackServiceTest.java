@@ -60,8 +60,8 @@ public class LangPackServiceTest {
 	}
 	
 	@Test
-	@DisplayName("Should create new LangPack")
-	void shouldCreateNewLangPack() {
+	@DisplayName("create() should create new LangPack")
+	void createShouldCreateNewLangPack() {
 		when(langPackRepo.existsByAccountEmailAndLang(
 			TEST_LANG_PACK_DTO.getAccountEmail(),
 			TEST_LANG_PACK_DTO.getLang()))
@@ -80,8 +80,8 @@ public class LangPackServiceTest {
 	}
 	
 	@Test
-	@DisplayName("Should throw LangPackAlreadyExistsException when create method called")
-	void shouldThrowLangPackAlreadyExistsExceptionWhenCreateMethodCalled() {
+	@DisplayName("create() should throw LangPackAlreadyExistsException")
+	void createShouldThrowLangPackAlreadyExistsException() {
 		when(langPackRepo.existsByAccountEmailAndLang(
 			TEST_LANG_PACK_DTO.getAccountEmail(),
 			TEST_LANG_PACK_DTO.getLang()))
@@ -92,22 +92,15 @@ public class LangPackServiceTest {
 	}
 	
 	@Test
-	@DisplayName("Should throw NullPointerException when create method called with invalid LangPackDto instance")
-	void shouldThrowNullPointerExceptionWhenCreateMethodCalledWithInvalidLangPackDtoInstance() {
-		when(langPackRepo.existsByAccountEmailAndLang(
-			TEST_LANG_PACK_DTO.getAccountEmail(),
-			TEST_LANG_PACK_DTO.getLang()))
-			.thenReturn(false);
-		
-		LangPackDto invalidLangPackDto = new LangPackDtoImpl(TEST_LANG_PACK_DTO);
-		invalidLangPackDto.setLang(null);
-		
-		assertThrows(NullPointerException.class, () -> langPackService.create(invalidLangPackDto));
+	@DisplayName("create() should throw NullPointerException when argument is null")
+	void createShouldThrowNullPointerExceptionWhenArgumentIsNull() {
+		assertThrows(NullPointerException.class,
+			() -> langPackService.create(null));
 	}
 	
 	@Test
-	@DisplayName("Should return LangPackDto when get method called")
-	void shouldReturnLangPackDtoWhenGetMethodCalled() {
+	@DisplayName("get() should return LangPackDto")
+	void getShouldReturnLangPackDto() {
 		when(langPackRepo.findByAccountEmailAndLang(
 			TEST_LANG_PACK_DTO.getAccountEmail(),
 			TEST_LANG_PACK_DTO.getLang()))
@@ -121,11 +114,9 @@ public class LangPackServiceTest {
 	}
 	
 	@Test
-	@DisplayName("Should throw IllegalArgumentException when get method called with illegal argument")
-	void shouldThrowNullPointerExceptionWhenGetMethodCalledWithIllegalArgument() {
-		assertThrows(IllegalArgumentException.class,
-			() -> langPackService.get(""));
-		assertThrows(IllegalArgumentException.class,
+	@DisplayName("get() should throw NullPointerException when argument is null")
+	void getShouldThrowNullPointerExceptionWhenArgumentIsNull() {
+		assertThrows(NullPointerException.class,
 			() -> langPackService.get(null));
 	}
 	
@@ -136,9 +127,9 @@ public class LangPackServiceTest {
 	}
 	
 	@Test
-	@DisplayName("update() should throw IllegalArgumentException when argument is null")
-	void updateShouldThrowIllegalArgumentExceptionWhenArgumentIsNull() {
-		assertThrows(IllegalArgumentException.class,
+	@DisplayName("update() should throw NullPointerException when argument is null")
+	void updateShouldThrowNullPointerExceptionWhenArgumentIsNull() {
+		assertThrows(NullPointerException.class,
 			() -> langPackService.update(null));
 	}
 	
@@ -170,11 +161,9 @@ public class LangPackServiceTest {
 	}
 	
 	@Test
-	@DisplayName("delete() should throw IllegalArgumentException when argument is null")
-	void deleteShouldThrowIllegalArgumentExceptionWhenArgumentIsNull() {
-		assertThrows(IllegalArgumentException.class,
+	@DisplayName("delete() should throw NullPointerException when argument is null")
+	void deleteShouldThrowNullPointerExceptionWhenArgumentIsNull() {
+		assertThrows(NullPointerException.class,
 			() -> langPackService.delete(null));
 	}
-	
-	
 }
