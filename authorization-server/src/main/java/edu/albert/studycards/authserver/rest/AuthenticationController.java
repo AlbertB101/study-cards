@@ -20,6 +20,12 @@ import java.util.Map;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Authentication REST controller that exposes endpoints for login and logout requests.
+ *
+ * <p>As this controller is REST it doesn't hold information about clients and receives JSON files.
+ *
+ */
 @RestController
 @RequestMapping("api/v1/auth")
 public class AuthenticationController {
@@ -28,9 +34,24 @@ public class AuthenticationController {
 	@Autowired
 	AuthenticationService authService;
 	
-	
+	/**
+	 * Makes a try to log client in and returns {@link ResponseEntity} with login information.
+	 *
+	 * <p>Response entity has properties:
+	 * <ul>
+	 * <li>email - email of logged user;
+	 * <li>token - jwt token for accessing resources those require authorization.
+	 * </ul>
+	 *
+	 * <p>Endpoint receives json file that is converted to {@link LoginDtoImpl} object.
+	 * To successfully log in received json file must satisfy annotation constraints in
+	 * {@link LoginDtoImpl}.
+	 *
+	 * @param loginDto {@link LoginDtoImpl} object to log in.
+	 * @return ResponseEntity with information about login request.
+	 */
 	@PostMapping(value = "/logIn")
-	public ResponseEntity<?> login(@RequestBody @Valid LoginDtoImpl loginDto) {
+	public ResponseEntity<?> logIn(@RequestBody @Valid LoginDtoImpl loginDto) {
 		try {
 			Map<String, Object> response = authService.login(loginDto).get();
 			return ResponseEntity.ok(response);
@@ -48,9 +69,9 @@ public class AuthenticationController {
 			return new ResponseEntity<>("Login fail", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
-	@PostMapping("/logout")
-	public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+
+	@PostMapping("/logOut")
+	public ResponseEntity<?> logOut(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			authService.logout(request, response).get();
 			return new ResponseEntity<>(HttpStatus.OK);
