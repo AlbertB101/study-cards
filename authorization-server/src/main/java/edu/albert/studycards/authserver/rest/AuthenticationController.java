@@ -23,8 +23,11 @@ import java.util.concurrent.ExecutionException;
 /**
  * Authentication REST controller that exposes endpoints for login and logout requests.
  *
- * <p>As this controller is REST it doesn't hold information about clients and receives JSON files.
- *
+ * <p>As this controller is REST it:
+ * <ul>
+ *     <li> doesn't hold session or another information about request or client
+ *     <li> receives and returns json files
+ * </ul>
  */
 @RestController
 @RequestMapping("api/v1/auth")
@@ -69,7 +72,18 @@ public class AuthenticationController {
 			return new ResponseEntity<>("Login fail", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
+	
+	//TODO:? Move logout actions with http request to request filter
+	/**
+	 * This endpoint tries to log client out and return {@link ResponseEntity}.
+	 *
+	 * <p>Frontend caller should pass valid token, that will be
+	 * invalidated if logout request successfully satisfied.
+	 * If logout request isn't satisfied, client will still could use the token as early.
+	 * @param request HttpServletRequest
+	 * @param response HttpServletResponse
+	 * @return {@link ResponseEntity}
+	 */
 	@PostMapping("/logOut")
 	public ResponseEntity<?> logOut(HttpServletRequest request, HttpServletResponse response) {
 		try {
