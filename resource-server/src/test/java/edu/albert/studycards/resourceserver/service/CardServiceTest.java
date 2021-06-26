@@ -109,4 +109,36 @@ public class CardServiceTest {
 			assertEquals(TEST_CARD_DTO, cardDto);
 		});
 	}
+	
+	@Test
+	@DisplayName("update() should throw NullPointerException")
+	void updateShouldThrowNullPointerException() {
+		assertThrows(NullPointerException.class,
+			() -> cardService.update(null));
+	}
+	
+	@Test
+	@DisplayName("update() should return updated CardDto")
+	void updateShouldReturnUpdatedCardDto() {
+		CardDto updateCard = new CardDtoImpl(TEST_CARD_DTO);
+		String newWordTr = "new transcription";
+		String newWordMng = "new meaning";
+		updateCard.setWordTr(newWordTr);
+		updateCard.setWordMng(newWordMng);
+		LangPackPersistent langPackP = new LangPackPersistentImpl(TEST_LANG_PACK_DTO);
+		when(cardRepo.findByWordAndLangPack_AccountEmail(
+			TEST_CARD_DTO.getWord(),
+			SecurityContextHolder.getContext().getAuthentication().getName()))
+			.thenReturn(Optional.of(new CardPersistentImpl(TEST_CARD_DTO, langPackP)));
+		when(cardRepo.saveAndFlush(any()))
+			.thenReturn(new CardPersistentImpl(updateCard, langPackP));
+		
+		assertDoesNotThrow(() -> {
+			CardDto updatedCard = cardService.update(updateCard);
+			assertNotNull(updatedCard);
+			assertEquals(TEST_CARD_DTO.getWord(), updatedCard.getWord());
+			assertEquals(newWordTr, updatedCard.getWordTr());
+			assertEquals(newWordMng, updatedCard.getWordMng());
+		});
+	}
 }
