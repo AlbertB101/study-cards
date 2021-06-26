@@ -42,6 +42,11 @@ public class CardService {
 		return new CardDtoImpl(cardP);
 	}
 	
+	public void delete(Long cardId) {
+		Objects.requireNonNull(cardId);
+		cardRepo.deleteById(cardId);
+	}
+	
 	public void delete(String word, String lang) {
 		Objects.requireNonNull(word);
 		Objects.requireNonNull(lang);
