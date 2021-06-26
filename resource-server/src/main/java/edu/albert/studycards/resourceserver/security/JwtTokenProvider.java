@@ -61,8 +61,6 @@ public class JwtTokenProvider {
 		try {
 			Jws<Claims> claimsJws = getClaims(token);
 			Date expiration = claimsJws.getBody().getExpiration();
-//			String tokenFromDB = jdbcTemplate.queryForObject("SELECT token FROM jwt_blacklist WHERE token = " + token, String.class);
-			
 			return !expiration.before(new Date());
 //					&& !jwtBlacklistRepository.existsByToken(token);
 		} catch (JwtException | IllegalArgumentException e) {
@@ -82,10 +80,6 @@ public class JwtTokenProvider {
 			e.printStackTrace();
 			return null;
 		}
-	}
-	
-	public String getUsername(String token) {
-		return getClaims(token).getBody().getSubject();
 	}
 	
 	private Jws<Claims> getClaims(String token) {
