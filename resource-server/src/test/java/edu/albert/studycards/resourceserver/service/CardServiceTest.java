@@ -141,4 +141,31 @@ public class CardServiceTest {
 			assertEquals(newWordMng, updatedCard.getWordMng());
 		});
 	}
+	
+	@Test
+	@DisplayName("delete() with one argument should throw NullPointerException")
+	void deleteWithOneArgumentShouldThrowNullPointerException() {
+		assertThrows(NullPointerException.class, () -> cardService.delete(null));
+	}
+	
+	@Test
+	@DisplayName("delete() with two arguments should throw NullPointerException when first argument is null")
+	void deleteWithTwoArgumentsShouldThrowNullPointerExceptionWhenFirstArgumentIsNull() {
+		assertThrows(NullPointerException.class,
+			() -> cardService.delete(null, TEST_CARD_DTO.getLang()));
+	}
+	
+	@Test
+	@DisplayName("delete() with two arguments should throw NullPointerException when second argument is null")
+	void deleteWithTwoArgumentsShouldThrowNullPointerExceptionWhenSecondArgumentIsNull() {
+		assertThrows(NullPointerException.class,
+			() -> cardService.delete(TEST_CARD_DTO.getWord(), null));
+	}
+	@Test
+	@DisplayName("delete() with two arguments should throw NullPointerException when both arguments are null")
+	void deleteWithTwoArgumentsShouldThrowNullPointerExceptionWhenBothArgumentsAreNull() {
+		assertThrows(NullPointerException.class,
+			() -> cardService.delete(TEST_CARD_DTO.getWord(), null));
+	}
+	
 }
