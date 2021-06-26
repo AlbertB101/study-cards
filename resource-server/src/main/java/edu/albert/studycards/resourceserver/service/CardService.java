@@ -19,12 +19,13 @@ public class CardService {
 	@Autowired
 	LangPackService langPackService;
 	
-	public void create(CardDto cardDto) {
+	public CardDto create(CardDto cardDto) {
 		Objects.requireNonNull(cardDto);
 		LangPackPersistent langPack = langPackService.find(cardDto.getLang());
 		if (!langPack.contains(cardDto.getWord())) {
 			langPack.addCard(new CardPersistentImpl(cardDto, langPack));
 		}
+		return new CardDtoImpl(langPack.getCard(cardDto.getWord()));
 	}
 	
 	public CardDto get(Long cardId) {
