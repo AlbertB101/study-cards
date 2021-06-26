@@ -1,7 +1,7 @@
 package edu.albert.studycards.authserver.rest;
 
 import edu.albert.studycards.authserver.domain.dto.UserAccountDtoImpl;
-import edu.albert.studycards.authserver.domain.interfaces.UserAccountDto;
+import edu.albert.studycards.authserver.domain.interfaces.*;
 import edu.albert.studycards.authserver.exception.ClientAlreadyExistsException;
 import edu.albert.studycards.authserver.service.UserAccountService;
 import org.slf4j.Logger;
@@ -21,6 +21,16 @@ import java.util.Map;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * REST controller for managing user account exposing CRUD endpoints.
+ *
+ * <p>Request to all endpoints except registration endpoint should be authenticated.
+ * Requests may have different authorities.
+ * Some endpoints are available for "users" and some only for "developers".
+ *
+ * @see Role
+ * @see Permission
+ */
 @RestController
 @RequestMapping("api/v1/user/account")
 public class UserAccountController {
