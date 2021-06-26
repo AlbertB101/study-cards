@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface CardRepository extends JpaRepository<CardPersistentImpl, Long> {
 	Optional<CardPersistent> findByWordAndLangPack_AccountEmail(String word, String accEmail);
+	void deleteByWordAndLangPack_LangAndLangPack_AccountEmail(
+		String word, String lang, String accEmail);
 }
