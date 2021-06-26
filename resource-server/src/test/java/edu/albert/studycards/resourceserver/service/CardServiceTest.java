@@ -89,15 +89,35 @@ public class CardServiceTest {
 	}
 	
 	@Test
-	@DisplayName("get() should throw NullPointerException")
-	void getShouldThrowNullPointerException() {
+	@DisplayName("get() by card id should throw NullPointerException")
+	void getByCardIdShouldThrowNullPointerException() {
 		assertThrows(NullPointerException.class,
-			() -> cardService.get(null));
+			() -> cardService.get((Long) null));
 	}
 	
 	@Test
-	@DisplayName("get() should return LangPack")
-	void getShouldReturnLangPack() {
+	@DisplayName("get() by LangPack language should throw NullPointerException")
+	void getByLangPackLanguageShouldThrowNullPointerException() {
+		assertThrows(NullPointerException.class,
+			() -> cardService.get((String) null));
+	}
+	
+	@Test
+	@DisplayName("get() by card id should return Card")
+	void getByCardIdShouldReturnCard() {
+		LangPackPersistent langPackP = new LangPackPersistentImpl(TEST_LANG_PACK_DTO);
+		when(cardRepo.findById(TEST_CARD_DTO.getId()))
+			.thenReturn(Optional.of(new CardPersistentImpl(TEST_CARD_DTO, langPackP)));
+		
+		assertDoesNotThrow(() -> {
+			CardDto receivedCard = cardService.get(TEST_CARD_DTO.getId());
+			assertEquals(TEST_CARD_DTO, receivedCard);
+		});
+	}
+	
+	@Test
+	@DisplayName("get() by LangPack language should return Card")
+	void getByLangPackLanguageShouldReturnCard() {
 		LangPackPersistent langPackP = new LangPackPersistentImpl(TEST_LANG_PACK_DTO);
 		when(cardRepo.findByWordAndLangPack_AccountEmail(
 			TEST_CARD_DTO.getWord(),
@@ -105,10 +125,11 @@ public class CardServiceTest {
 			.thenReturn(Optional.of(new CardPersistentImpl(TEST_CARD_DTO, langPackP)));
 		
 		assertDoesNotThrow(() -> {
-			CardDto cardDto = cardService.get(TEST_CARD_DTO.getWord());
-			assertEquals(TEST_CARD_DTO, cardDto);
+			CardDto receivedCard = cardService.get(TEST_CARD_DTO.getWord());
+			assertEquals(TEST_CARD_DTO, receivedCard);
 		});
 	}
+	
 	
 	@Test
 	@DisplayName("update() should throw NullPointerException")
