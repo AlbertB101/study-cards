@@ -58,16 +58,18 @@ public class LangPackRestController {
         }
     }
     
-//    @PreAuthorize("hasAuthority('developer:read')")
-//    @GetMapping(value = "/{id}/get", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<?> getLangPack(@PathVariable() Long id,
-//                                         @RequestParam(name = "lang") String lang) {
-//        try {
-//            return new ResponseEntity<>(langPackService.get(id, lang), HttpStatus.OK);
-//        } catch (NoSuchElementException e) {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-//        }
-//    }
+    @PreAuthorize("hasAuthority('developer:read')")
+    @GetMapping(value = "/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getLangPack(@PathVariable() Long id) {
+        try {
+            LangPackDto receivedLangPack = langPackService.get(id);
+            return new ResponseEntity<>(receivedLangPack, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(
+                "LangPack wasn't updated." + RESPONSE_MSG_FOR_RUNTIME_EXC,
+                HttpStatus.BAD_REQUEST);
+        }
+    }
     
     @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('user:update')")
@@ -97,14 +99,4 @@ public class LangPackRestController {
                 HttpStatus.BAD_REQUEST);
         }
     }
-    
-//    @PreAuthorize("hasAuthority('developer:read')")
-//    @GetMapping(value = "/getAccountLangPackLanguages", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<?> getExistingLanguages(@RequestParam(name = "accountId") Long accountId) {
-//        try {
-//            return new ResponseEntity<>(langPackService.getExistingLanguages(accountId), HttpStatus.OK);
-//        } catch (NoSuchElementException e) {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-//        }
-//    }
 }
