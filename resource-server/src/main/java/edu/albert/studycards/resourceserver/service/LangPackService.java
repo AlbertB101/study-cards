@@ -21,7 +21,7 @@ public class LangPackService {
 	@Autowired
 	CardService cardService;
 	
-	public LangPackPersistent create(LangPackDto langPackDto) throws LangPackAlreadyExistsException {
+	public LangPackDto create(LangPackDto langPackDto) throws LangPackAlreadyExistsException {
 		Objects.requireNonNull(langPackDto);
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		
@@ -32,7 +32,12 @@ public class LangPackService {
 		//TODO: add langPackDto validity check
 		
 		LangPackPersistentImpl langPack = new LangPackPersistentImpl(langPackDto);
-		return langPackRepo.saveAndFlush(langPack);
+		return new LangPackDtoImpl(langPackRepo.saveAndFlush(langPack));
+	}
+	
+	public LangPackDto get(Long id) {
+		Objects.requireNonNull(id);
+		return new LangPackDtoImpl(find(id));
 	}
 	
 	public LangPackDto get(String lang) {
@@ -61,6 +66,13 @@ public class LangPackService {
 	public void delete(Long id) {
 		Objects.requireNonNull(id);
 		langPackRepo.deleteById(id);
+	}
+	
+	LangPackPersistent find(Long id) {
+		Objects.requireNonNull(id);
+		return langPackRepo
+			       .findById(id)
+			       .orElseThrow(NoSuchElementException::new);
 	}
 	
 	LangPackPersistent find(String lang) {
