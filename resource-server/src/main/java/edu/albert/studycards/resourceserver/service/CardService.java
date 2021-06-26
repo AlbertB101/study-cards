@@ -27,6 +27,14 @@ public class CardService {
 		}
 	}
 	
+	public CardDto get(Long cardId) {
+		Objects.requireNonNull(cardId);
+		CardPersistent cardP = cardRepo
+			                       .findById(cardId)
+			                       .orElseThrow(NoSuchElementException::new);
+		return new CardDtoImpl(cardP);
+	}
+	
 	public CardDto get(String word) {
 		Objects.requireNonNull(word);
 		return new CardDtoImpl(findCard(word));
