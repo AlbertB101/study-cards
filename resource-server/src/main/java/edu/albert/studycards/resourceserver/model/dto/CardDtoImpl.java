@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
 @NoArgsConstructor
@@ -15,9 +16,13 @@ public class CardDtoImpl implements CardDto {
 	private Long id;
 	private Long langPackId;
 	private Long accountId;
+	@NotBlank
 	private String lang;
+	@NotBlank
 	private String word;
+	@NotBlank
 	private String wordTr;
+	@NotBlank
 	private String wordMng;
 	
 	public CardDtoImpl(String word, String wordTr, String wordMng) {
