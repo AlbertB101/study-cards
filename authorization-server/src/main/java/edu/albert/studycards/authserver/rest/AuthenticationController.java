@@ -36,16 +36,16 @@ public class AuthenticationController {
 			return ResponseEntity.ok(response);
 		} catch (BadCredentialsException e) {
 			LOGGER.info("Credentials are incorrect; Login request wasn't satisfied");
-			return new ResponseEntity<>("Email or password is incorrect", HttpStatus.FORBIDDEN);
+			return new ResponseEntity<>("Login fail. Email or password is incorrect", HttpStatus.FORBIDDEN);
 		} catch (CancellationException e) {
 			LOGGER.debug("Future completion was unexpectedly cancelled; " + e.getMessage());
-			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("Login fail", HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (ExecutionException e) {
 			LOGGER.debug("Future was completed exceptionally; " + e.getCause());
-			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("Login fail", HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (InterruptedException e) {
 			LOGGER.debug("Future was interrupted; " + e.getMessage());
-			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("Login fail", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -53,16 +53,16 @@ public class AuthenticationController {
 	public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			authService.logout(request, response).get();
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (CancellationException e) {
 			LOGGER.debug("Future completion was unexpectedly cancelled; " + e.getMessage());
-			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("Logout fail", HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (ExecutionException e) {
 			LOGGER.debug("Future was completed exceptionally; " + e.getCause());
-			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("Logout fail", HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (InterruptedException e) {
 			LOGGER.debug("Future was interrupted; " + e.getMessage());
-			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("Logout fail", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
