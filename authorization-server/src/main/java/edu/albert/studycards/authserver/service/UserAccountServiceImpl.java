@@ -1,5 +1,6 @@
 package edu.albert.studycards.authserver.service;
 
+import edu.albert.studycards.authserver.config.AppConfig;
 import edu.albert.studycards.authserver.domain.dto.AccountRegistrationRequest;
 import edu.albert.studycards.authserver.domain.dto.UserAccountDtoImpl;
 import edu.albert.studycards.authserver.domain.interfaces.UserAccountDto;
@@ -9,6 +10,7 @@ import edu.albert.studycards.authserver.exception.ClientAlreadyExistsException;
 import edu.albert.studycards.authserver.repository.UserAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,6 +20,23 @@ import org.springframework.stereotype.Service;
 import java.util.NoSuchElementException;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Service class managing {@link UserAccountPersistent} CRUD operations.
+ *
+ * <p>In this class I make a try to use asynchronous features of spring boot.
+ * Every API method is annotated {@link Async} annotation that uses
+ * configured {@link ThreadPoolTaskExecutor} from {@link AppConfig}.
+ * Every API method returns {@link CompletableFuture} with return value inside.
+ *
+ * <p> {@link UserAccountRepository} and {@link PasswordEncoder} seems to be thread because
+ * they are managed by spring container
+ * <a href=https://stackoverflow.com/questions/15965735/is-a-spring-data-jpa-repository-thread-safe-aka-is-simplejparepository-threa/15971952>
+ * (link)</a>. So it seems this class should be thread safe.
+ *
+ *
+ * <p>I'm not sure I use this feature properly, but
+ * I've wanted to get first experience with asynchronous computing.
+ */
 @Service
 public class UserAccountServiceImpl implements UserAccountService {
 	
