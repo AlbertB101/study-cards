@@ -1,5 +1,6 @@
 package edu.albert.studycards.authserver.rest;
 
+import edu.albert.studycards.authserver.domain.dto.AccountRegistrationRequest;
 import edu.albert.studycards.authserver.domain.dto.AccountRegistrationRequestDto;
 import edu.albert.studycards.authserver.domain.dto.UserAccountDtoImpl;
 import edu.albert.studycards.authserver.domain.interfaces.*;
@@ -47,21 +48,28 @@ public class UserAccountController {
 	private UserAccountService userAccService;
 	
 	/**
-	 * Sign client up and returns {@link ResponseEntity}.
+	 * Sign client up and returns {@link ResponseEntity} with http status and message.
+	 * Endpoint doesn't require authentication or authorization.
 	 *
-	 * Request to this endpoint should contain body with parameters
-	 * described in {@link UserAccountDtoImpl}
-	 * <p>If client was registered, the endpoint returns ResponseEntity with properties:
+	 * <p>Request to this endpoint should contain a body with parameters:
+	 * <ul>
+	 *  <li>firstName - name of user. Max size is 64 symbols;
+	 *  <li>lastName - last name of user. Max size is 64 symbols;
+	 *  <li>email - email of user that wasn't used before;
+	 *  <li>password - already encrypted password.
+	 * </ul>
+	 *
+	 * <p>If a client was registered, the endpoint returns ResponseEntity with properties:
 	 * <ul>
 	 *  <li>ResponseMessage - message about successful registration;
 	 *  <li>UserAccountInfo - information about new user account.
 	 * </ul>
-	 * <p>If client wasn't registered, the endpoint returns error message in ResponseEntity body
+	 * If client wasn't registered, the endpoint returns error message in ResponseEntity body
 	 *
-	 * @param regRequest
-	 * @return
-	 *
-	 * @see UserAccountDtoImpl
+	 * @param regRequest registration request object
+	 * @return ResponseEntity with information about registration request
+	 * @see AccountRegistrationRequest
+	 * @see AccountRegistrationRequestDto
 	 */
 	@PostMapping(value = "/signUp")
 	public ResponseEntity<?> signUp(@RequestBody @Valid AccountRegistrationRequestDto regRequest) {
@@ -86,6 +94,7 @@ public class UserAccountController {
 		}
 	}
 	
+	
 	@GetMapping(value = "/receive", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('user:read')")
 	public ResponseEntity<?> getAccount() {
@@ -105,6 +114,7 @@ public class UserAccountController {
 			return new ResponseEntity<>("User account wasn't received", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
 	
 	@GetMapping(value = "/{id}/receive")
 	@PreAuthorize("hasAuthority('developer:read')")
