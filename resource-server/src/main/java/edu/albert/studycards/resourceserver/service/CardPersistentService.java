@@ -17,7 +17,7 @@ public class CardPersistentService implements CardService {
 	@Autowired
 	CardRepository cardRepo;
 	@Autowired
-	LangPackPersistentService langPackService;
+	LangPackService langPackService;
 	
 	@Override
 	public CardDto create(CardDto cardDto) {
@@ -70,7 +70,8 @@ public class CardPersistentService implements CardService {
 			word, lang, email);
 	}
 	
-	CardPersistent findCard(String word) {
+	@Override
+	public CardPersistent findCard(String word) {
 		Objects.requireNonNull(word);
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		return cardRepo
@@ -78,7 +79,8 @@ public class CardPersistentService implements CardService {
 			       .orElseThrow(NoSuchElementException::new);
 	}
 	
-	CardPersistent findCard(String word, String lang) {
+	@Override
+	public CardPersistent findCard(String word, String lang) {
 		Objects.requireNonNull(word);
 		Objects.requireNonNull(lang);
 		LangPackPersistent langPack = langPackService.find(lang);

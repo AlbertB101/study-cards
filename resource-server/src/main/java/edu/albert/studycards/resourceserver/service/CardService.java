@@ -1,6 +1,7 @@
 package edu.albert.studycards.resourceserver.service;
 
 import edu.albert.studycards.resourceserver.model.interfaces.CardDto;
+import edu.albert.studycards.resourceserver.model.interfaces.CardPersistent;
 
 public interface CardService {
 	CardDto create(CardDto cardDto);
@@ -14,4 +15,8 @@ public interface CardService {
 	void delete(Long cardId);
 	
 	void delete(String word, String lang);
+	
+	CardPersistent findCard(String word);
+	
+	CardPersistent findCard(String word, String lang);
 }
