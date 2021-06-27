@@ -1,5 +1,6 @@
 package edu.albert.studycards.authserver.rest;
 
+import edu.albert.studycards.authserver.domain.dto.AccountRegistrationRequestDto;
 import edu.albert.studycards.authserver.domain.dto.UserAccountDtoImpl;
 import edu.albert.studycards.authserver.domain.interfaces.*;
 import edu.albert.studycards.authserver.exception.ClientAlreadyExistsException;
@@ -57,15 +58,15 @@ public class UserAccountController {
 	 * </ul>
 	 * <p>If client wasn't registered, the endpoint returns error message in ResponseEntity body
 	 *
-	 * @param userAccDto
+	 * @param regRequest
 	 * @return
 	 *
 	 * @see UserAccountDtoImpl
 	 */
 	@PostMapping(value = "/signUp")
-	public ResponseEntity<?> signUp(@RequestBody @Valid UserAccountDtoImpl userAccDto) {
+	public ResponseEntity<?> signUp(@RequestBody @Valid AccountRegistrationRequestDto regRequest) {
 		try {
-			UserAccountDto newUserAcc = userAccService.register(userAccDto).get();
+			UserAccountDto newUserAcc = userAccService.register(regRequest).get();
 			Map<String, Object> userAccInfo = Map.of(
 				"UserAccountInfo", newUserAcc,
 				"ResponseMessage", "Client was successfully registered");
