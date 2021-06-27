@@ -22,11 +22,16 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 
 /**
- * REST controller for managing user account exposing CRUD endpoints.
+ * REST controller for managing user accounts. The controller exposes endpoints
+ * for CRUD operations.
  *
  * <p>Request to all endpoints except registration endpoint should be authenticated.
  * Requests may have different authorities.
  * Some endpoints are available for "users" and some only for "developers".
+ *
+ * <p>All endpoints return {@link ResponseEntity} with JSON file
+ * that contains requested data or
+ * information about why the request wasn't satisfied.
  *
  * @see Role
  * @see Permission
@@ -40,6 +45,23 @@ public class UserAccountController {
 	@Autowired
 	private UserAccountService userAccService;
 	
+	/**
+	 * Sign client up and returns {@link ResponseEntity}.
+	 *
+	 * Request to this endpoint should contain body with parameters
+	 * described in {@link UserAccountDtoImpl}
+	 * <p>If client was registered, the endpoint returns ResponseEntity with properties:
+	 * <ul>
+	 *  <li>ResponseMessage - message about successful registration;
+	 *  <li>UserAccountInfo - information about new user account.
+	 * </ul>
+	 * <p>If client wasn't registered, the endpoint returns error message in ResponseEntity body
+	 *
+	 * @param userAccDto
+	 * @return
+	 *
+	 * @see UserAccountDtoImpl
+	 */
 	@PostMapping(value = "/signUp")
 	public ResponseEntity<?> signUp(@RequestBody @Valid UserAccountDtoImpl userAccDto) {
 		try {
@@ -48,7 +70,6 @@ public class UserAccountController {
 				"UserAccountInfo", newUserAcc,
 				"ResponseMessage", "Client was successfully registered");
 			return new ResponseEntity<>(userAccInfo, HttpStatus.OK);
-			
 		} catch (CancellationException e) {
 			LOGGER.debug("Future completion was unexpectedly cancelled; " + e.getMessage());
 			return new ResponseEntity<>("New user account wasn't created", HttpStatus.INTERNAL_SERVER_ERROR);
