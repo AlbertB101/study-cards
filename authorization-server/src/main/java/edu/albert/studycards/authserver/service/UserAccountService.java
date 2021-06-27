@@ -1,5 +1,6 @@
 package edu.albert.studycards.authserver.service;
 
+import edu.albert.studycards.authserver.domain.dto.AccountRegistrationRequest;
 import edu.albert.studycards.authserver.domain.interfaces.UserAccountDto;
 import edu.albert.studycards.authserver.exception.ClientAlreadyExistsException;
 
@@ -8,7 +9,7 @@ import java.util.concurrent.CompletableFuture;
 
 public interface UserAccountService {
 	
-	CompletableFuture<UserAccountDto> register(UserAccountDto userAccountDto) throws ClientAlreadyExistsException;
+	CompletableFuture<UserAccountDto> register(AccountRegistrationRequest regRequest) throws ClientAlreadyExistsException;
 	
 	CompletableFuture<UserAccountDto> receive(String email) throws NoSuchElementException;
 	
