@@ -1,4 +1,4 @@
-package edu.albert.studycards.authserver.domain.interfaces;
+package edu.albert.studycards.authserver.domain;
 
 public enum Permission {
     USER_WRITE("user:write"),

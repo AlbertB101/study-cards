@@ -1,6 +1,6 @@
 package edu.albert.studycards.authserver.repository;
 
-import edu.albert.studycards.authserver.domain.interfaces.UserAccountPersistent;
+import edu.albert.studycards.authserver.domain.persistent.UserAccountPersistent;
 import edu.albert.studycards.authserver.domain.persistent.UserAccountPersistentImpl;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

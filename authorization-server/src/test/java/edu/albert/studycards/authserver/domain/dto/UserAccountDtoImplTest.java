@@ -1,9 +1,8 @@
 package edu.albert.studycards.authserver.domain.dto;
 
-import edu.albert.studycards.authserver.domain.interfaces.UserAccountDto;
-import edu.albert.studycards.authserver.domain.interfaces.UserAccountPersistent;
-import edu.albert.studycards.authserver.domain.interfaces.Role;
-import edu.albert.studycards.authserver.domain.interfaces.Status;
+import edu.albert.studycards.authserver.domain.Role;
+import edu.albert.studycards.authserver.domain.Status;
+import edu.albert.studycards.authserver.domain.persistent.UserAccountPersistent;
 import edu.albert.studycards.authserver.domain.persistent.UserAccountPersistentImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

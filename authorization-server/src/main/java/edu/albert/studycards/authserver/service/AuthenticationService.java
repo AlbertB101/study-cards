@@ -1,13 +1,12 @@
 package edu.albert.studycards.authserver.service;
 
-import edu.albert.studycards.authserver.domain.interfaces.LoginDto;
+import edu.albert.studycards.authserver.domain.dto.LoginDto;
 import edu.albert.studycards.authserver.domain.persistent.JwtBlacklist;
 import edu.albert.studycards.authserver.repository.JwtBlacklistRepository;
 import edu.albert.studycards.authserver.repository.UserAccountRepository;
 import edu.albert.studycards.authserver.security.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;

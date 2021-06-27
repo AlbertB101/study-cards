@@ -1,6 +1,8 @@
 package edu.albert.studycards.authserver.domain.dto;
 
-import edu.albert.studycards.authserver.domain.interfaces.*;
+import edu.albert.studycards.authserver.domain.Role;
+import edu.albert.studycards.authserver.domain.Status;
+import edu.albert.studycards.authserver.domain.persistent.UserAccountPersistent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,7 +10,6 @@ import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 /**

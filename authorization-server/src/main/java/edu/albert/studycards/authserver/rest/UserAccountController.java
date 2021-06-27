@@ -1,9 +1,8 @@
 package edu.albert.studycards.authserver.rest;
 
-import edu.albert.studycards.authserver.domain.dto.AccountRegistrationRequest;
-import edu.albert.studycards.authserver.domain.dto.AccountRegistrationRequestDto;
-import edu.albert.studycards.authserver.domain.dto.UserAccountDtoImpl;
-import edu.albert.studycards.authserver.domain.interfaces.*;
+import edu.albert.studycards.authserver.domain.Permission;
+import edu.albert.studycards.authserver.domain.Role;
+import edu.albert.studycards.authserver.domain.dto.*;
 import edu.albert.studycards.authserver.exception.ClientAlreadyExistsException;
 import edu.albert.studycards.authserver.service.UserAccountService;
 import org.slf4j.Logger;

@@ -1,11 +1,11 @@
-package edu.albert.studycards.authserver.domain.interfaces;
+package edu.albert.studycards.authserver.domain;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static edu.albert.studycards.authserver.domain.interfaces.Permission.*;
+import static edu.albert.studycards.authserver.domain.Permission.*;
 
 public enum Role {
     USER(Set.of(USER_READ, USER_WRITE, USER_UPDATE, USER_DELETE)),

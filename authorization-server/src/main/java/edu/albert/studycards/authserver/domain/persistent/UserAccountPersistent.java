@@ -1,4 +1,7 @@
-package edu.albert.studycards.authserver.domain.interfaces;
+package edu.albert.studycards.authserver.domain.persistent;
+
+import edu.albert.studycards.authserver.domain.Role;
+import edu.albert.studycards.authserver.domain.Status;
 
 import java.util.Date;
 

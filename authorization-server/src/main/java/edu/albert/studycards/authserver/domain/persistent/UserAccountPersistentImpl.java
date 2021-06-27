@@ -1,7 +1,9 @@
 package edu.albert.studycards.authserver.domain.persistent;
 
 import edu.albert.studycards.authserver.domain.dto.AccountRegistrationRequest;
-import edu.albert.studycards.authserver.domain.interfaces.*;
+import edu.albert.studycards.authserver.domain.Role;
+import edu.albert.studycards.authserver.domain.Status;
+import edu.albert.studycards.authserver.domain.dto.UserAccountDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

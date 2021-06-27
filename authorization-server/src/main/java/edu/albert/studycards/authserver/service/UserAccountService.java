@@ -1,10 +1,9 @@
 package edu.albert.studycards.authserver.service;
 
 import edu.albert.studycards.authserver.domain.dto.AccountRegistrationRequest;
-import edu.albert.studycards.authserver.domain.interfaces.UserAccountDto;
+import edu.albert.studycards.authserver.domain.dto.UserAccountDto;
 import edu.albert.studycards.authserver.exception.ClientAlreadyExistsException;
 
-import java.util.NoSuchElementException;
 import java.util.concurrent.CompletableFuture;
 
 public interface UserAccountService {

@@ -1,8 +1,8 @@
 package edu.albert.studycards.authserver.repository;
 
 import edu.albert.studycards.authserver.domain.dto.UserAccountDtoImpl;
-import edu.albert.studycards.authserver.domain.interfaces.UserAccountDto;
-import edu.albert.studycards.authserver.domain.interfaces.UserAccountPersistent;
+import edu.albert.studycards.authserver.domain.dto.UserAccountDto;
+import edu.albert.studycards.authserver.domain.persistent.UserAccountPersistent;
 import edu.albert.studycards.authserver.domain.persistent.UserAccountPersistentImpl;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;

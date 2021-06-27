@@ -1,6 +1,5 @@
 package edu.albert.studycards.authserver.domain.dto;
 
-import edu.albert.studycards.authserver.domain.interfaces.LoginDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

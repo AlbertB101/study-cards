@@ -1,7 +1,7 @@
 package edu.albert.studycards.authserver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.albert.studycards.authserver.domain.dto.UserAccountDtoImpl;
-import edu.albert.studycards.authserver.domain.interfaces.UserAccountDto;
+import edu.albert.studycards.authserver.domain.dto.UserAccountDto;
 import lombok.SneakyThrows;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;

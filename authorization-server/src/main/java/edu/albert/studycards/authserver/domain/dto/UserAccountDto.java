@@ -1,4 +1,7 @@
-package edu.albert.studycards.authserver.domain.interfaces;
+package edu.albert.studycards.authserver.domain.dto;
+
+import edu.albert.studycards.authserver.domain.Role;
+import edu.albert.studycards.authserver.domain.Status;
 
 public interface UserAccountDto {
 	

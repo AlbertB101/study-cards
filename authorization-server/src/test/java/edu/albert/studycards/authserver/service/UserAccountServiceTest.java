@@ -1,7 +1,7 @@
 package edu.albert.studycards.authserver.service;
 
 import edu.albert.studycards.authserver.SourceProvider;
-import edu.albert.studycards.authserver.domain.interfaces.UserAccountDto;
+import edu.albert.studycards.authserver.domain.dto.UserAccountDto;
 import edu.albert.studycards.authserver.domain.persistent.UserAccountPersistentImpl;
 import edu.albert.studycards.authserver.exception.ClientAlreadyExistsException;
 import edu.albert.studycards.authserver.repository.UserAccountRepository;

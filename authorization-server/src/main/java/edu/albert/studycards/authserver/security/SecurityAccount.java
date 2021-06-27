@@ -1,7 +1,7 @@
 package edu.albert.studycards.authserver.security;
 
-import edu.albert.studycards.authserver.domain.interfaces.UserAccountPersistent;
-import edu.albert.studycards.authserver.domain.interfaces.Status;
+import edu.albert.studycards.authserver.domain.persistent.UserAccountPersistent;
+import edu.albert.studycards.authserver.domain.Status;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

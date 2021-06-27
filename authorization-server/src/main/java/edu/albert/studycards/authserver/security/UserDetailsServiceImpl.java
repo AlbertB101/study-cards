@@ -1,6 +1,6 @@
 package edu.albert.studycards.authserver.security;
 
-import edu.albert.studycards.authserver.domain.interfaces.UserAccountPersistent;
+import edu.albert.studycards.authserver.domain.persistent.UserAccountPersistent;
 import edu.albert.studycards.authserver.repository.UserAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
