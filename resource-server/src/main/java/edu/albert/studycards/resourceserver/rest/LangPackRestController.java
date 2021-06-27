@@ -93,8 +93,8 @@ public class LangPackRestController {
     }
     
     @PreAuthorize("hasAuthority('user:read')")
-    @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getLangPack(@RequestParam(name = "lang") String lang) {
+    @GetMapping(value = "/receive", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> receive(@RequestParam(name = "lang") String lang) {
         try {
             LangPackDto receivedLangPack = langPackService.get(lang);
             Map<String, Object> response = Map.of(
@@ -109,8 +109,8 @@ public class LangPackRestController {
     }
     
     @PreAuthorize("hasAuthority('developer:read')")
-    @GetMapping(value = "/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getLangPack(@PathVariable() Long id) {
+    @GetMapping(value = "/receive/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> receive(@PathVariable() Long id) {
         try {
             LangPackDto receivedLangPack = langPackService.get(id);
             return new ResponseEntity<>(receivedLangPack, HttpStatus.OK);
@@ -123,7 +123,7 @@ public class LangPackRestController {
     
     @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('user:update')")
-    public ResponseEntity<?> updateLangPack(@RequestBody @Valid LangPackDtoImpl langPackDtoImpl) {
+    public ResponseEntity<?> update(@RequestBody @Valid LangPackDtoImpl langPackDtoImpl) {
         try {
             LangPackDto updatedLangPack = langPackService.update(langPackDtoImpl);
             Map<String, Object> response = Map.of(
@@ -139,7 +139,7 @@ public class LangPackRestController {
     
     @PostMapping(value = "/delete/{id}")
     @PreAuthorize("hasAuthority('user:delete')")
-    public ResponseEntity<?> deleteLangPack(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
             langPackService.delete(id);
             return new ResponseEntity<>("LangPack was successfully deleted", HttpStatus.OK);
