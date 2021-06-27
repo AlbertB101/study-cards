@@ -1,24 +1,25 @@
 package edu.albert.studycards.authserver.domain.dto;
 
 import edu.albert.studycards.authserver.domain.interfaces.LoginDto;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+/**
+ * Implementation of {@link AccountRegistrationRequest}.
+ */
 @NoArgsConstructor
 @Getter
 @Setter
 public class LoginDtoImpl implements LoginDto {
 	
-	@NotNull
-	@NotEmpty
+	@NotBlank
 	@Size(max = 128)
 	private String email;
 	
-	@NotNull
-	@NotEmpty
-	@Size(max = 64)
+	@NotBlank
 	private String password;
 }
