@@ -33,7 +33,7 @@ import java.util.Map;
 @RequestMapping("/api/v1/langPack")
 public class LangPackRestController {
     
-    private static final String RESPONSE_MSG_FOR_RUNTIME_EXC =
+    private static final String RUNTIME_EXCEPTION_RESPONSE_MESSAGE =
     "Input values are incorrect or internal server error";
     
     @Autowired
@@ -52,7 +52,7 @@ public class LangPackRestController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(
-                "LangPack wasn't created." + RESPONSE_MSG_FOR_RUNTIME_EXC,
+                "LangPack wasn't created." + RUNTIME_EXCEPTION_RESPONSE_MESSAGE,
                 HttpStatus.BAD_REQUEST);
         }
     }
@@ -68,7 +68,7 @@ public class LangPackRestController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(
-                "LangPack wasn't created." + RESPONSE_MSG_FOR_RUNTIME_EXC,
+                "LangPack wasn't created." + RUNTIME_EXCEPTION_RESPONSE_MESSAGE,
                 HttpStatus.BAD_REQUEST);
         }
     }
@@ -81,7 +81,7 @@ public class LangPackRestController {
             return new ResponseEntity<>(receivedLangPack, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(
-                "LangPack wasn't updated." + RESPONSE_MSG_FOR_RUNTIME_EXC,
+                "LangPack wasn't updated." + RUNTIME_EXCEPTION_RESPONSE_MESSAGE,
                 HttpStatus.BAD_REQUEST);
         }
     }
@@ -97,7 +97,7 @@ public class LangPackRestController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(
-                "LangPack wasn't updated." + RESPONSE_MSG_FOR_RUNTIME_EXC,
+                "LangPack wasn't updated." + RUNTIME_EXCEPTION_RESPONSE_MESSAGE,
                 HttpStatus.BAD_REQUEST);
         }
     }
@@ -110,7 +110,7 @@ public class LangPackRestController {
             return new ResponseEntity<>("LangPack was successfully deleted", HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(
-                "LangPack wasn't updated." + RESPONSE_MSG_FOR_RUNTIME_EXC,
+                "LangPack wasn't updated." + RUNTIME_EXCEPTION_RESPONSE_MESSAGE,
                 HttpStatus.BAD_REQUEST);
         }
     }
