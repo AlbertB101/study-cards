@@ -21,7 +21,7 @@ import java.util.Base64;
 import java.util.Date;
 
 @Component
-public class JwtTokenProvider {
+public class JwtTokenProvider implements TokenProvider {
 	
 	@Autowired
 	private JwtBlacklistRepository jwtBlacklistRepository;
@@ -39,6 +39,7 @@ public class JwtTokenProvider {
 		secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
 	}
 	
+	@Override
 	public String createToken(String username, String role) {
 		Claims claims = Jwts.claims().setSubject(username);
 		claims.put("role", role);
@@ -53,6 +54,7 @@ public class JwtTokenProvider {
 			       .compact();
 	}
 	
+	@Override
 	public String resolveToken(HttpServletRequest request) throws BadCredentialsException {
 		String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 		if (header == null || header.isEmpty()) {
@@ -61,6 +63,7 @@ public class JwtTokenProvider {
 		return header;
 	}
 	
+	@Override
 	public boolean validateToken(String token) {
 		try {
 			Jws<Claims> claimsJws = getClaims(token);
@@ -72,6 +75,7 @@ public class JwtTokenProvider {
 		}
 	}
 	
+	@Override
 	public Authentication getAuthentication(String token) {
 		UserDetails userDetails = userDetailsService.loadUserByUsername(getUsername(token));
 		return new UsernamePasswordAuthenticationToken(
@@ -80,7 +84,7 @@ public class JwtTokenProvider {
 			userDetails.getAuthorities());
 	}
 	
-	public String getUsername(String token) {
+	private String getUsername(String token) {
 		return getClaims(token).getBody().getSubject();
 	}
 	
