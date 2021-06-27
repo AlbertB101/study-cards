@@ -94,11 +94,25 @@ public class UserAccountController {
 		}
 	}
 	
-	
+	/**
+	 * Returns information about account.
+	 * Request should be authorized as user to successfully access this endpoint.
+	 *
+	 * <p>Returns {@link ResponseEntity} with user account information:
+	 * <ul>
+	 *  <li>firstName - name of user. Max size is 64 symbols;
+	 * 	<li>lastName - last name of user. Max size is 64 symbols;
+	 * 	<li>email - email that wasn't used before;
+	 * 	<li>role - role that determines account authorities;
+	 * 	<li>status - account status (active, inactive)
+	 * </ul></p>
+	 * @return
+	 */
 	@GetMapping(value = "/receive", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('user:read')")
 	public ResponseEntity<?> getAccount() {
 		try {
+			//TODO: move it to account service
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			String username = auth.getName();
 			UserAccountDto userAccInfo = userAccService.receive(username).get();
