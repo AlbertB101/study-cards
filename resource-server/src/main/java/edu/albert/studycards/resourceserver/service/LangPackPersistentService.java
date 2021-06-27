@@ -52,6 +52,7 @@ public class LangPackPersistentService implements LangPackService {
 	public LangPackDto update(LangPackDto langPackDto) {
 		Objects.requireNonNull(langPackDto);
 		LangPackPersistent langPackP = find(langPackDto.getLang());
+		langPackP.setLang(langPackDto.getLang());
 		updateCards(langPackP, langPackDto);
 		//TODO: add update repository query
 		LangPackPersistent updatedLangPack = langPackRepo.saveAndFlush((LangPackPersistentImpl) langPackP);

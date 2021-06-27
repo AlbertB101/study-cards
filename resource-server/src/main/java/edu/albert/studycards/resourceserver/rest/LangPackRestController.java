@@ -92,6 +92,15 @@ public class LangPackRestController {
         }
     }
     
+    /**
+     * Returns information about LangPack and its cards. This endpoint allows
+     * client to receive account's LangPack.
+     *
+     * <p>Request should contain language of LangPack that will be returned.
+     * <p>Request should be authorized and have "user" authorities.
+     * @param lang of LangPack
+     * @return ResponseEntity with http status code and LangPack
+     */
     @PreAuthorize("hasAuthority('user:read')")
     @GetMapping(value = "/receive", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> receive(@RequestParam(name = "lang") String lang) {
@@ -108,6 +117,13 @@ public class LangPackRestController {
         }
     }
     
+    /**
+     * This endpoint allows to receive LangPack by its id.
+     *
+     * <p>Request should be authorized and have "developer" authorities.
+     * @param id of LangPackPersistent
+     * @return ResponseEntity with http status code and LangPack
+     */
     @PreAuthorize("hasAuthority('developer:read')")
     @GetMapping(value = "/receive/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> receive(@PathVariable() Long id) {
@@ -121,6 +137,40 @@ public class LangPackRestController {
         }
     }
     
+    /**
+     * This endpoint allows to update LangPack language and cards.
+     *
+     * <p>Update request may contain such parameters:
+     * <ul>
+     * 	<li> lang - new language of this LangPack.
+     * 	<li> cards - list of {@link CardDto}.
+     * 	If {@link LangPackPersistent} doesn't contain a card this card will be added.
+     * 	If LangPack already contains the card, word transcription and word meaning will be updated.
+     * </ul>
+     *
+     * <p>Example:
+     * <pre>
+     * {@code
+     * {
+     *   "lang": "English",
+     *   "cards": [
+     *     {
+     *       "word": "outstanding",
+     *       "wordTr": "ˌaʊtˈstæn.dɪŋ",
+     *       "wordMng": "выдающийся"
+     *     },
+     *     {
+     *       "word": "garbage",
+     *       "wordTr": "ˈɡɑː.bɪdʒ",
+     *       "wordMng": "мусор"
+     *     }
+     *   ]
+     * }
+     * }
+     * </pre>
+     * @param langPackDtoImpl that contains new language and/or cards that should be updated
+     * @return ResponseEntity with http status code and updated LangPack
+     */
     @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('user:update')")
     public ResponseEntity<?> update(@RequestBody @Valid LangPackDtoImpl langPackDtoImpl) {
