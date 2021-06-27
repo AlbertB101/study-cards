@@ -153,6 +153,14 @@ public class UserAccountController {
 		}
 	}
 	
+	//TODO: add endpoints for updating email and password
+	/**
+	 * Update user account. This endpoint allows update only first name and last name.
+	 *
+	 * <p>Request should contains new correct first name and last name
+	 * @param userAccDto with correct new first name and last name
+	 * @return ResponseEntity with information about update request
+	 */
 	@PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('user:update')")
 	public ResponseEntity<?> updateAccount(@RequestBody @Valid UserAccountDtoImpl userAccDto) {
@@ -174,6 +182,10 @@ public class UserAccountController {
 		}
 	}
 	
+	/**
+	 * Delete all user information from database.
+	 * @return ResponseEntity with information about the request
+	 */
 	@PostMapping(value = "/delete")
 	@PreAuthorize("hasAuthority('user:delete')")
 	public ResponseEntity<?> deleteAccount() {
@@ -195,6 +207,11 @@ public class UserAccountController {
 		}
 	}
 	
+	/**
+	 * Endpoint allows delete any user account to anybody who has "developer" authorities.
+	 * @param id of account that should be deleted
+	 * @return ResponseEntity with http status code and message about the request
+	 */
 	@PostMapping(value = "{id}/delete")
 	@PreAuthorize("hasAuthority('developer:delete')")
 	public ResponseEntity<?> deleteAccount(@PathVariable Long id) {
