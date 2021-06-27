@@ -11,14 +11,15 @@ public interface UserAccountService {
 	
 	CompletableFuture<UserAccountDto> register(AccountRegistrationRequest regRequest) throws ClientAlreadyExistsException;
 	
-	CompletableFuture<UserAccountDto> receive(String email) throws NoSuchElementException;
+	CompletableFuture<UserAccountDto> receive(String email);
 	
-	CompletableFuture<UserAccountDto> receive(Long id) throws NoSuchElementException;
+	CompletableFuture<UserAccountDto> receive(Long id);
 	
 	
-	CompletableFuture<UserAccountDto> update(UserAccountDto userAccountDto) throws NoSuchElementException;
+	CompletableFuture<UserAccountDto> update(UserAccountDto userAccountDto);
 	
-	CompletableFuture<Void> delete(String email) throws NoSuchElementException;
+	CompletableFuture<Void> delete(String email);
 	
-	CompletableFuture<Void> delete(Long id) throws NoSuchElementException;
+	CompletableFuture<Void> delete(Long id);
+	
 }

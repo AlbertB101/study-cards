@@ -46,18 +46,14 @@ public class UserAccountServiceImpl implements UserAccountService {
 	@Async("threadPoolTaskExecutor")
 	@Override
 	public CompletableFuture<UserAccountDto> receive(String email) throws NoSuchElementException {
-		UserAccountPersistent userAcc = userAccRepo
-			                                .findByEmail(email)
-			                                .orElseThrow(NoSuchElementException::new);
+		UserAccountPersistent userAcc = find(email);
 		return CompletableFuture.completedFuture(new UserAccountDtoImpl(userAcc));
 	}
 	
 	@Async("threadPoolTaskExecutor")
 	@Override
 	public CompletableFuture<UserAccountDto> receive(Long id) throws NoSuchElementException {
-		UserAccountPersistent userAcc = userAccRepo
-			                                .findById(id)
-			                                .orElseThrow(NoSuchElementException::new);
+		UserAccountPersistent userAcc = find(id);
 		return CompletableFuture.completedFuture(new UserAccountDtoImpl(userAcc));
 	}
 	
@@ -73,16 +69,13 @@ public class UserAccountServiceImpl implements UserAccountService {
 			userAccountDto.getFirstName(),
 			userAccountDto.getLastName());
 		
-		var userAcc = userAccRepo
-			              .findByEmail(auth.getName())
-			              .orElseThrow(() -> new RuntimeException("Client wasn't found after updating"));
-		
+		UserAccountPersistent userAcc = find(auth.getName());
 		return CompletableFuture.completedFuture(new UserAccountDtoImpl(userAcc));
 	}
 	
 	@Async("threadPoolTaskExecutor")
 	@Override
-	public CompletableFuture<Void> delete(String email) throws NoSuchElementException {
+	public CompletableFuture<Void> delete(String email) {
 		if (!userAccRepo.existsByEmail(email))
 			throw new NoSuchElementException();
 		
@@ -93,7 +86,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 	
 	@Async("threadPoolTaskExecutor")
 	@Override
-	public CompletableFuture<Void> delete(Long id) throws NoSuchElementException {
+	public CompletableFuture<Void> delete(Long id) {
 		if (!userAccRepo.existsById(id))
 			throw new NoSuchElementException();
 		
@@ -101,4 +94,15 @@ public class UserAccountServiceImpl implements UserAccountService {
 		return CompletableFuture.completedFuture(null);
 	}
 	
+	private UserAccountPersistent find(String email) {
+		return userAccRepo
+			       .findByEmail(email)
+			       .orElseThrow(NoSuchElementException::new);
+	}
+	
+	private UserAccountPersistent find(long id) {
+		return userAccRepo
+			       .findById(id)
+			       .orElseThrow(NoSuchElementException::new);
+	}
 }
