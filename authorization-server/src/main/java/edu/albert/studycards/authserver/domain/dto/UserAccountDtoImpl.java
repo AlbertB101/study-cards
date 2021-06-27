@@ -11,6 +11,14 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+/**
+ * Dto object for transferring {@link UserAccountPersistent} information.
+ *
+ * <p>The properties don't have {@link javax.validation.constraints}
+ * because their values may be used in different contexts
+ * (for example: we don't need pass firstName and lastName when we just want to update cards).
+ *
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -34,13 +42,19 @@ public class UserAccountDtoImpl implements UserAccountDto {
 	@Enumerated(value = EnumType.STRING)
 	private Status status;
 	
-	public UserAccountDtoImpl(UserAccountPersistent userAcc) {
-		this.firstName = userAcc.getFirstName();
-		this.lastName = userAcc.getLastName();
-		this.email = userAcc.getEmail();
-		this.password = userAcc.getPassword();
-		this.role = userAcc.getRole();
-		this.status = userAcc.getStatus();
+	/**
+	 * Constructor is dedicated for creating new {@link UserAccountDtoImpl} instance
+	 * based on {@link UserAccountPersistent} argument. New {@link UserAccountDtoImpl}
+	 * instance just copies values from {@link UserAccountPersistent} argument.
+	 * @param userAccount valid UserAccountPersistent instance
+	 */
+	public UserAccountDtoImpl(UserAccountPersistent userAccount) {
+		this.firstName = userAccount.getFirstName();
+		this.lastName = userAccount.getLastName();
+		this.email = userAccount.getEmail();
+		this.password = userAccount.getPassword();
+		this.role = userAccount.getRole();
+		this.status = userAccount.getStatus();
 	}
 	
 	public UserAccountDtoImpl(UserAccountDto userAcc) {
