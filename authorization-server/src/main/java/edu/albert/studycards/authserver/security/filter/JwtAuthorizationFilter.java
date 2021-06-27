@@ -1,7 +1,7 @@
 package edu.albert.studycards.authserver.security.filter;
 
 import edu.albert.studycards.authserver.exception.JwtAuthenticationException;
-import edu.albert.studycards.authserver.security.JwtTokenProvider;
+import edu.albert.studycards.authserver.security.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -20,7 +20,7 @@ import java.io.IOException;
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 	
 	@Autowired
-	private JwtTokenProvider jwtTokenProvider;
+	private TokenProvider tokenProvider;
 	
 	public JwtAuthorizationFilter() {
 	}
@@ -30,9 +30,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 	                                HttpServletResponse response,
 	                                FilterChain filterChain) throws ServletException, IOException {
 		try {
-			String token = jwtTokenProvider.resolveToken(request);
-			if (token != null && jwtTokenProvider.validateToken(token)) {
-				Authentication auth = jwtTokenProvider.getAuthentication(token);
+			String token = tokenProvider.resolveToken(request);
+			if (token != null && tokenProvider.validateToken(token)) {
+				Authentication auth = tokenProvider.getAuthentication(token);
 				if (auth != null)
 					SecurityContextHolder.getContext().setAuthentication(auth);
 			}
