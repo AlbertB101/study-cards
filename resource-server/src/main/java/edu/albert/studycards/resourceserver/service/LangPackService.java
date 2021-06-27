@@ -2,6 +2,7 @@ package edu.albert.studycards.resourceserver.service;
 
 import edu.albert.studycards.resourceserver.exceptions.LangPackAlreadyExistsException;
 import edu.albert.studycards.resourceserver.model.interfaces.LangPackDto;
+import edu.albert.studycards.resourceserver.model.interfaces.LangPackPersistent;
 
 public interface LangPackService {
 	LangPackDto create(LangPackDto langPackDto) throws LangPackAlreadyExistsException;
@@ -13,4 +14,8 @@ public interface LangPackService {
 	LangPackDto update(LangPackDto langPackDto);
 	
 	void delete(Long id);
+	
+	LangPackPersistent find(Long id);
+	
+	LangPackPersistent find(String lang);
 }

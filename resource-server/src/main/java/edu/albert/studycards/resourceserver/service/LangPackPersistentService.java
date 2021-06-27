@@ -73,14 +73,16 @@ public class LangPackPersistentService implements LangPackService {
 		langPackRepo.deleteById(id);
 	}
 	
-	LangPackPersistent find(Long id) {
+	@Override
+	public LangPackPersistent find(Long id) {
 		Objects.requireNonNull(id);
 		return langPackRepo
 			       .findById(id)
 			       .orElseThrow(NoSuchElementException::new);
 	}
 	
-	LangPackPersistent find(String lang) {
+	@Override
+	public LangPackPersistent find(String lang) {
 		Objects.requireNonNull(lang);
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		return langPackRepo
