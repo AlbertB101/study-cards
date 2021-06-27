@@ -1,5 +1,6 @@
 package edu.albert.studycards.authserver.service;
 
+import edu.albert.studycards.authserver.domain.dto.AccountRegistrationRequest;
 import edu.albert.studycards.authserver.domain.dto.UserAccountDtoImpl;
 import edu.albert.studycards.authserver.domain.interfaces.UserAccountDto;
 import edu.albert.studycards.authserver.domain.interfaces.UserAccountPersistent;
@@ -28,19 +29,18 @@ public class UserAccountServiceImpl implements UserAccountService {
 	
 	@Async("threadPoolTaskExecutor")
 	@Override
-	public CompletableFuture<UserAccountDto> register(UserAccountDto userAccDto) throws ClientAlreadyExistsException {
-		if (userAccRepo.existsByEmail(userAccDto.getEmail()))
+	public CompletableFuture<UserAccountDto> register(AccountRegistrationRequest regRequest) throws ClientAlreadyExistsException {
+		if (userAccRepo.existsByEmail(regRequest.getEmail()))
 			throw new ClientAlreadyExistsException();
 
 //		TODO: add email validity check
 //		TODO: receive from client already encoded password
 		
-		UserAccountPersistentImpl userAcc = new UserAccountPersistentImpl(userAccDto);
+		UserAccountPersistentImpl userAcc = new UserAccountPersistentImpl(regRequest);
 		userAcc.setPassword(passwordEncoder.encode(userAcc.getPassword()));
 		userAccRepo.saveAndFlush(userAcc);
 		
-		userAccDto.setPassword(null);
-		return CompletableFuture.completedFuture(userAccDto);
+		return CompletableFuture.completedFuture(new UserAccountDtoImpl(userAcc));
 	}
 	
 	@Async("threadPoolTaskExecutor")
