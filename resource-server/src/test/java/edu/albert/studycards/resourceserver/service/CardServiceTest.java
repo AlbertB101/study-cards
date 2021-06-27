@@ -44,7 +44,7 @@ public class CardServiceTest {
 	@Mock
 	private CardRepository cardRepo;
 	@Mock
-	private LangPackService langPackService;
+	private LangPackPersistentService langPackService;
 	
 	@BeforeAll
 	static void configureSecurityContext() {

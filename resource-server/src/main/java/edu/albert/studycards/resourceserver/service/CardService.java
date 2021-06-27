@@ -17,7 +17,7 @@ public class CardService {
 	@Autowired
 	CardRepository cardRepo;
 	@Autowired
-	LangPackService langPackService;
+	LangPackPersistentService langPackService;
 	
 	public CardDto create(CardDto cardDto) {
 		Objects.requireNonNull(cardDto);
