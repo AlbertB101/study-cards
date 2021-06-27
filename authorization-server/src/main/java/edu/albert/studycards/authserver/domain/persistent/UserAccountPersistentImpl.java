@@ -1,5 +1,6 @@
 package edu.albert.studycards.authserver.domain.persistent;
 
+import edu.albert.studycards.authserver.domain.dto.AccountRegistrationRequest;
 import edu.albert.studycards.authserver.domain.interfaces.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -62,6 +63,16 @@ public class UserAccountPersistentImpl implements UserAccountPersistent, Seriali
 		this.firstName = userAcc.getFirstName();
 		this.lastName = userAcc.getLastName();
 		this.password = userAcc.getPassword();
+		this.created = new Date();
+		this.role = Role.USER;
+		this.status = Status.ACTIVE;
+	}
+	
+	public UserAccountPersistentImpl(AccountRegistrationRequest regRequest) {
+		this.email = regRequest.getEmail();
+		this.firstName = regRequest.getFirstName();
+		this.lastName = regRequest.getLastName();
+		this.password = regRequest.getPassword();
 		this.created = new Date();
 		this.role = Role.USER;
 		this.status = Status.ACTIVE;
