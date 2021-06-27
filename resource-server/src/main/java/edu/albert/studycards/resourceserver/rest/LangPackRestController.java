@@ -2,7 +2,7 @@ package edu.albert.studycards.resourceserver.rest;
 
 import edu.albert.studycards.resourceserver.exceptions.LangPackAlreadyExistsException;
 import edu.albert.studycards.resourceserver.model.dto.LangPackDtoImpl;
-import edu.albert.studycards.resourceserver.model.interfaces.LangPackDto;
+import edu.albert.studycards.resourceserver.model.interfaces.*;
 import edu.albert.studycards.resourceserver.service.LangPackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +14,21 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Map;
 
+/**
+ * Rest controller for managing {@link LangPackPersistent}. This controller exposes endpoints
+ * for CRUD operations.
+ *
+ * <p>Request to all endpoints should be authenticated. Some endpoints
+ * require different authorization levels.
+ * Some endpoints are available for those who has "user" authorities and
+ * some for those who has"developer" authorities.
+ *
+ * <p>All endpoints return {@link ResponseEntity}.
+ * {@link ResponseEntity} contains http status code and message with
+ * additional information about request processing.
+ *
+ * Endpoints receive data and return data in JSON files.
+ */
 @RestController
 @RequestMapping("/api/v1/langPack")
 public class LangPackRestController {
