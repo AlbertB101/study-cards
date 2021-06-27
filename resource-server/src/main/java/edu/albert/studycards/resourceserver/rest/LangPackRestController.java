@@ -39,9 +39,44 @@ public class LangPackRestController {
     @Autowired
     private LangPackService langPackService;
     
+    /**
+     * Creates new {@link LangPackPersistent}.
+     *
+     * <p>Request to this endpoint must contain such parameters:
+     * <ul>
+     * 	<li> accountEmail - the email of account that owns this LangPack;
+     * 	<li> lang - language of this LangPack.
+     * </ul>
+     * Also LangPacks may have "cards" parameter that contains
+     * list of {@link CardDto} that will be created and saved within the LangPack.
+     *
+     * <p>Example:
+     * <pre>
+     * {@code
+     * {
+     *   "accountEmail": "email@mail.ru",
+     *   "lang": "English",
+     *   "cards": [
+     *     {
+     *       "word": "outstanding",
+     *       "wordTr": "ˌaʊtˈstæn.dɪŋ",
+     *       "wordMng": "выдающийся"
+     *     },
+     *     {
+     *       "word": "garbage",
+     *       "wordTr": "ˈɡɑː.bɪdʒ",
+     *       "wordMng": "мусор"
+     *     }
+     *   ]
+     * }
+     * }
+     * </pre>
+     * @param langPack LangPackDto implementation
+     * @return ResponseEntity with http status code and just created LangPack
+     */
     @PreAuthorize("hasAuthority('user:write')")
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createLangPack(@RequestBody @Valid LangPackDtoImpl langPack) {
+    public ResponseEntity<?> create(@RequestBody @Valid LangPackDtoImpl langPack) {
         try {
             LangPackDto createdLangPack = langPackService.create(langPack);
             Map<String, Object> response = Map.of(
