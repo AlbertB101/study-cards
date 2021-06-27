@@ -42,6 +42,7 @@ public class LangPackRestController {
     /**
      * Creates new {@link LangPackPersistent}.
      *
+     * <p>Request should be authorized and have "user" authorities.
      * <p>Request to this endpoint must contain such parameters:
      * <ul>
      * 	<li> accountEmail - the email of account that owns this LangPack;
@@ -96,8 +97,8 @@ public class LangPackRestController {
      * Returns information about LangPack and its cards. This endpoint allows
      * client to receive account's LangPack.
      *
-     * <p>Request should contain language of LangPack that will be returned.
      * <p>Request should be authorized and have "user" authorities.
+     * <p>Request should contain language of LangPack that will be returned.
      * @param lang of LangPack
      * @return ResponseEntity with http status code and LangPack
      */
@@ -140,6 +141,7 @@ public class LangPackRestController {
     /**
      * This endpoint allows to update LangPack language and cards.
      *
+     * <p>Request should be authorized and have "user" authorities.
      * <p>Update request may contain such parameters:
      * <ul>
      * 	<li> lang - new language of this LangPack.
@@ -187,6 +189,13 @@ public class LangPackRestController {
         }
     }
     
+    /**
+     * This endpoint allows to delete LangPack from database.
+     *
+     * <p>Request should be authorized and have "user" authorities.
+     * @param id of LangPack that should be deleted.
+     * @return ResponseEntity with http status code and additional information
+     */
     @PostMapping(value = "/delete/{id}")
     @PreAuthorize("hasAuthority('user:delete')")
     public ResponseEntity<?> delete(@PathVariable Long id) {
