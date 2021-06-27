@@ -106,7 +106,7 @@ public class UserAccountController {
 	 * 	<li>role - role that determines account authorities;
 	 * 	<li>status - account status (active, inactive)
 	 * </ul></p>
-	 * @return
+	 * @return ResponseEntity with information about user account
 	 */
 	@GetMapping(value = "/receive", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('user:read')")
@@ -129,8 +129,13 @@ public class UserAccountController {
 		}
 	}
 	
-	
-	@GetMapping(value = "/{id}/receive")
+	/**
+	 * Endpoint returns information about any account to anybody who has "developer" authorities.
+	 *
+	 * @param id of account.
+	 * @return {@link #getAccount()}
+	 */
+	@GetMapping(value = "/receive/{id}")
 	@PreAuthorize("hasAuthority('developer:read')")
 	public ResponseEntity<?> getAccount(@PathVariable Long id) {
 		try {
