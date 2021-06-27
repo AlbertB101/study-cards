@@ -8,6 +8,10 @@ import org.hibernate.annotations.NaturalId;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+/**
+ * Implementation of {@link AccountRegistrationRequest}.
+ * <p>All the properties are necessary for successful new user registration.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

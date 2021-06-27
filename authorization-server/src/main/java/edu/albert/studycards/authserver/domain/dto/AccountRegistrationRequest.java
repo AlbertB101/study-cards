@@ -1,5 +1,9 @@
 package edu.albert.studycards.authserver.domain.dto;
 
+/**
+ * Interface for DTO object that will be used
+ * for new account registration request
+ */
 public interface AccountRegistrationRequest {
 	String getFirstName();
 	
