@@ -47,13 +47,14 @@ public class UserAccountDtoImpl implements UserAccountDto {
 	 * Constructor is dedicated for creating new {@link UserAccountDtoImpl} instance
 	 * based on {@link UserAccountPersistent} argument. New {@link UserAccountDtoImpl}
 	 * instance just copies values from {@link UserAccountPersistent} argument.
+	 * Password won't be copied due to security concerns
 	 * @param userAccount valid UserAccountPersistent instance
 	 */
 	public UserAccountDtoImpl(UserAccountPersistent userAccount) {
 		this.firstName = userAccount.getFirstName();
 		this.lastName = userAccount.getLastName();
 		this.email = userAccount.getEmail();
-		this.password = userAccount.getPassword();
+		this.password = null;
 		this.role = userAccount.getRole();
 		this.status = userAccount.getStatus();
 	}

@@ -59,7 +59,7 @@ public class AuthenticationService {
 			loginDto.getPassword());
 		authManager.authenticate(authToken);
 		var userAcc = userAccRepo.findByEmail(loginDto.getEmail())
-			              .orElseThrow(() -> new UsernameNotFoundException("User doesn't exists"));
+			              .orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
 		String token = jwtTokenProvider.createToken(userAcc.getEmail(), userAcc.getRole().name());
 		
 		//TODO: Add event of new user account creation
