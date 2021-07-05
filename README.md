@@ -24,6 +24,7 @@ The project consists of mainly two parts: Authorization server and Resource serv
 
 ## Getting Started
 You need Java 8 installed.
+
 `mvn authorization-server spring-boot:start`
 
 ## Rest
