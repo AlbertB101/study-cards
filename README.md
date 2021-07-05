@@ -16,7 +16,6 @@ The project uses:
 - [Mockito ](https://github.com/mockito/mockito)
 - [JSON Web Token](https://github.com/mockito/mockito)
 
-Also the project saves data in PostgreSql database.
 
 
 The project consists of mainly two parts: Authorization server and Resource server. 
