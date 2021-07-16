@@ -68,8 +68,8 @@ public class JwtTokenProvider implements TokenProvider {
 		try {
 			Jws<Claims> claimsJws = getClaims(token);
 			Date expiration = claimsJws.getBody().getExpiration();
-			return !expiration.before(new Date()) &&
-				       !jwtBlacklistRepository.existsByToken(token);
+			return !expiration.before(new Date());
+//				       && !jwtBlacklistRepository.existsByToken(token);
 		} catch (JwtException | IllegalArgumentException e) {
 			throw new JwtAuthenticationException("JWT token is expired or invalid", HttpStatus.UNAUTHORIZED);
 		}
