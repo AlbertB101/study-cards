@@ -11,16 +11,17 @@
     <groupId>edu.albert</groupId>
     <artifactId>study-cards</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>pom</packaging>
     <name>study-cards</name>
     <description>Study cards backend application</description>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
     </properties>
 
     <modules>
         <module>authorization-server</module>
+        <module>resource-server</module>
     </modules>
 
     <dependencyManagement>
