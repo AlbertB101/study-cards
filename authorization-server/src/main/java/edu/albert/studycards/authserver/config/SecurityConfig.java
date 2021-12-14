@@ -28,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 			.authorizeRequests()
-			.mvcMatchers("/api/v1/auth/logIn", "/api/v1/user/account/signUp").permitAll()
+			.mvcMatchers("/api/v1/auth/logIn", "/api/v1/account/signUp").permitAll()
 			.anyRequest().authenticated()
 			.and()
 			.apply(jwtConfigurer);

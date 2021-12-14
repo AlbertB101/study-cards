@@ -55,10 +55,10 @@ public class AuthenticationService {
 	 */
 	public CompletableFuture<Map<String, Object>> login(LoginDto loginDto) {
 		var authToken = new UsernamePasswordAuthenticationToken(
-			loginDto.getEmail(),
-			loginDto.getPassword());
+			loginDto.email(),
+			loginDto.password());
 		authManager.authenticate(authToken);
-		var userAcc = userAccRepo.findByEmail(loginDto.getEmail())
+		var userAcc = userAccRepo.findByEmail(loginDto.email())
 			              .orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
 		String token = jwtTokenProvider.createToken(userAcc.getEmail(), userAcc.getRole().name());
 		

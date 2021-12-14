@@ -17,9 +17,11 @@
     <description>Authorization server of study cards application</description>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <skip.it>true</skip.it>
         <slf4j.version>1.7.30</slf4j.version>
+        <maven.test.skip>true</maven.test.skip>
+        <tests.skip>true</tests.skip>
     </properties>
 
     <dependencies>
@@ -57,7 +59,6 @@
         </dependency>
 
 
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -70,8 +71,7 @@
         </dependency>
 
 
-
-<!--        databases          -->
+        <!--        databases          -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -82,17 +82,7 @@
             <scope>runtime</scope>
         </dependency>
 
-
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-
-
-<!--        testing-->
+        <!--        testing-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -129,7 +119,6 @@
         </dependency>
 
 
-
         <!--security-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -154,8 +143,7 @@
         </dependency>
 
 
-
-<!--        logging                  -->
+        <!--        logging                  -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
@@ -172,7 +160,6 @@
             <version>${slf4j.version}</version>
         </dependency>
     </dependencies>
-
 
 
     <build>

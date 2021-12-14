@@ -62,16 +62,16 @@ public class UserAccountServiceTest {
 	@Test
 	@DisplayName("Should successfully register new client")
 	void shouldSuccessfullyRegisterNewClient() {
-		when(userAccRepo.existsByEmail(CLIENT.getEmail()))
+		when(userAccRepo.existsByEmail(CLIENT.email()))
 			.thenReturn(false);
 		when(userAccRepo.saveAndFlush(any()))
 			.thenReturn(new UserAccountPersistentImpl(CLIENT));
 		
 //		assertDoesNotThrow(() -> {
 //			UserAccountDto userAccountDto = clientService.register(CLIENT).get();
-//			assertEquals(CLIENT.getEmail(), userAccountDto.getEmail());
-//			assertEquals(CLIENT.getFirstName(), userAccountDto.getFirstName());
-//			assertEquals(CLIENT.getLastName(), userAccountDto.getLastName());
+//			assertEquals(CLIENT.email(), userAccountDto.email());
+//			assertEquals(CLIENT.firstName(), userAccountDto.firstName());
+//			assertEquals(CLIENT.lastName(), userAccountDto.lastName());
 //			assertEquals(Role.USER, clientDto.getRole());
 //			assertEquals(Status.ACTIVE, clientDto.getStatus());
 //		});
@@ -99,9 +99,9 @@ public class UserAccountServiceTest {
 //				CompletableFuture<UserAccountDto> compFuture = future.get();
 //				assertTrue(future.isDone());
 //				UserAccountDto userAccountDto = compFuture.get();
-//				assertEquals(CLIENT.getEmail(), userAccountDto.getEmail());
-//				assertEquals(CLIENT.getFirstName(), userAccountDto.getFirstName());
-//				assertEquals(CLIENT.getLastName(), userAccountDto.getLastName());
+//				assertEquals(CLIENT.email(), userAccountDto.email());
+//				assertEquals(CLIENT.firstName(), userAccountDto.firstName());
+//				assertEquals(CLIENT.lastName(), userAccountDto.lastName());
 //				assertEquals(Role.USER, clientDto.getRole());
 //				assertEquals(Status.ACTIVE, clientDto.getStatus());
 //			});
@@ -151,7 +151,7 @@ public class UserAccountServiceTest {
 	void shouldThrowClientAlreadyExistsExceptionWhenTryToGetClient() {
 		assertThrows(
 			NoSuchElementException.class,
-			() -> clientService.receive(CLIENT.getEmail()));
+			() -> clientService.receive(CLIENT.email()));
 	}
 	
 	@Test
@@ -161,7 +161,7 @@ public class UserAccountServiceTest {
 		
 		for (UserAccountDto userAccountDto : CLIENTS) {
 			Future<CompletableFuture<?>> futureTask =
-				executor.submit(() -> clientService.receive(userAccountDto.getEmail()));
+				executor.submit(() -> clientService.receive(userAccountDto.email()));
 			execFutures.add(futureTask);
 		}
 		
@@ -184,11 +184,11 @@ public class UserAccountServiceTest {
 			.thenReturn(Optional.of(new UserAccountPersistentImpl(CLIENT)));
 		
 		assertDoesNotThrow(() -> {
-			CompletableFuture<UserAccountDto> compFuture = clientService.receive(CLIENT.getEmail());
+			CompletableFuture<UserAccountDto> compFuture = clientService.receive(CLIENT.email());
 			UserAccountDto userAccountDto = compFuture.get();
-			assertEquals(CLIENT.getEmail(), userAccountDto.getEmail());
-			assertEquals(CLIENT.getFirstName(), userAccountDto.getFirstName());
-			assertEquals(CLIENT.getLastName(), userAccountDto.getLastName());
+			assertEquals(CLIENT.email(), userAccountDto.email());
+			assertEquals(CLIENT.firstName(), userAccountDto.firstName());
+			assertEquals(CLIENT.lastName(), userAccountDto.lastName());
 //			assertEquals(Role.USER, clientDto.getRole());
 //			assertEquals(Status.ACTIVE, clientDto.getStatus());
 		});
@@ -204,7 +204,7 @@ public class UserAccountServiceTest {
 		
 		for (UserAccountDto userAccountDto : CLIENTS) {
 			Future<CompletableFuture<UserAccountDto>> futureTask =
-				executor.submit(() -> clientService.receive(userAccountDto.getEmail()));
+				executor.submit(() -> clientService.receive(userAccountDto.email()));
 			execFutures.add(futureTask);
 		}
 		
@@ -212,9 +212,9 @@ public class UserAccountServiceTest {
 			assertDoesNotThrow(() -> {
 				CompletableFuture<UserAccountDto> completableFuture = future.get();
 				UserAccountDto userAccountDto = completableFuture.get();
-				assertEquals(CLIENT.getEmail(), userAccountDto.getEmail());
-				assertEquals(CLIENT.getFirstName(), userAccountDto.getFirstName());
-				assertEquals(CLIENT.getLastName(), userAccountDto.getLastName());
+				assertEquals(CLIENT.email(), userAccountDto.email());
+				assertEquals(CLIENT.firstName(), userAccountDto.firstName());
+				assertEquals(CLIENT.lastName(), userAccountDto.lastName());
 //				assertEquals(Role.USER, clientDto.getRole());
 //				assertEquals(Status.ACTIVE, clientDto.getStatus());
 			});
@@ -224,10 +224,10 @@ public class UserAccountServiceTest {
 	@Test
 	@DisplayName("Should successfully delete Client")
 	void shouldSuccessfullyDeleteClient() {
-		when(userAccRepo.existsByEmail(CLIENT.getEmail()))
+		when(userAccRepo.existsByEmail(CLIENT.email()))
 			.thenReturn(true);
 		
-		assertDoesNotThrow(() -> clientService.delete(CLIENT.getEmail()));
+		assertDoesNotThrow(() -> clientService.delete(CLIENT.email()));
 	}
 	
 	@Test
@@ -240,7 +240,7 @@ public class UserAccountServiceTest {
 		
 		for (UserAccountDto userAccountDto : CLIENTS) {
 			Future<CompletableFuture<?>> f =
-				executor.submit(() -> clientService.delete(userAccountDto.getEmail()));
+				executor.submit(() -> clientService.delete(userAccountDto.email()));
 			execFutures.add(f);
 		}
 		
@@ -257,7 +257,7 @@ public class UserAccountServiceTest {
 		
 		assertThrows(
 			NoSuchElementException.class,
-			() -> clientService.delete(CLIENT.getEmail()));
+			() -> clientService.delete(CLIENT.email()));
 	}
 	
 	@Test
@@ -270,7 +270,7 @@ public class UserAccountServiceTest {
 		
 		for (UserAccountDto userAccountDto : CLIENTS) {
 			Future<CompletableFuture<?>> f =
-				executor.submit(() -> clientService.delete(userAccountDto.getEmail()));
+				executor.submit(() -> clientService.delete(userAccountDto.email()));
 			execFutures.add(f);
 		}
 		

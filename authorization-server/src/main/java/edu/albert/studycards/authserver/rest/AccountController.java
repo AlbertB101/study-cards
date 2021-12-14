@@ -38,10 +38,10 @@ import java.util.concurrent.ExecutionException;
  * @see Permission
  */
 @RestController
-@RequestMapping("api/v1/user/account")
-public class UserAccountController {
+@RequestMapping("api/v1/account")
+public class AccountController {
 	
-	private final static Logger LOGGER = LoggerFactory.getLogger(UserAccountController.class);
+	private final static Logger LOGGER = LoggerFactory.getLogger(AccountController.class);
 	
 	@Autowired
 	private UserAccountService userAccService;
@@ -71,7 +71,7 @@ public class UserAccountController {
 	 * @see AccountRegistrationRequestDto
 	 */
 	@PostMapping(value = "/signUp")
-	public ResponseEntity<?> signUp(@RequestBody @Valid AccountRegistrationRequestDto regRequest) {
+	public ResponseEntity<?> signUp(@RequestBody @Valid AccountRegistrationRequestDtoRecord regRequest) {
 		try {
 			UserAccountDto newUserAcc = userAccService.register(regRequest).get();
 			Map<String, Object> userAccInfo = Map.of(
@@ -162,7 +162,7 @@ public class UserAccountController {
 	 */
 	@PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('user:update')")
-	public ResponseEntity<?> updateAccount(@RequestBody @Valid UserAccountDtoImpl userAccDto) {
+	public ResponseEntity<?> updateAccount(@RequestBody @Valid UserAccountDto userAccDto) {
 		try {
 			userAccService.update(userAccDto).get();
 			return new ResponseEntity<>(HttpStatus.OK);

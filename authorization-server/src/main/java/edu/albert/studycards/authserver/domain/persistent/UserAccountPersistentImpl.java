@@ -3,10 +3,8 @@ package edu.albert.studycards.authserver.domain.persistent;
 import edu.albert.studycards.authserver.domain.dto.AccountRegistrationRequest;
 import edu.albert.studycards.authserver.domain.Role;
 import edu.albert.studycards.authserver.domain.Status;
+import edu.albert.studycards.authserver.domain.dto.AccountRegistrationRequestDtoRecord;
 import edu.albert.studycards.authserver.domain.dto.UserAccountDto;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -16,9 +14,6 @@ import java.util.Date;
 
 @Entity(name = "UserAccount")
 @Table(name = "userAccount")
-@Getter
-@Setter
-@NoArgsConstructor
 public class UserAccountPersistentImpl implements UserAccountPersistent, Serializable {
 	
 	@Id
@@ -61,10 +56,10 @@ public class UserAccountPersistentImpl implements UserAccountPersistent, Seriali
 	private String token;
 	
 	public UserAccountPersistentImpl(UserAccountDto userAcc) {
-		this.email = userAcc.getEmail();
-		this.firstName = userAcc.getFirstName();
-		this.lastName = userAcc.getLastName();
-		this.password = userAcc.getPassword();
+		this.email = userAcc.email();
+		this.firstName = userAcc.firstName();
+		this.lastName = userAcc.lastName();
+		this.password = userAcc.password();
 		this.created = new Date();
 		this.role = Role.USER;
 		this.status = Status.ACTIVE;
@@ -78,5 +73,107 @@ public class UserAccountPersistentImpl implements UserAccountPersistent, Seriali
 		this.created = new Date();
 		this.role = Role.USER;
 		this.status = Status.ACTIVE;
+	}
+
+	public UserAccountPersistentImpl(AccountRegistrationRequestDtoRecord regRequest) {
+		this.email = regRequest.email();
+		this.firstName = regRequest.firstName();
+		this.lastName = regRequest.lastName();
+		this.password = regRequest.password();
+		this.created = new Date();
+		this.role = Role.USER;
+		this.status = Status.ACTIVE;
+	}
+
+	public UserAccountPersistentImpl() {
+
+	}
+
+	@Override
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	@Override
+	public String getFirstName() {
+		return firstName;
+	}
+
+	@Override
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	@Override
+	public String getLastName() {
+		return lastName;
+	}
+
+	@Override
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	@Override
+	public String getEmail() {
+		return email;
+	}
+
+	@Override
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	@Override
+	public String getPassword() {
+		return password;
+	}
+
+	@Override
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	@Override
+	public Date getCreated() {
+		return created;
+	}
+
+	public void setCreated(Date created) {
+		this.created = created;
+	}
+
+	@Override
+	public Role getRole() {
+		return role;
+	}
+
+	@Override
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	@Override
+	public Status getStatus() {
+		return status;
+	}
+
+	@Override
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	@Override
+	public String getToken() {
+		return token;
+	}
+
+	@Override
+	public void setToken(String token) {
+		this.token = token;
 	}
 }
