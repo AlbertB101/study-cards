@@ -1,7 +1,7 @@
 package edu.albert.studycards.resourceserver.model.persistent;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import edu.albert.studycards.resourceserver.model.interfaces.CardDto;
+import edu.albert.studycards.resourceserver.model.dto.CardDto;
 import edu.albert.studycards.resourceserver.model.interfaces.CardPersistent;
 import edu.albert.studycards.resourceserver.model.interfaces.LangPackPersistent;
 import lombok.Getter;
@@ -59,9 +59,9 @@ public class CardPersistentImpl implements CardPersistent, Serializable {
 	 */
 	//TODO: refactor creating new Persistent cards
 	public CardPersistentImpl(CardDto card, LangPackPersistent langPack) {
-		this.word = card.getWord();
-		this.wordTr = card.getWordTr();
-		this.wordMng = card.getWordMng();
+		this.word = card.word();
+		this.wordTr = card.wordTr();
+		this.wordMng = card.wordMng();
 		this.langPack = langPack;
 	}
 	

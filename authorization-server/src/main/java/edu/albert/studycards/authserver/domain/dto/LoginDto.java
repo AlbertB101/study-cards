@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author Albert Banshchikov
  * @since 2021.12.14
  */
-public record LoginDto (
+public record LoginDto(
         @NotBlank @Size(max = 128) String email,
         @NotBlank String password) implements Serializable {
 }

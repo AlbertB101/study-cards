@@ -2,10 +2,7 @@ package edu.albert.studycards.resourceserver.service;
 
 import edu.albert.studycards.resourceserver.ResourceProvider;
 import edu.albert.studycards.resourceserver.exceptions.LangPackAlreadyExistsException;
-import edu.albert.studycards.resourceserver.model.dto.LangPackDtoImpl;
-import edu.albert.studycards.resourceserver.model.interfaces.CardPersistent;
-import edu.albert.studycards.resourceserver.model.interfaces.LangPackDto;
-import edu.albert.studycards.resourceserver.model.interfaces.LangPackPersistent;
+import edu.albert.studycards.resourceserver.model.dto.LangPackDto;
 import edu.albert.studycards.resourceserver.model.persistent.LangPackPersistentImpl;
 import edu.albert.studycards.resourceserver.repository.LangPackRepository;
 import org.junit.jupiter.api.*;
@@ -19,7 +16,6 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -45,7 +41,7 @@ public class LangPackServiceTest {
 	@BeforeAll
 	static void configureSecurityContext() {
 		Authentication auth = new UsernamePasswordAuthenticationToken(
-			TEST_LANG_PACK_DTO.getAccountEmail(),
+			TEST_LANG_PACK_DTO.accountEmail(),
 			"Credentials");
 		SecurityContext securityContext = new SecurityContextImpl(auth);
 		SecurityContextHolder.setContext(securityContext);
@@ -61,8 +57,8 @@ public class LangPackServiceTest {
 	@DisplayName("create() should create new LangPack")
 	void createShouldCreateNewLangPack() {
 		when(langPackRepo.existsByAccountEmailAndLang(
-			TEST_LANG_PACK_DTO.getAccountEmail(),
-			TEST_LANG_PACK_DTO.getLang()))
+			TEST_LANG_PACK_DTO.accountEmail(),
+			TEST_LANG_PACK_DTO.lang()))
 			.thenReturn(false);
 		when(langPackRepo.saveAndFlush(any()))
 			.thenReturn(new LangPackPersistentImpl(TEST_LANG_PACK_DTO));
@@ -70,8 +66,8 @@ public class LangPackServiceTest {
 //		assertDoesNotThrow(() -> {
 //			LangPackPersistent langPackP = langPackService.create(TEST_LANG_PACK_DTO);
 //			assertNotNull(langPackP);
-//			assertEquals(TEST_LANG_PACK_DTO.getLang(), langPackP.getLang());
-//			assertEquals(TEST_LANG_PACK_DTO.getAccountEmail(), langPackP.getAccountEmail());
+//			assertEquals(TEST_LANG_PACK_DTO.lang(), langPackP.lang());
+//			assertEquals(TEST_LANG_PACK_DTO.accountEmail(), langPackP.accountEmail());
 //			List<CardPersistent> cards = CardPersistent.listFrom(TEST_LANG_PACK_DTO.getCards(), langPackP);
 //			assertEquals(cards, langPackP.getCards());
 //		});
@@ -81,8 +77,8 @@ public class LangPackServiceTest {
 	@DisplayName("create() should throw LangPackAlreadyExistsException")
 	void createShouldThrowLangPackAlreadyExistsException() {
 		when(langPackRepo.existsByAccountEmailAndLang(
-			TEST_LANG_PACK_DTO.getAccountEmail(),
-			TEST_LANG_PACK_DTO.getLang()))
+			TEST_LANG_PACK_DTO.accountEmail(),
+			TEST_LANG_PACK_DTO.lang()))
 			.thenReturn(true);
 		
 		assertThrows(LangPackAlreadyExistsException.class,
@@ -100,12 +96,12 @@ public class LangPackServiceTest {
 	@DisplayName("get() should return LangPackDto")
 	void getShouldReturnLangPackDto() {
 		when(langPackRepo.findByAccountEmailAndLang(
-			TEST_LANG_PACK_DTO.getAccountEmail(),
-			TEST_LANG_PACK_DTO.getLang()))
+			TEST_LANG_PACK_DTO.accountEmail(),
+			TEST_LANG_PACK_DTO.lang()))
 			.thenReturn(Optional.of(new LangPackPersistentImpl(TEST_LANG_PACK_DTO)));
 		
 		assertDoesNotThrow(() -> {
-			LangPackDto langPackDto = langPackService.get(TEST_LANG_PACK_DTO.getLang());
+			LangPackDto langPackDto = langPackService.get(TEST_LANG_PACK_DTO.lang());
 			assertNotNull(langPackDto);
 			assertEquals(TEST_LANG_PACK_DTO, langPackDto);
 		});
@@ -146,8 +142,8 @@ public class LangPackServiceTest {
 		emptyLangPackP.clearCards();
 		
 		when(langPackRepo.findByAccountEmailAndLang(
-			TEST_LANG_PACK_DTO.getAccountEmail(),
-			TEST_LANG_PACK_DTO.getLang()))
+			TEST_LANG_PACK_DTO.accountEmail(),
+			TEST_LANG_PACK_DTO.lang()))
 			.thenReturn(Optional.of(emptyLangPackP));
 		when(langPackRepo.saveAndFlush(emptyLangPackP))
 			.thenReturn(new LangPackPersistentImpl(TEST_LANG_PACK_DTO));

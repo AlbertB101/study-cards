@@ -1,10 +1,10 @@
 package edu.albert.studycards.authserver.service;
 
 import edu.albert.studycards.authserver.config.AppConfig;
-import edu.albert.studycards.authserver.domain.dto.AccountRegistrationRequestDtoRecord;
+import edu.albert.studycards.authserver.domain.dto.AccountRegistrationDto;
 import edu.albert.studycards.authserver.domain.dto.UserAccountDto;
-import edu.albert.studycards.authserver.domain.persistent.UserAccountPersistent;
-import edu.albert.studycards.authserver.domain.persistent.UserAccountPersistentImpl;
+import edu.albert.studycards.authserver.domain.persistent.AccountPersistent;
+import edu.albert.studycards.authserver.domain.persistent.AccountPersistentImpl;
 import edu.albert.studycards.authserver.exception.ClientAlreadyExistsException;
 import edu.albert.studycards.authserver.repository.UserAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +19,10 @@ import org.springframework.stereotype.Service;
 import java.util.NoSuchElementException;
 import java.util.concurrent.CompletableFuture;
 
+import static edu.albert.studycards.authserver.config.AppConfig.TASK_EXECUTOR_NAME;
+
 /**
- * Service class managing {@link UserAccountPersistent} CRUD operations.
+ * Service class managing {@link AccountPersistent} CRUD operations.
  *
  * <p>Every API method is annotated {@link Async} annotation that uses
  * configured {@link ThreadPoolTaskExecutor} from {@link AppConfig}.
@@ -32,7 +34,7 @@ import java.util.concurrent.CompletableFuture;
  * (link)</a>. So it seems this class should be thread safe.
  */
 @Service
-public class UserAccountServiceImpl implements UserAccountService {
+public class AccountServiceImpl implements AccountService {
 
     @Autowired
     UserAccountRepository userAccRepo;
@@ -40,16 +42,16 @@ public class UserAccountServiceImpl implements UserAccountService {
     PasswordEncoder passwordEncoder;
 
 
-    @Async("threadPoolTaskExecutor")
+    @Async(TASK_EXECUTOR_NAME)
     @Override
-    public CompletableFuture<UserAccountDto> register(AccountRegistrationRequestDtoRecord regRequest) throws ClientAlreadyExistsException {
-        if (userAccRepo.existsByEmail(regRequest.email()))
+    public CompletableFuture<UserAccountDto> register(AccountRegistrationDto registrationRequest) throws ClientAlreadyExistsException {
+        if (userAccRepo.existsByEmail(registrationRequest.email()))
             throw new ClientAlreadyExistsException();
 
 //		TODO: add email validity check
 //		TODO: receive from client already encoded password
 
-        UserAccountPersistentImpl userAcc = new UserAccountPersistentImpl(regRequest);
+        AccountPersistentImpl userAcc = new AccountPersistentImpl(registrationRequest);
         userAcc.setPassword(passwordEncoder.encode(userAcc.getPassword()));
         userAccRepo.saveAndFlush(userAcc);
 
@@ -59,14 +61,14 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Async("threadPoolTaskExecutor")
     @Override
     public CompletableFuture<UserAccountDto> receive(String email) throws NoSuchElementException {
-        UserAccountPersistent userAcc = find(email);
+        AccountPersistent userAcc = find(email);
         return CompletableFuture.completedFuture(new UserAccountDto(userAcc));
     }
 
     @Async("threadPoolTaskExecutor")
     @Override
     public CompletableFuture<UserAccountDto> receive(Long id) throws NoSuchElementException {
-        UserAccountPersistent userAcc = find(id);
+        AccountPersistent userAcc = find(id);
         return CompletableFuture.completedFuture(new UserAccountDto(userAcc));
     }
 
@@ -82,7 +84,7 @@ public class UserAccountServiceImpl implements UserAccountService {
                 userAccountDto.firstName(),
                 userAccountDto.lastName());
 
-        UserAccountPersistent userAcc = find(auth.getName());
+        AccountPersistent userAcc = find(auth.getName());
         return CompletableFuture.completedFuture(new UserAccountDto(userAcc));
     }
 
@@ -107,13 +109,13 @@ public class UserAccountServiceImpl implements UserAccountService {
         return CompletableFuture.completedFuture(null);
     }
 
-    private UserAccountPersistent find(String email) {
+    private AccountPersistent find(String email) {
         return userAccRepo
                 .findByEmail(email)
                 .orElseThrow(NoSuchElementException::new);
     }
 
-    private UserAccountPersistent find(long id) {
+    private AccountPersistent find(long id) {
         return userAccRepo
                 .findById(id)
                 .orElseThrow(NoSuchElementException::new);

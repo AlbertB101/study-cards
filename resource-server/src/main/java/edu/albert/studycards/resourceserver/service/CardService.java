@@ -1,6 +1,6 @@
 package edu.albert.studycards.resourceserver.service;
 
-import edu.albert.studycards.resourceserver.model.interfaces.CardDto;
+import edu.albert.studycards.resourceserver.model.dto.CardDto;
 import edu.albert.studycards.resourceserver.model.interfaces.CardPersistent;
 
 public interface CardService {

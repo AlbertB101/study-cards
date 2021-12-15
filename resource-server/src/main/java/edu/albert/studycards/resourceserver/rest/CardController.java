@@ -1,7 +1,6 @@
 package edu.albert.studycards.resourceserver.rest;
 
-import edu.albert.studycards.resourceserver.model.dto.CardDtoImpl;
-import edu.albert.studycards.resourceserver.model.interfaces.CardDto;
+import edu.albert.studycards.resourceserver.model.dto.CardDto;
 import edu.albert.studycards.resourceserver.service.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +21,7 @@ public class CardController {
 	
 	@PostMapping(value = "/create")
 	@PreAuthorize("hasAuthority('user:write')")
-	public ResponseEntity<?> create(@RequestBody @Valid CardDtoImpl cardDto) {
+	public ResponseEntity<?> create(@RequestBody @Valid CardDto cardDto) {
 		try {
 			CardDto createdCard = cardService.create(cardDto);
 			Map<String, Object> response = Map.of(
@@ -54,7 +53,7 @@ public class CardController {
 	
 	@PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('user:update')")
-	public ResponseEntity<?> update(@RequestBody @Valid CardDtoImpl cardDto) {
+	public ResponseEntity<?> update(@RequestBody @Valid CardDto cardDto) {
 		try {
 			CardDto updatedCard = cardService.update(cardDto);
 			Map<String, Object> response = Map.of(

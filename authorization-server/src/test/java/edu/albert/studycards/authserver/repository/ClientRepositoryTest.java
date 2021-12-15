@@ -3,8 +3,8 @@ package edu.albert.studycards.authserver.repository;
 import edu.albert.studycards.authserver.domain.Role;
 import edu.albert.studycards.authserver.domain.Status;
 import edu.albert.studycards.authserver.domain.dto.UserAccountDto;
-import edu.albert.studycards.authserver.domain.persistent.UserAccountPersistent;
-import edu.albert.studycards.authserver.domain.persistent.UserAccountPersistentImpl;
+import edu.albert.studycards.authserver.domain.persistent.AccountPersistent;
+import edu.albert.studycards.authserver.domain.persistent.AccountPersistentImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 public class ClientRepositoryTest {
     private static UserAccountDto userAccountDto;
-    private static UserAccountPersistentImpl clientPersistent;
+    private static AccountPersistentImpl clientPersistent;
 
     @Autowired
     UserAccountRepository userAccRepo;
@@ -37,7 +37,7 @@ public class ClientRepositoryTest {
                 Role.USER,
                 Status.ACTIVE);
 
-        clientPersistent = new UserAccountPersistentImpl(userAccountDto);
+        clientPersistent = new AccountPersistentImpl(userAccountDto);
     }
 
     @Test
@@ -51,7 +51,7 @@ public class ClientRepositoryTest {
     @Test
     @DisplayName("When client isn't saved should return Optional with NULL")
     void whenClientIsNotSavedShouldReturnOptionalWithNull() {
-        Optional<UserAccountPersistent> opt = userAccRepo.findByEmail(clientPersistent.getEmail());
+        Optional<AccountPersistent> opt = userAccRepo.findByEmail(clientPersistent.getEmail());
         assertFalse(opt.isPresent());
         assertThrows(NoSuchElementException.class, () -> opt.get());
     }
@@ -82,9 +82,9 @@ public class ClientRepositoryTest {
                 newFirstName,
                 newLastName);
 
-        UserAccountPersistent updatedClient = userAccRepo
+        AccountPersistent updatedClient = userAccRepo
                 .findByEmail(ClientRepositoryTest.clientPersistent.getEmail())
-                .orElse(new UserAccountPersistentImpl());
+                .orElse(new AccountPersistentImpl());
         assertEquals(newFirstName, updatedClient.getFirstName());
         assertEquals(newLastName, updatedClient.getLastName());
     }

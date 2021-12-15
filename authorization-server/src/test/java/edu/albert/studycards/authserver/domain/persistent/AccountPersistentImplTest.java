@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class UserAccountPersistentImplTest {
+public class AccountPersistentImplTest {
     private static String testEmail = "TestEmail@mail.com";
     private static String testFirstName = "SomeName";
     private static String testLastName = "SomeLastName";
@@ -28,7 +28,7 @@ public class UserAccountPersistentImplTest {
                 testRole,
                 testStatus
         );
-        UserAccountPersistent client = new UserAccountPersistentImpl(testUserAccountDto);
+        AccountPersistent client = new AccountPersistentImpl(testUserAccountDto);
 
         assertEquals(testUserAccountDto.email(), client.getEmail());
         assertEquals(testUserAccountDto.firstName(), client.getFirstName());

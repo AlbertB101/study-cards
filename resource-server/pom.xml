@@ -15,7 +15,7 @@
     <name>resource-server</name>
     <description>Resource server of study-cards</description>
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
     </properties>
 
     <dependencies>
@@ -113,19 +113,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-
             <!--from https://dev.to/martinbelev/how-to-enable-junit-5-in-new-spring-boot-project-29a8-->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>

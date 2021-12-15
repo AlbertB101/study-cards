@@ -1,7 +1,8 @@
 package edu.albert.studycards.resourceserver.service;
 
 import edu.albert.studycards.resourceserver.exceptions.LangPackAlreadyExistsException;
-import edu.albert.studycards.resourceserver.model.dto.LangPackDtoImpl;
+import edu.albert.studycards.resourceserver.model.dto.CardDto;
+import edu.albert.studycards.resourceserver.model.dto.LangPackDto;
 import edu.albert.studycards.resourceserver.model.interfaces.*;
 import edu.albert.studycards.resourceserver.model.persistent.*;
 import edu.albert.studycards.resourceserver.repository.*;
@@ -26,42 +27,42 @@ public class LangPackPersistentService implements LangPackService {
 		Objects.requireNonNull(langPackDto);
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		
-		if (langPackRepo.existsByAccountEmailAndLang(email, langPackDto.getLang())) {
+		if (langPackRepo.existsByAccountEmailAndLang(email, langPackDto.lang())) {
 			throw new LangPackAlreadyExistsException();
 		}
 		
 		//TODO: add langPackDto validity check
 		
 		LangPackPersistentImpl langPack = new LangPackPersistentImpl(langPackDto);
-		return new LangPackDtoImpl(langPackRepo.saveAndFlush(langPack));
+		return new LangPackDto(langPackRepo.saveAndFlush(langPack));
 	}
 	
 	@Override
 	public LangPackDto get(Long id) {
 		Objects.requireNonNull(id);
-		return new LangPackDtoImpl(find(id));
+		return new LangPackDto(find(id));
 	}
 	
 	@Override
 	public LangPackDto get(String lang) {
 		Objects.requireNonNull(lang);
-		return new LangPackDtoImpl(find(lang));
+		return new LangPackDto(find(lang));
 	}
 	
 	@Override
 	public LangPackDto update(LangPackDto langPackDto) {
 		Objects.requireNonNull(langPackDto);
-		LangPackPersistent langPackP = find(langPackDto.getLang());
-		langPackP.setLang(langPackDto.getLang());
+		LangPackPersistent langPackP = find(langPackDto.lang());
+		langPackP.setLang(langPackDto.lang());
 		updateCards(langPackP, langPackDto);
 		//TODO: add update repository query
 		LangPackPersistent updatedLangPack = langPackRepo.saveAndFlush((LangPackPersistentImpl) langPackP);
-		return new LangPackDtoImpl(updatedLangPack);
+		return new LangPackDto(updatedLangPack);
 	}
 	
 	private void updateCards(LangPackPersistent to, LangPackDto from) {
-		for (CardDto cardDto : from.getCards()) {
-			if (to.contains(cardDto.getWord()))
+		for (CardDto cardDto : from.cards()) {
+			if (to.contains(cardDto.word()))
 				to.editCard(cardDto);
 			else
 				to.addCard(new CardPersistentImpl(cardDto, to));

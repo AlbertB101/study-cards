@@ -1,6 +1,8 @@
 package edu.albert.studycards.resourceserver.model.persistent;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import edu.albert.studycards.resourceserver.model.dto.CardDto;
+import edu.albert.studycards.resourceserver.model.dto.LangPackDto;
 import edu.albert.studycards.resourceserver.model.interfaces.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,9 +16,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-@NoArgsConstructor
-@Getter
-@Setter
 @Entity(name = "LangPack")
 @Table(name = "lang_pack")
 public class LangPackPersistentImpl implements LangPackPersistent, Serializable {
@@ -41,15 +40,59 @@ public class LangPackPersistentImpl implements LangPackPersistent, Serializable 
 	private List<CardPersistent> cards = new ArrayList<>();
 	
 	public LangPackPersistentImpl(LangPackDto langPackDto) {
-		this.lang = Objects.requireNonNull(langPackDto.getLang());
-		this.accountEmail = Objects.requireNonNull(langPackDto.getAccountEmail());
-		this.cards = CardPersistent.listFrom(Objects.requireNonNull(langPackDto.getCards()), this);
+		this.lang = Objects.requireNonNull(langPackDto.lang());
+		this.accountEmail = Objects.requireNonNull(langPackDto.accountEmail());
+		this.cards = CardPersistent.listFrom(Objects.requireNonNull(langPackDto.cards()), this);
 	}
 	
 	public LangPackPersistentImpl(String lang) {
 		this.lang = Objects.requireNonNull(lang);
 	}
-	
+
+	public LangPackPersistentImpl() {
+
+	}
+
+	@Override
+	public Long getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	@Override
+	public String getAccountEmail() {
+		return accountEmail;
+	}
+
+	@Override
+	public void setAccountEmail(String accountEmail) {
+		this.accountEmail = accountEmail;
+	}
+
+	@Override
+	public String getLang() {
+		return lang;
+	}
+
+	@Override
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
+
+	@Override
+	public List<CardPersistent> getCards() {
+		return cards;
+	}
+
+	@Override
+	public void setCards(List<CardPersistent> cards) {
+		this.cards = cards;
+	}
+
 	@Override
 	public void addCard(CardPersistent card) {
 		Objects.requireNonNull(card);
@@ -64,19 +107,18 @@ public class LangPackPersistentImpl implements LangPackPersistent, Serializable 
 		
 	}
 	
-	@Override
 	public void editCard(CardDto cardDto) {
 		Objects.requireNonNull(cardDto);
 		CardPersistent card;
 		try {
-			card = getCard(cardDto.getWord());
-			card.setWordTr(cardDto.getWordTr());
-			card.setWordMng(cardDto.getWordMng());
+			card = getCard(cardDto.word());
+			card.setWordTr(cardDto.wordTr());
+			card.setWordMng(cardDto.wordMng());
 		} catch (NoSuchElementException nsee) {
-			System.out.println(cardDto.getWord() + " doesn't exist in repository");
+			System.out.println(cardDto.word() + " doesn't exist in repository");
 		}
 	}
-	
+
 	@Override
 	public CardPersistent getCard(int n) {
 		return cards.get(n);

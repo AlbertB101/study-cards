@@ -4,7 +4,7 @@ import edu.albert.studycards.authserver.domain.Permission;
 import edu.albert.studycards.authserver.domain.Role;
 import edu.albert.studycards.authserver.domain.dto.*;
 import edu.albert.studycards.authserver.exception.ClientAlreadyExistsException;
-import edu.albert.studycards.authserver.service.UserAccountService;
+import edu.albert.studycards.authserver.service.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ public class AccountController {
 	private final static Logger LOGGER = LoggerFactory.getLogger(AccountController.class);
 	
 	@Autowired
-	private UserAccountService userAccService;
+	private AccountService userAccService;
 	
 	/**
 	 * Sign client up and returns {@link ResponseEntity} with http status and message.
@@ -68,10 +68,10 @@ public class AccountController {
 	 * @param regRequest registration request object
 	 * @return ResponseEntity with information about registration request
 	 * @see AccountRegistrationRequest
-	 * @see AccountRegistrationRequestDto
+	 * @see AccountRegistrationDto
 	 */
 	@PostMapping(value = "/signUp")
-	public ResponseEntity<?> signUp(@RequestBody @Valid AccountRegistrationRequestDtoRecord regRequest) {
+	public ResponseEntity<?> signUp(@RequestBody @Valid AccountRegistrationDto regRequest) {
 		try {
 			UserAccountDto newUserAcc = userAccService.register(regRequest).get();
 			Map<String, Object> userAccInfo = Map.of(

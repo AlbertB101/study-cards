@@ -2,7 +2,7 @@ package edu.albert.studycards.authserver.domain.dto;
 
 import edu.albert.studycards.authserver.domain.Role;
 import edu.albert.studycards.authserver.domain.Status;
-import edu.albert.studycards.authserver.domain.persistent.UserAccountPersistent;
+import edu.albert.studycards.authserver.domain.persistent.AccountPersistent;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.EnumType;
@@ -23,14 +23,12 @@ public record UserAccountDto(
         @Enumerated(value = EnumType.STRING) Status status) implements Serializable {
 
     /**
-     * Constructor is dedicated for creating new {@link UserAccountDtoImpl} instance
-     * based on {@link UserAccountPersistent} argument. New {@link UserAccountDtoImpl}
-     * instance just copies values from {@link UserAccountPersistent} argument.
-     * Password won't be copied due to security concerns
+     * Copies values from {@link AccountPersistent} argument.
+     * Password won't be copied due to security concerns.
      *
-     * @param userAccount valid UserAccountPersistent instance
+     * @param userAccount UserAccountPersistent entity
      */
-    public UserAccountDto(UserAccountPersistent userAccount) {
+    public UserAccountDto(AccountPersistent userAccount) {
         this(userAccount.getFirstName(),
                 userAccount.getLastName(),
                 userAccount.getEmail(),

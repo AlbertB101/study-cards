@@ -1,7 +1,7 @@
 package edu.albert.studycards.resourceserver.service;
 
 import edu.albert.studycards.resourceserver.exceptions.LangPackAlreadyExistsException;
-import edu.albert.studycards.resourceserver.model.interfaces.LangPackDto;
+import edu.albert.studycards.resourceserver.model.dto.LangPackDto;
 import edu.albert.studycards.resourceserver.model.interfaces.LangPackPersistent;
 
 public interface LangPackService {

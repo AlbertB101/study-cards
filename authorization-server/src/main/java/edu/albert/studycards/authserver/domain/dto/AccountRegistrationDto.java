@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @author Albert Banshchikov
  * @since 2021.12.14
  */
-public record AccountRegistrationRequestDtoRecord(
+public record AccountRegistrationDto(
         @NotBlank @Size(max = 64) String firstName,
         @NotBlank @Size(max = 64) String lastName,
         @NotBlank @Size(max = 256) @NaturalId(mutable = true) String email,

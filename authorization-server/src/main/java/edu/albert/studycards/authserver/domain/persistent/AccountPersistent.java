@@ -5,7 +5,7 @@ import edu.albert.studycards.authserver.domain.Status;
 
 import java.util.Date;
 
-public interface UserAccountPersistent {
+public interface AccountPersistent {
 	String getFirstName();
 	void setFirstName(String firstName);
 	

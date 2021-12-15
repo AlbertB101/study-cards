@@ -2,7 +2,7 @@ package edu.albert.studycards.authserver.service;
 
 import edu.albert.studycards.authserver.SourceProvider;
 import edu.albert.studycards.authserver.domain.dto.UserAccountDto;
-import edu.albert.studycards.authserver.domain.persistent.UserAccountPersistentImpl;
+import edu.albert.studycards.authserver.domain.persistent.AccountPersistentImpl;
 import edu.albert.studycards.authserver.exception.ClientAlreadyExistsException;
 import edu.albert.studycards.authserver.repository.UserAccountRepository;
 import org.junit.jupiter.api.*;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.*;
 @EnableAsync
 @Transactional
 @ExtendWith(MockitoExtension.class)
-public class UserAccountServiceTest {
+public class AccountServiceTest {
 	
 	private final static int ACCOUNT_AMOUNT = 10;
 	private final static List<UserAccountDto> CLIENTS = SourceProvider.getRandomAccountDto(ACCOUNT_AMOUNT);
@@ -41,7 +41,7 @@ public class UserAccountServiceTest {
 	@Mock
 	UserAccountRepository userAccRepo;
 	@InjectMocks
-	UserAccountServiceImpl clientService;
+	AccountServiceImpl clientService;
 	
 	@BeforeAll
 	static void configure() {
@@ -65,7 +65,7 @@ public class UserAccountServiceTest {
 		when(userAccRepo.existsByEmail(CLIENT.email()))
 			.thenReturn(false);
 		when(userAccRepo.saveAndFlush(any()))
-			.thenReturn(new UserAccountPersistentImpl(CLIENT));
+			.thenReturn(new AccountPersistentImpl(CLIENT));
 		
 //		assertDoesNotThrow(() -> {
 //			UserAccountDto userAccountDto = clientService.register(CLIENT).get();
@@ -86,7 +86,7 @@ public class UserAccountServiceTest {
 		when(userAccRepo.existsByEmail(any(String.class)))
 			.thenReturn(false);
 		when(userAccRepo.saveAndFlush(any()))
-			.thenReturn(new UserAccountPersistentImpl(CLIENT));
+			.thenReturn(new AccountPersistentImpl(CLIENT));
 		
 //		for (UserAccountDto userAccountDto : CLIENTS) {
 //			Future<CompletableFuture<UserAccountDto>> future =
@@ -181,7 +181,7 @@ public class UserAccountServiceTest {
 	@DisplayName("Should receive CLIENT")
 	void shouldReturnClient() {
 		when(userAccRepo.findByEmail(any()))
-			.thenReturn(Optional.of(new UserAccountPersistentImpl(CLIENT)));
+			.thenReturn(Optional.of(new AccountPersistentImpl(CLIENT)));
 		
 		assertDoesNotThrow(() -> {
 			CompletableFuture<UserAccountDto> compFuture = clientService.receive(CLIENT.email());
@@ -200,7 +200,7 @@ public class UserAccountServiceTest {
 		List<Future<CompletableFuture<UserAccountDto>>> execFutures = new ArrayList<>(ACCOUNT_AMOUNT);
 		
 		when(userAccRepo.findByEmail(any()))
-			.thenReturn(Optional.of(new UserAccountPersistentImpl(CLIENT)));
+			.thenReturn(Optional.of(new AccountPersistentImpl(CLIENT)));
 		
 		for (UserAccountDto userAccountDto : CLIENTS) {
 			Future<CompletableFuture<UserAccountDto>> futureTask =

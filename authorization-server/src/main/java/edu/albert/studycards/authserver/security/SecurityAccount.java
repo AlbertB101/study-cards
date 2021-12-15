@@ -1,6 +1,6 @@
 package edu.albert.studycards.authserver.security;
 
-import edu.albert.studycards.authserver.domain.persistent.UserAccountPersistent;
+import edu.albert.studycards.authserver.domain.persistent.AccountPersistent;
 import edu.albert.studycards.authserver.domain.Status;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -61,7 +61,7 @@ public class SecurityAccount implements UserDetails {
 		return isActive;
 	}
 	
-	public static UserDetails fromUser(UserAccountPersistent userAcc) {
+	public static UserDetails fromUser(AccountPersistent userAcc) {
 		return new org.springframework.security.core.userdetails.User(
 			userAcc.getEmail(),
 			userAcc.getPassword(),

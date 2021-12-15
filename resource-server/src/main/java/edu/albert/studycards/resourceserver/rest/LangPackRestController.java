@@ -1,7 +1,7 @@
 package edu.albert.studycards.resourceserver.rest;
 
 import edu.albert.studycards.resourceserver.exceptions.LangPackAlreadyExistsException;
-import edu.albert.studycards.resourceserver.model.dto.LangPackDtoImpl;
+import edu.albert.studycards.resourceserver.model.dto.LangPackDto;
 import edu.albert.studycards.resourceserver.model.interfaces.*;
 import edu.albert.studycards.resourceserver.service.LangPackService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class LangPackRestController {
      * 	<li> lang - language of this LangPack.
      * </ul>
      * Also LangPacks may have "cards" parameter that contains
-     * list of {@link CardDto} that will be created and saved within the LangPack.
+     * list of {@link CardDtoI} that will be created and saved within the LangPack.
      *
      * <p>Example:
      * <pre>
@@ -77,7 +77,7 @@ public class LangPackRestController {
      */
     @PreAuthorize("hasAuthority('user:write')")
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> create(@RequestBody @Valid LangPackDtoImpl langPack) {
+    public ResponseEntity<?> create(@RequestBody @Valid LangPackDto langPack) {
         try {
             LangPackDto createdLangPack = langPackService.create(langPack);
             Map<String, Object> response = Map.of(
@@ -145,7 +145,7 @@ public class LangPackRestController {
      * <p>Update request may contain such parameters:
      * <ul>
      * 	<li> lang - new language of this LangPack.
-     * 	<li> cards - list of {@link CardDto}.
+     * 	<li> cards - list of {@link CardDtoI}.
      * 	If {@link LangPackPersistent} doesn't contain a card this card will be added.
      * 	If LangPack already contains the card, word transcription and word meaning will be updated.
      * </ul>
@@ -170,14 +170,14 @@ public class LangPackRestController {
      * }
      * }
      * </pre>
-     * @param langPackDtoImpl that contains new language and/or cards that should be updated
+     * @param langPackDto that contains new language and/or cards that should be updated
      * @return ResponseEntity with http status code and updated LangPack
      */
     @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('user:update')")
-    public ResponseEntity<?> update(@RequestBody @Valid LangPackDtoImpl langPackDtoImpl) {
+    public ResponseEntity<?> update(@RequestBody @Valid LangPackDto langPackDto) {
         try {
-            LangPackDto updatedLangPack = langPackService.update(langPackDtoImpl);
+            LangPackDto updatedLangPack = langPackService.update(langPackDto);
             Map<String, Object> response = Map.of(
                 "ResponseMessage", "LangPack was successfully created",
                 "Card", updatedLangPack);

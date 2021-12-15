@@ -1,6 +1,6 @@
 package edu.albert.studycards.resourceserver.service;
 
-import edu.albert.studycards.resourceserver.model.dto.CardDtoImpl;
+import edu.albert.studycards.resourceserver.model.dto.CardDto;
 import edu.albert.studycards.resourceserver.model.interfaces.*;
 import edu.albert.studycards.resourceserver.model.persistent.CardPersistentImpl;
 import edu.albert.studycards.resourceserver.repository.CardRepository;
@@ -22,11 +22,11 @@ public class CardPersistentService implements CardService {
 	@Override
 	public CardDto create(CardDto cardDto) {
 		Objects.requireNonNull(cardDto);
-		LangPackPersistent langPack = langPackService.find(cardDto.getLang());
-		if (!langPack.contains(cardDto.getWord())) {
+		LangPackPersistent langPack = langPackService.find(cardDto.lang());
+		if (!langPack.contains(cardDto.word())) {
 			langPack.addCard(new CardPersistentImpl(cardDto, langPack));
 		}
-		return new CardDtoImpl(langPack.getCard(cardDto.getWord()));
+		return new CardDto(langPack.getCard(cardDto.word()));
 	}
 	
 	@Override
@@ -35,24 +35,24 @@ public class CardPersistentService implements CardService {
 		CardPersistent cardP = cardRepo
 			                       .findById(cardId)
 			                       .orElseThrow(NoSuchElementException::new);
-		return new CardDtoImpl(cardP);
+		return new CardDto(cardP);
 	}
 	
 	@Override
 	public CardDto get(String word) {
 		Objects.requireNonNull(word);
-		return new CardDtoImpl(findCard(word));
+		return new CardDto(findCard(word));
 	}
 	
 	@Override
 	public CardDto update(CardDto cardDto) {
 		Objects.requireNonNull(cardDto);
-		CardPersistent card = findCard(cardDto.getWord());
-		card.setWordTr(cardDto.getWordTr());
-		card.setWordMng(cardDto.getWordMng());
+		CardPersistent card = findCard(cardDto.word());
+		card.setWordTr(cardDto.wordTr());
+		card.setWordMng(cardDto.wordMng());
 		//TODO: add update query to card repo
 		CardPersistent cardP = cardRepo.saveAndFlush((CardPersistentImpl) card);
-		return new CardDtoImpl(cardP);
+		return new CardDto(cardP);
 	}
 	
 	@Override
